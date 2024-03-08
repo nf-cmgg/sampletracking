@@ -1,0 +1,27 @@
+Changes in module 'nf-core/bwa/mem'
+--- modules/nf-core/bwa/mem/meta.yml
++++ modules/nf-core/bwa/mem/meta.yml
+@@ -46,6 +46,10 @@
+       type: file
+       description: Output BAM file containing read alignments
+       pattern: "*.{bam}"
++  - csi:
++      type: file
++      description: Index file for BAM file
++      pattern: "*.{bam.csi}"
+   - versions:
+       type: file
+       description: File containing software versions
+
+--- modules/nf-core/bwa/mem/main.nf
++++ modules/nf-core/bwa/mem/main.nf
+@@ -14,6 +14,7 @@
+ 
+     output:
+     tuple val(meta), path("*.bam"), emit: bam
++    tuple val(meta), path("*.csi"), emit: csi, optional: true
+     path  "versions.yml"          , emit: versions
+ 
+     when:
+
+************************************************************
