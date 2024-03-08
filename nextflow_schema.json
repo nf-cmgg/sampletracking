@@ -48,7 +48,7 @@
             "type": "object",
             "fa_icon": "fas fa-dna",
             "description": "Reference genome related files and options required for the workflow.",
-            "required": ["fasta", "bwamem2_index"],
+            "required": ["fasta", "bwa_index"],
             "properties": {
                 "fasta": {
                     "type": "string",
@@ -60,13 +60,21 @@
                     "help_text": "This parameter is *mandatory*.",
                     "fa_icon": "far fa-file-code"
                 },
-                "bwamem2_index": {
+                "bwa_index": {
                     "type": "string",
                     "format": "directory-path",
                     "exists": true,
-                    "description": "Path to bwamem2 index directory.",
+                    "description": "Path to bwa index directory.",
                     "help_text": "This parameter is *mandatory*.",
                     "fa_icon": "far fa-file-code"
+                },
+                "haplotype_map": {
+                    "type": "string",
+                    "format": "file-path",
+                    "exists": true,
+                    "description": "Path to haplotype map file.",
+                    "help_text": "This parameter is *mandatory*.",
+                    "errorMessage": "far fa-file-code"
                 }
             }
         },

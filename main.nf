@@ -32,8 +32,9 @@ workflow NFCMGG_SAMPLETRACKING {
 
     take:
     samplesheet // channel: samplesheet read in from --input
-    bwamem2_index
+    bwa_index
     fasta
+    haplotype_map
 
     main:
 
@@ -42,8 +43,9 @@ workflow NFCMGG_SAMPLETRACKING {
     //
     SAMPLETRACKING (
         samplesheet,
-        bwamem2_index,
+        bwa_index,
         fasta,
+        haplotype_map
     )
 
     emit:
@@ -79,12 +81,16 @@ workflow {
     NFCMGG_SAMPLETRACKING (
         PIPELINE_INITIALISATION.out.samplesheet,
         Channel.value([
-            [id: "bwamem2"],
-            file(params.bwamem2_index, checkIfExists: true)
+            [id: "bwa"],
+            file(params.bwa_index, checkIfExists: true)
         ]),
         Channel.value(
             [[id:"genome_fasta"],
             file(params.fasta, checkIfExists: true)
+        ]),
+        Channel.value(
+            [[id:"haplotype_map"],
+            file(params.haplotype_map, checkIfExists: true)
         ])
     )
 

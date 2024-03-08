@@ -14,6 +14,13 @@
                 "meta": ["id","samplename"],
                 "unique": true
             },
+            "pool": {
+                "type": "string",
+                "pattern": "^\\S+$",
+                "default": "sampletracking_pool",
+                "meta": ["pool"],
+                "errorMessage": "Pool name must be provided and cannot contain spaces"
+            },
             "sample_bam": {
                 "type": "string",
                 "format": "file-path",
@@ -39,12 +46,6 @@
                 "format": "file-path",
                 "exists": true,
                 "errorMessage": "snp BAM/CRAM file must be provided, cannot contain spaces and must have extension '.bam' or '.cram'"
-            },
-            "haplotype_map": {
-                "type": "string",
-                "format": "file-path",
-                "exists": true,
-                "errorMessage": "Haplotype map file must be provided, cannot contain spaces"
             }
         },
         "AnyOf": [

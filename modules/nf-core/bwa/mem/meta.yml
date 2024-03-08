@@ -1,4 +1,4 @@
-name: bwamem2_mem
+name: bwa_mem
 description: Performs fastq alignment to a fasta reference using BWA
 keywords:
   - mem
@@ -11,12 +11,12 @@ keywords:
 tools:
   - bwa:
       description: |
-        BWA-mem2 is a software package for mapping DNA sequences against
+        BWA is a software package for mapping DNA sequences against
         a large reference genome, such as the human genome.
-      homepage: https://github.com/bwa-mem2/bwa-mem2
+      homepage: http://bio-bwa.sourceforge.net/
       documentation: http://www.htslib.org/doc/samtools.html
       arxiv: arXiv:1303.3997
-      licence: ["MIT"]
+      licence: ["GPL-3.0-or-later"]
 input:
   - meta:
       type: map
@@ -31,31 +31,32 @@ input:
   - meta2:
       type: map
       description: |
-        Groovy Map containing reference/index information
-        e.g. [ id:'test' ]
+        Groovy Map containing reference information.
+        e.g. [ id:'test', single_end:false ]
   - index:
       type: file
       description: BWA genome index files
-      pattern: "Directory containing BWA index *.{0132,amb,ann,bwt.2bit.64,pac}"
+      pattern: "Directory containing BWA index *.{amb,ann,bwt,pac,sa}"
   - sort_bam:
       type: boolean
       description: use samtools sort (true) or samtools view (false)
       pattern: "true or false"
 output:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
   - bam:
       type: file
       description: Output BAM file containing read alignments
       pattern: "*.{bam}"
+  - csi:
+      type: file
+      description: Index file for BAM file
+      pattern: "*.{bam.csi}"
   - versions:
       type: file
       description: File containing software versions
       pattern: "versions.yml"
 authors:
-  - "@maxulysse"
+  - "@drpatelh"
+  - "@jeremy1805"
 maintainers:
-  - "@maxulysse"
+  - "@drpatelh"
+  - "@jeremy1805"

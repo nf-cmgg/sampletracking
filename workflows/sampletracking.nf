@@ -4,7 +4,7 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { BWAMEM2_MEM                   } from '../modules/nf-core/bwamem2/mem/main'
+include { BWA_MEM                       } from '../modules/nf-core/bwa/mem/main'
 include { PICARD_CROSSCHECKFINGERPRINTS } from '../modules/nf-core/picard/crosscheckfingerprints/main'
 include { MULTIQC                       } from '../modules/nf-core/multiqc/main'
 include { paramsSummaryMap              } from 'plugin/nf-validation'
@@ -22,8 +22,9 @@ workflow SAMPLETRACKING {
 
     take:
     ch_samplesheet      // channel: samplesheet read in from --input
-    ch_bwamem2_index    // channel: [meta, /path/to/bwamem2_index]
+    ch_bwa_index        // channel: [meta, /path/to/bwa_index]
     ch_fasta            // channel: [meta,/path/to/fasta]
+    ch_haplotype_map    // channel: [meta, /path/to/haplotype_map]
 
     main:
 
@@ -31,34 +32,37 @@ workflow SAMPLETRACKING {
     ch_multiqc_files = Channel.empty()
 
     ch_samplesheet
-    .branch { meta, sample_bam, snp_fastq, snp_bam, haplotype_map ->
+    .branch { meta, sample_bam, snp_fastq, snp_bam ->
         aligned: snp_bam
-            return [meta, sample_bam, snp_bam, haplotype_map]
+            return [meta, sample_bam, snp_bam]
         to_align : snp_fastq
-            return [meta, sample_bam, snp_fastq, haplotype_map]
+            return [meta, sample_bam, snp_fastq]
     }
     .set{ ch_inputs }
 
-    ch_inputs.to_align.multiMap{ meta, sample_bam, snp_fastq, haplotype_map ->
-        fastq:          [meta, snp_fastq]
-        haplotype_map:  [meta, sample_bam, haplotype_map]
+    ch_inputs.to_align.multiMap{ meta, sample_bam, snp_fastq ->
+        fastq:  [meta, snp_fastq]
+        bam:    [meta, sample_bam]
     }
     .set{ ch_to_align }
 
-    BWAMEM2_MEM(
+    BWA_MEM(
         ch_to_align.fastq,
-        ch_bwamem2_index,
+        ch_bwa_index,
         true
     )
-    ch_versions = ch_versions.mix(BWAMEM2_MEM.out.versions.first())
+    ch_versions = ch_versions.mix(BWA_MEM.out.versions.first())
 
-    ch_to_align.haplotype_map
-    .join(BWAMEM2_MEM.out.bam, failOnMismatch:true, failOnDuplicate:true)
-    .dump(tag: "algined_snp")
-    .map{ meta, sample_bam, haplotype_map, snp_bam ->
-        [meta, sample_bam, snp_bam, haplotype_map]}
-    .mix(ch_samplesheet.aligned)
-    .set(ch_to_fingerprint)
+    ch_to_align.bam
+    .join(BWA_MEM.out.bam, failOnMismatch:true, failOnDuplicate:true)
+    .mix(ch_inputs.aligned)
+    .map{ meta, sample_bam, snp_bam ->
+        return [[id: meta.pool], sample_bam, snp_bam]
+    }
+    .groupTuple()
+    .merge(ch_haplotype_map.map{it[1]})
+    .dump(tag: "Samples to fingerprint", pretty: true)
+    .set{ch_to_fingerprint}
 
     PICARD_CROSSCHECKFINGERPRINTS(
         ch_to_fingerprint,
