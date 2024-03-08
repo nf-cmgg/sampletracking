@@ -1,6 +1,7 @@
 name: Feature request
 description: Suggest an idea for the nf-cmgg/sampletracking pipeline
-labels: enhancement
+labels:
+  - enhancement
 body:
   - type: textarea
     id: description

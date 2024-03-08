@@ -12,7 +12,6 @@ lint:
   - assets/nf-core-sampletracking_logo_light.png
   - docs/images/nf-core-sampletracking_logo_light.png
   - docs/images/nf-core-sampletracking_logo_dark.png
-  - .github/ISSUE_TEMPLATE/bug_report.yml
   multiqc_config:
   - report_comment
   nextflow_config:
@@ -21,4 +20,5 @@ lint:
 repository_type: pipeline
 template:
   prefix: nf-cmgg
-  skip: []
+  skip:
+    - igenomes
