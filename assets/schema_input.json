@@ -11,14 +11,14 @@
                 "type": "string",
                 "pattern": "^\\S+$",
                 "errorMessage": "Sample name must be provided and cannot contain spaces",
-                "meta": ["id"]
+                "meta": ["id","samplename"],
+                "unique": true
             },
             "sample_bam": {
                 "type": "string",
                 "format": "file-path",
                 "exists": true,
-                "pattern": "^\\S+\\.bam$",
-                "errorMessage": "Sample BAM file must be provided, cannot contain spaces and must have extension '.bam' of '.cram'"
+                "errorMessage": "Sample BAM/CRAM file must be provided, cannot contain spaces and must have extension '.bam' of '.cram'"
             },
             "snp_fastq_1": {
                 "type": "string",
@@ -38,9 +38,22 @@
                 "type": "string",
                 "format": "file-path",
                 "exists": true,
-                "pattern": "^\\S+\\.bam$",
-                "errorMessage": "BAM file must be provided, cannot contain spaces and must have extension '.bam' or '.cram'"}
+                "errorMessage": "snp BAM/CRAM file must be provided, cannot contain spaces and must have extension '.bam' or '.cram'"
+            },
+            "haplotype_map": {
+                "type": "string",
+                "format": "file-path",
+                "exists": true,
+                "errorMessage": "Haplotype map file must be provided, cannot contain spaces"
+            }
         },
-        "required": ["sample", "fastq_1"]
+        "AnyOf": [
+            {
+                "required": ["sample", "sample_bam", "snp_fastq_1", "snp_fastq_2"]
+            },
+            {
+                "required": ["sample", "sample_bam", "snp_bam"]
+            }
+        ]
     }
 }

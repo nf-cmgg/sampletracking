@@ -19,16 +19,6 @@ include { SAMPLETRACKING  } from './workflows/sampletracking'
 include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_sampletracking_pipeline'
 include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_sampletracking_pipeline'
 
-include { getGenomeAttribute      } from './subworkflows/local/utils_nfcore_sampletracking_pipeline'
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    GENOME PARAMETER VALUES
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-params.fasta = ""
-
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     NAMED WORKFLOWS FOR PIPELINE
@@ -42,6 +32,8 @@ workflow NFCMGG_SAMPLETRACKING {
 
     take:
     samplesheet // channel: samplesheet read in from --input
+    bwamem2_index
+    fasta
 
     main:
 
@@ -49,7 +41,9 @@ workflow NFCMGG_SAMPLETRACKING {
     // WORKFLOW: Run pipeline
     //
     SAMPLETRACKING (
-        samplesheet
+        samplesheet,
+        bwamem2_index,
+        fasta,
     )
 
     emit:
@@ -83,7 +77,15 @@ workflow {
     // WORKFLOW: Run main workflow
     //
     NFCMGG_SAMPLETRACKING (
-        PIPELINE_INITIALISATION.out.samplesheet
+        PIPELINE_INITIALISATION.out.samplesheet,
+        Channel.value([
+            [id: "bwamem2"],
+            file(params.bwamem2_index, checkIfExists: true)
+        ]),
+        Channel.value(
+            [[id:"genome_fasta"],
+            file(params.fasta, checkIfExists: true)
+        ])
     )
 
     //
