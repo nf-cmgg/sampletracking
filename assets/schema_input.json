@@ -60,7 +60,7 @@
                 "errorMessage": "snp BAM/CRAM index file must be provided, cannot contain spaces and must have extension '.bai' or '.csi'"
             }
         },
-        "AnyOf": [
+        "anyOf": [
             {
                 "required": ["sample", "sample_bam", "snp_fastq_1", "snp_fastq_2"]
             },
