@@ -25,7 +25,13 @@
                 "type": "string",
                 "format": "file-path",
                 "exists": true,
-                "errorMessage": "Sample BAM/CRAM file must be provided, cannot contain spaces and must have extension '.bam' of '.cram'"
+                "errorMessage": "Sample BAM/CRAM file must be provided, cannot contain spaces and must have extension '.bam' or '.cram'"
+            },
+            "sample_bam_index": {
+                "type": "string",
+                "format": "file-path",
+                "exists": true,
+                "errorMessage": "Sample BAM/CRAM index file must be provided, cannot contain spaces and must have extension '.bai' or '.csi'"
             },
             "snp_fastq_1": {
                 "type": "string",
@@ -46,6 +52,12 @@
                 "format": "file-path",
                 "exists": true,
                 "errorMessage": "snp BAM/CRAM file must be provided, cannot contain spaces and must have extension '.bam' or '.cram'"
+            },
+            "snp_bam_index": {
+                "type": "string",
+                "format": "file-path",
+                "exists": true,
+                "errorMessage": "snp BAM/CRAM index file must be provided, cannot contain spaces and must have extension '.bai' or '.csi'"
             }
         },
         "AnyOf": [

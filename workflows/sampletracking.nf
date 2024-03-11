@@ -32,17 +32,17 @@ workflow SAMPLETRACKING {
     ch_multiqc_files = Channel.empty()
 
     ch_samplesheet
-    .branch { meta, sample_bam, snp_fastq, snp_bam ->
+    .branch { meta, sample_bam, sample_bam_index, snp_fastq, snp_bam, snp_bam_index ->
         aligned: snp_bam
-            return [meta, sample_bam, snp_bam]
+            return [meta, sample_bam, sample_bam_index, snp_bam, snp_bam_index]
         to_align : snp_fastq
-            return [meta, sample_bam, snp_fastq]
+            return [meta, sample_bam, sample_bam_index, snp_fastq]
     }
     .set{ ch_inputs }
 
-    ch_inputs.to_align.multiMap{ meta, sample_bam, snp_fastq ->
+    ch_inputs.to_align.multiMap{ meta, sample_bam, sample_bam_index, snp_fastq ->
         fastq:  [meta, snp_fastq]
-        bam:    [meta, sample_bam]
+        bam:    [meta, sample_bam, sample_bam_index]
     }
     .set{ ch_to_align }
 
@@ -55,12 +55,15 @@ workflow SAMPLETRACKING {
 
     ch_to_align.bam
     .join(BWA_MEM.out.bam, failOnMismatch:true, failOnDuplicate:true)
+    .join(BWA_MEM.out.csi, failOnMismatch:true, failOnDuplicate:true)
     .mix(ch_inputs.aligned)
-    .map{ meta, sample_bam, snp_bam ->
-        return [[id: meta.pool], sample_bam, snp_bam]
+    .map{ meta, sample_bam, sample_bam_index, snp_bam, snp_bam_index ->
+        return [[id: meta.pool], sample_bam, sample_bam_index, snp_bam, snp_bam_index]
     }
     .groupTuple()
     .merge(ch_haplotype_map.map{it[1]})
+    .map{ meta, sample_bam, sample_bam_index, snp_bam, snp_bam_index, haplotype_map ->
+        return [meta, sample_bam.flatten(), sample_bam_index.flatten(), snp_bam.flatten(), snp_bam_index.flatten(), haplotype_map]}
     .dump(tag: "Samples to fingerprint", pretty: true)
     .set{ch_to_fingerprint}
 

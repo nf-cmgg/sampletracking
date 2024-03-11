@@ -83,8 +83,8 @@ workflow PIPELINE_INITIALISATION {
     Channel
         .fromSamplesheet("input")
         .map {
-            meta, sample_bam, snp_fastq_1, snp_fastq_2, snp_bam ->
-                return [ meta + ['single_end': false], sample_bam, [snp_fastq_1, snp_fastq_2].flatten(), snp_bam ]
+            meta, sample_bam, sample_bam_index, snp_fastq_1, snp_fastq_2, snp_bam, snp_bam_index ->
+                return [ meta + ['single_end': false], sample_bam, sample_bam_index, [snp_fastq_1, snp_fastq_2].flatten(), snp_bam, snp_bam_index ]
         }
         .set { ch_samplesheet }
 
