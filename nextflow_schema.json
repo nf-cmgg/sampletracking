@@ -48,7 +48,7 @@
             "type": "object",
             "fa_icon": "fas fa-dna",
             "description": "Reference genome related files and options required for the workflow.",
-            "required": ["fasta", "bwa_index"],
+            "required": ["fasta", "bwa_index", "haplotype_map"],
             "properties": {
                 "fasta": {
                     "type": "string",
