@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/csv"
+	"fmt"
 	"io"
 	"io/fs"
 	"os"
@@ -174,11 +175,12 @@ func main() {
 				// Find the snp fastq
 				for _, file := range snpFastq {
 					if strings.Contains(file, sample.sample) {
-						if strings.Contains(file, "_1") {
+						if strings.Contains(file, "_R1") {
 							samples[i].snpFastq1 = file
-						} else if strings.Contains(file, "_2") {
+						} else if strings.Contains(file, "_R2") {
 							samples[i].snpFastq2 = file
 						}
+						fmt.Println(sample)
 					}
 				}
 				// Find the snp bam
