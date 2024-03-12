@@ -50,8 +50,8 @@ func main() {
 	var smaplePassword string
 	var smapleUrl string
 
-	var samplesDir string
-	var snpDir string
+	var samplesDir cli.StringSlice
+	var snpDir cli.StringSlice
 
 	app := &cli.App{
 		Name:  "nf-cmgg-sampletracking",
@@ -64,14 +64,14 @@ func main() {
 				Required:    true,
 				Destination: &runName,
 			},
-			&cli.StringFlag{
+			&cli.StringSliceFlag{
 				Name:        "samples_directory",
 				Usage:       "Directory containing the full size samples",
 				Aliases:     []string{"w"},
 				Required:    true,
 				Destination: &samplesDir,
 			},
-			&cli.StringFlag{
+			&cli.StringSliceFlag{
 				Name:        "snp_directory",
 				Usage:       "Directory containing the snp samples",
 				Aliases:     []string{"s"},
@@ -142,14 +142,31 @@ func main() {
 			}
 
 			// Find all full size (aligned) samples in <samplesDir>
-			sampleFiles, err := findFilesByExtension(samplesDir, []string{".bam", ".cram"})
-			if err != nil {
-				log.Fatal("Error finding files in ", samplesDir, ": ", err)
+			sampleFiles := []string{}
+			for _, dir := range samplesDir.Value() {
+				files, err := findFilesByExtension(dir, []string{".bam", ".cram"})
+				if err != nil {
+					log.Fatal("Error finding files in ", dir, ": ", err)
+				}
+				sampleFiles = append(sampleFiles, files...)
 			}
 
 			// Find all snp samples in <snpDir>
-			snpFastq, err := findFilesByExtension(snpDir, []string{".fastq.gz", ".fq.gz"})
-			snpBams, err := findFilesByExtension(snpDir, []string{".bam", ".cram"})
+			snpFastq := []string{}
+			snpBams := []string{}
+			for _, dir := range snpDir.Value() {
+				snpfiles, err := findFilesByExtension(dir, []string{".fastq.gz", ".fq.gz"})
+				if err != nil {
+					log.Fatal("Error finding files in ", dir, ": ", err)
+				}
+				snpFastq = append(snpFastq, snpfiles...)
+				snpbamfiles, err := findFilesByExtension(dir, []string{".bam", ".cram"})
+				if err != nil {
+					log.Fatal("Error finding files in ", dir, ": ", err)
+				}
+				snpBams = append(snpBams, snpbamfiles...)
+			}
+
 			if err != nil {
 				log.Fatal("Error finding files in ", snpDir, ": ", err)
 			}
