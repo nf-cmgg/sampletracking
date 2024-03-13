@@ -49,13 +49,14 @@ workflow SAMPLETRACKING {
     BWA_MEM(
         ch_to_align.fastq,
         ch_bwa_index,
+        ch_fasta,
         true
     )
     ch_versions = ch_versions.mix(BWA_MEM.out.versions.first())
 
     ch_to_align.bam
-    .join(BWA_MEM.out.bam, failOnMismatch:true, failOnDuplicate:true)
-    .join(BWA_MEM.out.csi, failOnMismatch:true, failOnDuplicate:true)
+    .join(BWA_MEM.out.cram, failOnMismatch:true, failOnDuplicate:true)
+    .join(BWA_MEM.out.crai, failOnMismatch:true, failOnDuplicate:true)
     .mix(ch_inputs.aligned)
     .map{ meta, sample_bam, sample_bam_index, snp_bam, snp_bam_index ->
         return [[id: meta.pool], sample_bam, sample_bam_index, snp_bam, snp_bam_index]
