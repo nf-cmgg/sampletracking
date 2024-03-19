@@ -33,7 +33,7 @@ workflow NFCMGG_SAMPLETRACKING {
     take:
     samplesheet // channel: samplesheet read in from --input
     bwa_index
-    fasta
+    fasta_fai
     haplotype_map
 
     main:
@@ -44,7 +44,7 @@ workflow NFCMGG_SAMPLETRACKING {
     SAMPLETRACKING (
         samplesheet,
         bwa_index,
-        fasta,
+        fasta_fai,
         haplotype_map
     )
 
@@ -86,7 +86,8 @@ workflow {
         ]),
         Channel.value(
             [[id:"genome_fasta"],
-            file(params.fasta, checkIfExists: true)
+            file(params.fasta, checkIfExists: true),
+            file(params.fai, checkIfExists: true),
         ]),
         Channel.value(
             [[id:"haplotype_map"],

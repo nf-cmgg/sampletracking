@@ -23,7 +23,7 @@ workflow SAMPLETRACKING {
     take:
     ch_samplesheet      // channel: samplesheet read in from --input
     ch_bwa_index        // channel: [meta, /path/to/bwa_index]
-    ch_fasta            // channel: [meta,/path/to/fasta]
+    ch_fasta_fai        // channel: [meta,/path/to/fasta, /path/to/fasta.fai]
     ch_haplotype_map    // channel: [meta, /path/to/haplotype_map]
 
     main:
@@ -49,7 +49,7 @@ workflow SAMPLETRACKING {
     BWA_MEM(
         ch_to_align.fastq,
         ch_bwa_index,
-        ch_fasta,
+        ch_fasta_fai.map{meta, fasta, fai -> [meta, fasta]},
         true
     )
     ch_versions = ch_versions.mix(BWA_MEM.out.versions.first())
@@ -70,7 +70,7 @@ workflow SAMPLETRACKING {
 
     PICARD_CROSSCHECKFINGERPRINTS(
         ch_to_fingerprint,
-        ch_fasta
+        ch_fasta_fai
     )
     ch_versions = ch_versions.mix(PICARD_CROSSCHECKFINGERPRINTS.out.versions.first())
     ch_multiqc_files = ch_multiqc_files.mix(PICARD_CROSSCHECKFINGERPRINTS.out.crosscheck_metrics.map{it[1]})

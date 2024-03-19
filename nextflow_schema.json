@@ -60,6 +60,16 @@
                     "help_text": "This parameter is *mandatory*.",
                     "fa_icon": "far fa-file-code"
                 },
+                "fai": {
+                    "type": "string",
+                    "format": "file-path",
+                    "exists": true,
+                    "mimetype": "text/plain",
+                    "pattern": "^\\S+\\.fai$",
+                    "description": "Path to FASTA index file.",
+                    "help_text": "This parameter is *mandatory*.",
+                    "fa_icon": "far fa-file-code"
+                },
                 "bwa_index": {
                     "type": "string",
                     "format": "directory-path",
