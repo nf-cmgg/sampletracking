@@ -8,8 +8,8 @@ Changes in module 'nf-core/picard/crosscheckfingerprints'
 -    tuple val(meta), path(input1)
 -    path input2
 -    path haplotype_map
-+    tuple val(meta),  path(input1), path(input2), path(haplotype_map)
-+    tuple val(meta2), path(fasta)
++    tuple val(meta),  path(input1), path(input1_index), path(input2), path(input2_index), path(haplotype_map)
++    tuple val(meta2), path(fasta), path(fai)
  
      output:
      tuple val(meta), path("*.crosscheck_metrics.txt"), emit: crosscheck_metrics
