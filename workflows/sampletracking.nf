@@ -66,7 +66,14 @@ workflow SAMPLETRACKING {
     .map{ meta, sample_bam, sample_bam_index, snp_bam, snp_bam_index, haplotype_map ->
         return [meta, sample_bam.flatten(), sample_bam_index.flatten(), snp_bam.flatten(), snp_bam_index.flatten(), haplotype_map]}
     // workaround for bug in MQC crosscheckfingerprints module
-    .collect()
+    // https://github.com/MultiQC/MultiQC/issues/2449
+    .map{ meta, sample_bam, sample_bam_index, snp_bam, snp_bam_index, haplotype_map ->
+        return [['pool':'crosscheckfingerprints'], sample_bam, sample_bam_index, snp_bam, snp_bam_index, haplotype_map]
+    }
+    .groupTuple()
+    .map{ meta, sample_bam, sample_bam_index, snp_bam, snp_bam_index, haplotype_map ->
+        return [meta, sample_bam.flatten(), sample_bam_index.flatten(), snp_bam.flatten(), snp_bam_index.flatten(), haplotype_map]}
+    // end workaround
     .dump(tag: "Samples to fingerprint", pretty: true)
     .set{ch_to_fingerprint}
 
