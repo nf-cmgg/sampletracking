@@ -52,7 +52,7 @@ workflow SAMPLETRACKING {
         ch_fasta_fai.map{meta, fasta, fai -> [meta, fasta]},
         true
     )
-    ch_versions = ch_versions.mix(BWA_MEM.out.versions.first())
+    ch_versions = ch_versions.mix(BWA_MEM.out.versions)
 
     ch_to_align.bam
     .join(BWA_MEM.out.cram, failOnMismatch:true, failOnDuplicate:true)
@@ -65,6 +65,8 @@ workflow SAMPLETRACKING {
     .merge(ch_haplotype_map.map{it[1]})
     .map{ meta, sample_bam, sample_bam_index, snp_bam, snp_bam_index, haplotype_map ->
         return [meta, sample_bam.flatten(), sample_bam_index.flatten(), snp_bam.flatten(), snp_bam_index.flatten(), haplotype_map]}
+    // workaround for bug in MQC crosscheckfingerprints module
+    .collect()
     .dump(tag: "Samples to fingerprint", pretty: true)
     .set{ch_to_fingerprint}
 
@@ -72,7 +74,7 @@ workflow SAMPLETRACKING {
         ch_to_fingerprint,
         ch_fasta_fai
     )
-    ch_versions = ch_versions.mix(PICARD_CROSSCHECKFINGERPRINTS.out.versions.first())
+    ch_versions = ch_versions.mix(PICARD_CROSSCHECKFINGERPRINTS.out.versions)
     ch_multiqc_files = ch_multiqc_files.mix(PICARD_CROSSCHECKFINGERPRINTS.out.crosscheck_metrics.map{it[1]})
 
     //
