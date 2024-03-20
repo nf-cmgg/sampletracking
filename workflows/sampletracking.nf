@@ -59,21 +59,16 @@ workflow SAMPLETRACKING {
     .join(BWA_MEM.out.crai, failOnMismatch:true, failOnDuplicate:true)
     .mix(ch_inputs.aligned)
     .map{ meta, sample_bam, sample_bam_index, snp_bam, snp_bam_index ->
-        return [[id: meta.pool], sample_bam, sample_bam_index, snp_bam, snp_bam_index]
+        // workaround for bug in MQC crosscheckfingerprints module
+        // https://github.com/MultiQC/MultiQC/issues/2449
+        return [[id: "crosscheckfingerprints"], sample_bam, sample_bam_index, snp_bam, snp_bam_index]
+        //return [[id: meta.pool], sample_bam, sample_bam_index, snp_bam, snp_bam_index]
     }
     .groupTuple()
     .merge(ch_haplotype_map.map{it[1]})
     .map{ meta, sample_bam, sample_bam_index, snp_bam, snp_bam_index, haplotype_map ->
-        return [meta, sample_bam.flatten(), sample_bam_index.flatten(), snp_bam.flatten(), snp_bam_index.flatten(), haplotype_map]}
-    // workaround for bug in MQC crosscheckfingerprints module
-    // https://github.com/MultiQC/MultiQC/issues/2449
-    .map{ meta, sample_bam, sample_bam_index, snp_bam, snp_bam_index, haplotype_map ->
-        return [['pool':'crosscheckfingerprints'], sample_bam, sample_bam_index, snp_bam, snp_bam_index, haplotype_map]
+        return [meta, sample_bam.flatten(), sample_bam_index.flatten(), snp_bam.flatten(), snp_bam_index.flatten(), haplotype_map]
     }
-    .groupTuple()
-    .map{ meta, sample_bam, sample_bam_index, snp_bam, snp_bam_index, haplotype_map ->
-        return [meta, sample_bam.flatten(), sample_bam_index.flatten(), snp_bam.flatten(), snp_bam_index.flatten(), haplotype_map]}
-    // end workaround
     .dump(tag: "Samples to fingerprint", pretty: true)
     .set{ch_to_fingerprint}
 
