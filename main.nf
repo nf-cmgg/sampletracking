@@ -19,19 +19,6 @@ include { SAMPLETRACKING  } from './workflows/sampletracking'
 include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_sampletracking_pipeline'
 include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_sampletracking_pipeline'
 
-include { getGenomeAttribute      } from './subworkflows/local/utils_nfcore_sampletracking_pipeline'
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    GENOME PARAMETER VALUES
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-// TODO nf-core: Remove this line if you don't need a FASTA file
-//   This is an example of how to use getGenomeAttribute() to fetch parameters
-//   from igenomes.config using `--genome`
-params.fasta = getGenomeAttribute('fasta')
-
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     NAMED WORKFLOWS FOR PIPELINE
@@ -45,6 +32,9 @@ workflow NFCMGG_SAMPLETRACKING {
 
     take:
     samplesheet // channel: samplesheet read in from --input
+    bwa_index
+    fasta_fai
+    haplotype_map
 
     main:
 
@@ -52,7 +42,10 @@ workflow NFCMGG_SAMPLETRACKING {
     // WORKFLOW: Run pipeline
     //
     SAMPLETRACKING (
-        samplesheet
+        samplesheet,
+        bwa_index,
+        fasta_fai,
+        haplotype_map
     )
 
     emit:
@@ -86,7 +79,20 @@ workflow {
     // WORKFLOW: Run main workflow
     //
     NFCMGG_SAMPLETRACKING (
-        PIPELINE_INITIALISATION.out.samplesheet
+        PIPELINE_INITIALISATION.out.samplesheet,
+        Channel.value([
+            [id: "bwa"],
+            file(params.bwa_index, checkIfExists: true)
+        ]),
+        Channel.value(
+            [[id:"genome_fasta"],
+            file(params.fasta, checkIfExists: true),
+            file(params.fai, checkIfExists: true),
+        ]),
+        Channel.value(
+            [[id:"haplotype_map"],
+            file(params.haplotype_map, checkIfExists: true)
+        ])
     )
 
     //

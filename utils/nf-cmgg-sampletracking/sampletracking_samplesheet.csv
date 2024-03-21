@@ -1,0 +1,2 @@
+sample,pool,sample_bam,sample_bam_index,snp_fastq_1,snp_fastq_2,snp_bam,snp_bam_index
+D2217639,WES_H112,test-data/sample_data/D2217639.cram,test-data/sample_data/D2217639.cram.crai,test-data/snp_data/snp_D2217639_S201_R1_001.fastq.gz,test-data/snp_data/snp_D2217639_S201_R2_001.fastq.gz,,
