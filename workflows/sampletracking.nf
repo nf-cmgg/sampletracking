@@ -59,10 +59,7 @@ workflow SAMPLETRACKING {
     .join(BWA_MEM.out.crai, failOnMismatch:true, failOnDuplicate:true)
     .mix(ch_inputs.aligned)
     .map{ meta, sample_bam, sample_bam_index, snp_bam, snp_bam_index ->
-        // workaround for bug in MQC crosscheckfingerprints module
-        // https://github.com/MultiQC/MultiQC/issues/2449
-        return [[id: "crosscheckfingerprints"], sample_bam, sample_bam_index, snp_bam, snp_bam_index]
-        //return [[id: meta.pool], sample_bam, sample_bam_index, snp_bam, snp_bam_index]
+        return [[id: meta.pool], sample_bam, sample_bam_index, snp_bam, snp_bam_index]
     }
     .groupTuple()
     .merge(ch_haplotype_map.map{it[1]})
@@ -101,7 +98,7 @@ workflow SAMPLETRACKING {
     ch_multiqc_files                      = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml', sort: false))
 
     MULTIQC (
-        ch_multiqc_files.collect(),
+        PICARD_CROSSCHECKFINGERPRINTS.out.crosscheck_metrics,
         ch_multiqc_config.toList(),
         ch_multiqc_custom_config.toList(),
         ch_multiqc_logo.toList()
