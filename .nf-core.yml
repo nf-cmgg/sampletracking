@@ -12,6 +12,7 @@ lint:
     - assets/nf-core-sampletracking_logo_light.png
     - docs/images/nf-core-sampletracking_logo_light.png
     - docs/images/nf-core-sampletracking_logo_dark.png
+    - .github/workflows/linting.yml
   multiqc_config:
     - report_comment
   nextflow_config:
