@@ -71,7 +71,7 @@ nextflow_workflow {
             assert workflow.success
             assert snapshot(
                 file(workflow.out.multiqc_report[0][0]).name,
-                file(workflow.out.crosscheck_metrics[0][0]).name,
+                file(workflow.out.crosscheck_metrics[0]).name,
                 workflow.out.versions
             ).match()
         }
