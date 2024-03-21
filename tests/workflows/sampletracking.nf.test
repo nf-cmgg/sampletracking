@@ -2,6 +2,10 @@ nextflow_workflow {
 
     name "Test Workflow SAMPLETRACKING"
     script "workflows/sampletracking.nf"
+
+    tag "workflows"
+    tag "workflows/sampletracking"
+
     workflow "SAMPLETRACKING"
 
     test("Should run without failures") {
@@ -65,7 +69,11 @@ nextflow_workflow {
 
         then {
             assert workflow.success
-            assert snapshot(workflow.out).match()
+            assert snapshot(
+                file(workflow.out.multiqc_report[0][0]).name,
+                file(workflow.out.crosscheck_metrics[0][0]).name,
+                workflow.out.versions
+            ).match()
         }
 
     }

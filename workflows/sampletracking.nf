@@ -108,8 +108,9 @@ workflow SAMPLETRACKING {
     )
 
     emit:
-    multiqc_report = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
-    versions       = ch_versions                 // channel: [ path(versions.yml) ]
+    multiqc_report      = MULTIQC.out.report.toList()                                       // channel: /path/to/multiqc_report.html
+    crosscheck_metrics  = PICARD_CROSSCHECKFINGERPRINTS.out.crosscheck_metrics.map{it[1]}   // channel: [ path(crosscheck_metrics.txt) ]
+    versions            = ch_versions                                                       // channel: [ path(versions.yml) ]
 }
 
 /*
