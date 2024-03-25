@@ -32,6 +32,7 @@ jobs:
           - "latest-everything"
         tags:
           - "workflows"
+          - "pipeline"
         profile:
           - "test,docker"
     steps:
