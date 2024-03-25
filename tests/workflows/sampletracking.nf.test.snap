@@ -1,7 +1,7 @@
 {
     "Should run without failures": {
         "content": [
-            "multiqc_report.html",
+            "pool1_multiqc_report.html",
             "pool1.crosscheck_metrics.txt",
             [
                 "versions.yml:md5,0e5cf92b1d741f4f366aaf67f2740640",
@@ -12,6 +12,6 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-03-21T21:14:08.389822"
+        "timestamp": "2024-03-25T08:37:51.702499"
     }
 }
