@@ -3,11 +3,11 @@ process MULTIQC {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/multiqc:1.27--pyhdfd78af_0' :
-        'biocontainers/multiqc:1.27--pyhdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/multiqc:1.26--pyhdfd78af_0' :
+        'biocontainers/multiqc:1.26--pyhdfd78af_0' }"
 
     input:
-    path  multiqc_files, stageAs: "?/*"
+    tuple val(meta), path(multiqc_files)
     path(multiqc_config)
     path(extra_multiqc_config)
     path(multiqc_logo)
@@ -50,10 +50,15 @@ process MULTIQC {
     """
 
     stub:
+    def args = task.ext.args ?: ''
+    def prefix = ''
+    if(args.contains("--title")) {
+        prefix = args.split("--title ")[-1].split(" ")[0] + "_"
+    }
     """
-    mkdir multiqc_data
-    mkdir multiqc_plots
-    touch multiqc_report.html
+    mkdir ${prefix}multiqc_data
+    mkdir ${prefix}multiqc_plots
+    touch ${prefix}multiqc_report.html
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

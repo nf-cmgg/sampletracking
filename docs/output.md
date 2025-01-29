@@ -12,22 +12,36 @@ The directories listed below will be created in the results directory after the 
 
 The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
 
-- [FastQC](#fastqc) - Raw read QC
+- [BWA MEM](#bwa-mem) - Align SNP fastqs using BWA MEM
+- [Picard Crosscheckfingerprints](#picard-crosscheckfingerprints) - Check SNP fingerprints using Picard Crosscheckfingerprints
 - [MultiQC](#multiqc) - Aggregate report describing results and QC from the whole pipeline
 - [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
 
-### FastQC
+### BWA MEM
 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `fastqc/`
-  - `*_fastqc.html`: FastQC report containing quality metrics.
-  - `*_fastqc.zip`: Zip archive containing the FastQC report, tab-delimited data file and plot images.
+- `bwa/`
+  - `*.cram`: SNP CRAM file aligned from the SNP fastq file
+  - `*.crai`: Crai index of the SNP CRAM file
+  - `*.csi`: Csi index of the SNP CRAM file
 
 </details>
 
-[FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) gives general quality metrics about your sequenced reads. It provides information about the quality score distribution across your reads, per base sequence content (%A/T/G/C), adapter contamination and overrepresented sequences. For further reading and documentation see the [FastQC help pages](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/).
+[BWA](https://github.com/lh3/bwa) is a software package for mapping DNA sequences against a large reference genome, such as the human genome. It consists of three algorithms: BWA-backtrack, BWA-SW and BWA-MEM. The first algorithm is designed for Illumina sequence reads up to 100bp, while the rest two for longer sequences ranged from 70bp to a few megabases. BWA-MEM and BWA-SW share similar features such as the support of long reads and chimeric alignment, but BWA-MEM, which is the latest, is generally recommended as it is faster and more accurate. BWA-MEM also has better performance than BWA-backtrack for 70-100bp Illumina reads.
+
+### Picard Crosscheckfingerprints
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `picard/`
+  - `*.crosscheck_metrics.txt`: The metrics for the SNP crosschecking of the pool
+
+</details>
+
+[Picard Crosscheckfingerprints](https://broadinstitute.github.io/picard/command-line-overview.html#CrosscheckFingerprints) checks if all fingerprints within a set of files appear to come from the same individual. The fingerprints are calculated initially at the readgroup level (if present) but can be "rolled-up" by library, sample or file, to increase power and provide results at the desired resolution. Regular output is in a "Moltenized" format, one row per comparison. In this format the output will include the LOD score and also tumor-aware LOD score which can help assess identity even in the presence of a severe LOH sample with high purity. A matrix output is also available to facilitate visual inspection of crosscheck results. A separate CLP, ClusterCrosscheckMetrics, can cluster the results as a connected graph according to LOD greater than a threshold.
 
 ### MultiQC
 
@@ -35,9 +49,12 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 <summary>Output files</summary>
 
 - `multiqc/`
-  - `multiqc_report.html`: a standalone HTML file that can be viewed in your web browser.
+  - `multiqc_report.html`: a standalone HTML file that can be viewed in your web browser containing pipeline information.
   - `multiqc_data/`: directory containing parsed statistics from the different tools used in the pipeline.
   - `multiqc_plots/`: directory containing static images from the report in various formats.
+  - `*_multiqc_report.html`: an HTML file containing the sampletracking info for the specified pool.
+  - `*_multiqc_data/`: directory containing parsed statistics from the different tools per pool.
+  - `*_multiqc_plots/`: directory containint static images from the report per pool.
 
 </details>
 

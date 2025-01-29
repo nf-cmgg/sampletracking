@@ -11,23 +11,62 @@
                 "type": "string",
                 "pattern": "^\\S+$",
                 "errorMessage": "Sample name must be provided and cannot contain spaces",
-                "meta": ["id"]
+                "meta": ["id", "samplename"]
             },
-            "fastq_1": {
+            "pool": {
+                "type": "string",
+                "pattern": "^\\S+$",
+                "default": "sampletracking_pool",
+                "meta": ["pool"],
+                "errorMessage": "Pool name must be provided and cannot contain spaces"
+            },
+            "sample_bam": {
+                "type": "string",
+                "format": "file-path",
+                "exists": true,
+                "errorMessage": "Sample BAM/CRAM file must be provided, cannot contain spaces and must have extension '.bam' or '.cram'"
+            },
+            "sample_bam_index": {
+                "type": "string",
+                "format": "file-path",
+                "exists": true,
+                "errorMessage": "Sample BAM/CRAM index file must be provided, cannot contain spaces and must have extension '.bai' or '.csi'"
+            },
+            "snp_fastq_1": {
                 "type": "string",
                 "format": "file-path",
                 "exists": true,
                 "pattern": "^\\S+\\.f(ast)?q\\.gz$",
                 "errorMessage": "FastQ file for reads 1 must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
             },
-            "fastq_2": {
+            "snp_fastq_2": {
                 "type": "string",
                 "format": "file-path",
                 "exists": true,
                 "pattern": "^\\S+\\.f(ast)?q\\.gz$",
                 "errorMessage": "FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
+            },
+            "snp_bam": {
+                "type": "string",
+                "format": "file-path",
+                "exists": true,
+                "errorMessage": "snp BAM/CRAM file must be provided, cannot contain spaces and must have extension '.bam' or '.cram'"
+            },
+            "snp_bam_index": {
+                "type": "string",
+                "format": "file-path",
+                "exists": true,
+                "errorMessage": "snp BAM/CRAM index file must be provided, cannot contain spaces and must have extension '.bai' or '.csi'"
+            },
+            "sex": {
+                "type": "string",
+                "enum": ["M", "F", "U"],
+                "default": "U",
+                "meta": "sex",
+                "errorMessage": "The value should be one of 'M' (male), 'F' (female) or 'U' (unknown)"
             }
         },
-        "required": ["sample", "fastq_1"]
+        "uniqueEntries": ["sample"],
+        "required": ["sample", "sample_bam"]
     }
 }

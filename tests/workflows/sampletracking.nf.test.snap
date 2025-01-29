@@ -1,0 +1,180 @@
+{
+    "Should run without failures - skip crosscheck fingerprints": {
+        "content": [
+            {
+                "0": [
+                    "multiqc_report.html:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "1": [
+                    "pool1_multiqc_report.html:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "2": [
+                    
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "sample1",
+                            "pool": "pool1",
+                            "pool_count": 2
+                        },
+                        "sample1.xy_xy.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample1.xy_sry.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample1.xy_hetx.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        {
+                            "id": "sample2",
+                            "pool": "pool1",
+                            "pool_count": 2
+                        },
+                        "sample2.xy_xy.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample2.xy_sry.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample2.xy_hetx.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "4": [
+                    "versions.yml:md5,dac5a146f64564be62294d29fe21cb67"
+                ],
+                "crosscheck_metrics": [
+                    
+                ],
+                "multiqc_pools": [
+                    "pool1_multiqc_report.html:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "multiqc_report": [
+                    "multiqc_report.html:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "sex_prediction": [
+                    [
+                        {
+                            "id": "sample1",
+                            "pool": "pool1",
+                            "pool_count": 2
+                        },
+                        "sample1.xy_xy.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample1.xy_sry.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample1.xy_hetx.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        {
+                            "id": "sample2",
+                            "pool": "pool1",
+                            "pool_count": 2
+                        },
+                        "sample2.xy_xy.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample2.xy_sry.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample2.xy_hetx.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,dac5a146f64564be62294d29fe21cb67"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.3"
+        },
+        "timestamp": "2025-01-21T11:08:41.920631027"
+    },
+    "Should run without failures": {
+        "content": [
+            {
+                "0": [
+                    "multiqc_report.html:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "1": [
+                    "pool1_multiqc_report.html:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "2": [
+                    [
+                        {
+                            "groupSize": 2,
+                            "groupTarget": {
+                                "id": "pool1"
+                            }
+                        },
+                        "pool1.crosscheck_metrics.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "sample1",
+                            "pool": "pool1",
+                            "pool_count": 2
+                        },
+                        "sample1.xy_xy.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample1.xy_sry.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample1.xy_hetx.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        {
+                            "id": "sample2",
+                            "pool": "pool1",
+                            "pool_count": 2
+                        },
+                        "sample2.xy_xy.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample2.xy_sry.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample2.xy_hetx.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "4": [
+                    "versions.yml:md5,7442362a1e457dad7ce796c703bd6380",
+                    "versions.yml:md5,ab16dda2f91f60705355cab06b0145bf",
+                    "versions.yml:md5,dac5a146f64564be62294d29fe21cb67"
+                ],
+                "crosscheck_metrics": [
+                    [
+                        {
+                            "groupSize": 2,
+                            "groupTarget": {
+                                "id": "pool1"
+                            }
+                        },
+                        "pool1.crosscheck_metrics.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "multiqc_pools": [
+                    "pool1_multiqc_report.html:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "multiqc_report": [
+                    "multiqc_report.html:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "sex_prediction": [
+                    [
+                        {
+                            "id": "sample1",
+                            "pool": "pool1",
+                            "pool_count": 2
+                        },
+                        "sample1.xy_xy.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample1.xy_sry.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample1.xy_hetx.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        {
+                            "id": "sample2",
+                            "pool": "pool1",
+                            "pool_count": 2
+                        },
+                        "sample2.xy_xy.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample2.xy_sry.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample2.xy_hetx.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,7442362a1e457dad7ce796c703bd6380",
+                    "versions.yml:md5,ab16dda2f91f60705355cab06b0145bf",
+                    "versions.yml:md5,dac5a146f64564be62294d29fe21cb67"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.3"
+        },
+        "timestamp": "2025-01-21T11:08:18.733645178"
+    }
+}

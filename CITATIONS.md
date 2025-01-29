@@ -10,13 +10,19 @@
 
 ## Pipeline tools
 
-- [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
+- [BWA-MEM](https://arxiv.org/abs/1303.3997v2)
 
-> Andrews, S. (2010). FastQC: A Quality Control Tool for High Throughput Sequence Data [Online].
+  > Li H: Aligning sequence reads, clone sequences and assembly contigs with BWA-MEM. arXiv 2013. doi: 10.48550/arXiv.1303.3997
+
+- [Picard](https://broadinstitute.github.io/picard/)
 
 - [MultiQC](https://pubmed.ncbi.nlm.nih.gov/27312411/)
 
-> Ewels P, Magnusson M, Lundin S, Käller M. MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics. 2016 Oct 1;32(19):3047-8. doi: 10.1093/bioinformatics/btw354. Epub 2016 Jun 16. PubMed PMID: 27312411; PubMed Central PMCID: PMC5039924.
+  > Ewels P, Magnusson M, Lundin S, Käller M. MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics. 2016 Oct 1;32(19):3047-8. doi: 10.1093/bioinformatics/btw354. Epub 2016 Jun 16. PubMed PMID: 27312411; PubMed Central PMCID: PMC5039924.
+
+- [ngs-bits](https://doi.org/10.5281/zenodo.14216792)
+
+  > Marc Sturm, Alexandr Chernov, Leon Schütz, Axel Gschwind, Alexander Ott, c-schroeder, Florian Lenz, Jakob Admard, Lennard Berger, Tim Stohn, Marvin Döbel, KilianIlius, Jan Schleicher, Institute of Medical Genetics and Applied Genomics, Alexander Seitz, Benedikt Schnur, & Tobias Meissner. (2024). imgag/ngs-bits: 2024_11 (2024_11). Zenodo.
 
 ## Software packaging/containerisation tools
 

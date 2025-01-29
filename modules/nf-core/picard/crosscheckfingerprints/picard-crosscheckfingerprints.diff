@@ -1,0 +1,21 @@
+Changes in module 'nf-core/picard/crosscheckfingerprints'
+Changes in 'picard/crosscheckfingerprints/main.nf':
+--- modules/nf-core/picard/crosscheckfingerprints/main.nf
++++ modules/nf-core/picard/crosscheckfingerprints/main.nf
+@@ -9,7 +9,7 @@
+ 
+     input:
+     tuple val(meta),  path(input1), path(input1_index), path(input2), path(input2_index), path(haplotype_map)
+-    tuple val(meta2), path(fasta)
++    tuple val(meta2), path(fasta), path(fasta_index)
+ 
+     output:
+     tuple val(meta), path("*.crosscheck_metrics.txt"), emit: crosscheck_metrics
+
+'modules/nf-core/picard/crosscheckfingerprints/environment.yml' is unchanged
+'modules/nf-core/picard/crosscheckfingerprints/meta.yml' is unchanged
+'modules/nf-core/picard/crosscheckfingerprints/tests/tags.yml' is unchanged
+'modules/nf-core/picard/crosscheckfingerprints/tests/main.nf.test' is unchanged
+'modules/nf-core/picard/crosscheckfingerprints/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/picard/crosscheckfingerprints/tests/nextflow.config' is unchanged
+************************************************************

@@ -17,8 +17,7 @@
                     "format": "file-path",
                     "exists": true,
                     "schema": "assets/schema_input.json",
-                    "mimetype": "text/csv",
-                    "pattern": "^\\S+\\.csv$",
+                    "pattern": "^\\S+\\.(csv|tsv|yml|yaml|json)$",
                     "description": "Path to comma-separated file containing information about the samples in the experiment.",
                     "help_text": "You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row.",
                     "fa_icon": "fas fa-file-csv"
@@ -43,18 +42,53 @@
                 }
             }
         },
+        "sex_prediction_options": {
+            "title": "Sex prediction options",
+            "type": "object",
+            "fa_icon": "fas fa-terminal",
+            "description": "Options to customize the sex prediction",
+            "properties": {
+                "max_yx_female": {
+                    "type": "number",
+                    "minimum": 0,
+                    "description": "The maximum Y/X reads ratio for a sample to be considered female",
+                    "default": 0.06
+                },
+                "min_yx_male": {
+                    "type": "number",
+                    "minimum": 0,
+                    "description": "The minimum Y/X reads ratio for a sample to be considered male",
+                    "default": 0.09
+                },
+                "min_sry_cov_male": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "description": "The minimum coverage of the SRY gene (chrY) for a sample to be considered male",
+                    "default": 20
+                },
+                "min_hetx_female": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1,
+                    "description": "The minimum heterozygous SNP fraction for a sample to be considered female",
+                    "default": 0.25
+                },
+                "max_hetx_male": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1,
+                    "description": "The maximum heterozygous SNP fraction for a sample to be considered male",
+                    "default": 0.05
+                }
+            }
+        },
         "reference_genome_options": {
             "title": "Reference genome options",
             "type": "object",
             "fa_icon": "fas fa-dna",
             "description": "Reference genome related files and options required for the workflow.",
+            "required": ["fasta", "bwa_index", "haplotype_map"],
             "properties": {
-                "genome": {
-                    "type": "string",
-                    "description": "Name of iGenomes reference.",
-                    "fa_icon": "fas fa-book",
-                    "help_text": "If using a reference genome configured in the pipeline using iGenomes, use this parameter to give the ID for the reference. This is then used to build the full paths for all required reference genome files e.g. `--genome GRCh38`. \n\nSee the [nf-core website docs](https://nf-co.re/usage/reference_genomes) for more details."
-                },
                 "fasta": {
                     "type": "string",
                     "format": "file-path",
@@ -62,23 +96,34 @@
                     "mimetype": "text/plain",
                     "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
                     "description": "Path to FASTA genome file.",
-                    "help_text": "This parameter is *mandatory* if `--genome` is not specified. If you don't have a BWA index available this will be generated for you automatically. Combine with `--save_reference` to save BWA index for future runs.",
+                    "help_text": "This parameter is *mandatory*.",
                     "fa_icon": "far fa-file-code"
                 },
-                "igenomes_ignore": {
-                    "type": "boolean",
-                    "description": "Do not load the iGenomes reference config.",
-                    "fa_icon": "fas fa-ban",
-                    "hidden": true,
-                    "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`."
+                "fai": {
+                    "type": "string",
+                    "format": "file-path",
+                    "exists": true,
+                    "mimetype": "text/plain",
+                    "pattern": "^\\S+\\.fai$",
+                    "description": "Path to FASTA index file.",
+                    "help_text": "This parameter is *mandatory*.",
+                    "fa_icon": "far fa-file-code"
                 },
-                "igenomes_base": {
+                "bwa_index": {
                     "type": "string",
                     "format": "directory-path",
-                    "description": "The base path to the igenomes reference files",
-                    "fa_icon": "fas fa-ban",
-                    "hidden": true,
-                    "default": "s3://ngi-igenomes/igenomes/"
+                    "exists": true,
+                    "description": "Path to bwa index directory.",
+                    "help_text": "This parameter is *mandatory*.",
+                    "fa_icon": "far fa-file-code"
+                },
+                "haplotype_map": {
+                    "type": "string",
+                    "format": "file-path",
+                    "exists": true,
+                    "description": "Path to haplotype map file.",
+                    "help_text": "This parameter is *mandatory*.",
+                    "errorMessage": "far fa-file-code"
                 }
             }
         },
@@ -137,6 +182,12 @@
             "description": "Less common options for the pipeline, typically set in a config file.",
             "help_text": "These options are common to all nf-core pipelines and allow you to customise some of the core preferences for how the pipeline runs.\n\nTypically these options would be set in a Nextflow config file loaded for all pipeline runs, such as `~/.nextflow/config`.",
             "properties": {
+                "help": {
+                    "type": "boolean",
+                    "description": "Display help text.",
+                    "fa_icon": "fas fa-question-circle",
+                    "hidden": true
+                },
                 "version": {
                     "type": "boolean",
                     "description": "Display version and exit.",
@@ -211,19 +262,6 @@
                     "default": true,
                     "fa_icon": "fas fa-check-square",
                     "hidden": true
-                },
-                "pipelines_testdata_base_path": {
-                    "type": "string",
-                    "fa_icon": "far fa-check-circle",
-                    "description": "Base URL or local path to location of pipeline test dataset files",
-                    "default": "https://raw.githubusercontent.com/nf-core/test-datasets/",
-                    "hidden": true
-                },
-                "trace_report_suffix": {
-                    "type": "string",
-                    "fa_icon": "far calendar",
-                    "description": "Suffix to add to the trace report filename. Default is the date and time in the format yyyy-MM-dd_HH-mm-ss.",
-                    "hidden": true
                 }
             }
         }
@@ -231,6 +269,9 @@
     "allOf": [
         {
             "$ref": "#/$defs/input_output_options"
+        },
+        {
+            "$ref": "#/$defs/sex_prediction_options"
         },
         {
             "$ref": "#/$defs/reference_genome_options"
