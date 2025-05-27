@@ -44,3 +44,5 @@ custom_plot_config:
     defaultsort:
     - column: "Best match LOD"
       direction: asc
+
+template: "cmgg"
