@@ -14,6 +14,8 @@ include { samplesheetToList             } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc          } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML        } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText        } from '../subworkflows/local/utils_nfcore_sampletracking_pipeline'
+include { SAMTOOLS_INDEX                } from '../modules/nf-core/samtools/index/main'
+
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -40,12 +42,34 @@ workflow SAMPLETRACKING {
     def ch_multiqc_files = Channel.empty()
     def ch_pool_multiqc_files = Channel.empty()
 
+    def ch_bams_with_index = ch_samplesheet.filter { meta, sample_bam, sample_bam_index, snp_fastq, snp_bam, snp_bam_index ->
+        sample_bam_index != null
+    }
+    def ch_bams_no_index = ch_samplesheet.filter { meta, sample_bam, sample_bam_index, snp_fastq, snp_bam, snp_bam_index ->
+        sample_bam_index == null
+    }
+
+    def ch_bams_to_index = ch_bams_no_index
+        .map { meta, sample_bam, _sample_bam_index, _snp_fastq, _snp_bam, _snp_bam_index -> [meta, sample_bam] }
+        .distinct()
+
+    SAMTOOLS_INDEX(ch_bams_to_index)
+
+    def ch_bams_no_index_fixed = ch_bams_no_index
+        .join(SAMTOOLS_INDEX.out.bai, by: 0)
+        .map { meta, sample_bam, _sample_bam_index, snp_fastq, snp_bam, snp_bam_index, sample_bam_index_new ->
+            [meta, sample_bam, sample_bam_index_new, snp_fastq, snp_bam, snp_bam_index]
+        }
+
+    def ch_samplesheet_fixed = ch_bams_with_index.mix(ch_bams_no_index_fixed)
+
+
     //
     // Crosscheck fingerprints
     //
 
     def ch_crosscheck_metrics_out = Channel.empty()
-    ch_samplesheet
+    ch_samplesheet_fixed
         .filter { meta, _sample_bam, _sample_bam_index, snp_fastq, snp_bam, _snp_bam_index ->
             if(!snp_bam && !snp_fastq) {
                 log.warn("No SNP BAM/CRAM/FASTQ files were detected for '${meta.id}'. Skipping the crosscheck fingerprints step for this sample.")
@@ -102,9 +126,9 @@ workflow SAMPLETRACKING {
     //
     // Determine sample sex
     //
-
+    /*
     def ch_sex_prediction_out = Channel.empty()
-    ch_samplesheet
+    ch_samplesheet_fixed
         .map { meta, sample_bam, sample_bam_index, _snp_fastq, _snp_bam, _snp_bam_index ->
             [ meta, sample_bam, sample_bam_index ]
         }
@@ -190,7 +214,8 @@ workflow SAMPLETRACKING {
         .set { ch_sex_prediction_configs }
 
     ch_pool_multiqc_files = ch_pool_multiqc_files.mix(ch_sex_prediction_configs)
-
+*/
+    ch_sex_prediction_out = Channel.empty()  // this is to try the code without the samplegender part
 
     //
     // Collate and save software versions
