@@ -126,7 +126,6 @@ workflow SAMPLETRACKING {
     //
     // Determine sample sex
     //
-    /*
     def ch_sex_prediction_out = Channel.empty()
     ch_samplesheet_fixed
         .map { meta, sample_bam, sample_bam_index, _snp_fastq, _snp_bam, _snp_bam_index ->
@@ -214,8 +213,6 @@ workflow SAMPLETRACKING {
         .set { ch_sex_prediction_configs }
 
     ch_pool_multiqc_files = ch_pool_multiqc_files.mix(ch_sex_prediction_configs)
-*/
-    ch_sex_prediction_out = Channel.empty()  // this is to try the code without the samplegender part
 
     //
     // Collate and save software versions
