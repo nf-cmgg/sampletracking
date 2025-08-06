@@ -1,4 +1,4 @@
-process SAMTOOLS_INDEX {
+process SAMTOOLS_INDEX_SNP {
     tag "$meta.id"
     label 'process_low'
 
@@ -11,8 +11,8 @@ process SAMTOOLS_INDEX {
     tuple val(meta), path(input)
 
     output:
-    tuple val(meta), path("${meta.id}_sample.bam"),     emit: bam
-    tuple val(meta), path("${meta.id}_sample.bam.bai"), emit: bai
+    tuple val(meta), path("${meta.id}_snp.bam"),     emit: bam
+    tuple val(meta), path("${meta.id}_snp.bam.bai"), emit: bai
     path "versions.yml", emit: versions
 
     when:
@@ -20,8 +20,8 @@ process SAMTOOLS_INDEX {
 
     script:
     """
-    cp "$input" "${meta.id}_sample.bam"
-    samtools index -@ ${task.cpus} "${meta.id}_sample.bam"
+    cp "$input" "${meta.id}_snp.bam"
+    samtools index -@ ${task.cpus} "${meta.id}_snp.bam"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

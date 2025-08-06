@@ -15,7 +15,7 @@ include { paramsSummaryMultiqc          } from '../subworkflows/nf-core/utils_nf
 include { softwareVersionsToYAML        } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText        } from '../subworkflows/local/utils_nfcore_sampletracking_pipeline'
 include { SAMTOOLS_INDEX                } from '../modules/nf-core/samtools/index'
-include { SAMTOOLS_INDEX as SAMTOOLS_INDEX_SNP_BAM } from '../modules/nf-core/samtools/index'
+include { SAMTOOLS_INDEX_SNP            } from '../modules/nf-core/samtools_snp/index'
 
 
 /*
@@ -43,47 +43,49 @@ workflow SAMPLETRACKING {
     def ch_multiqc_files = Channel.empty()
     def ch_pool_multiqc_files = Channel.empty()
 
-    def (ch_bams_with_index, ch_bams_no_index) = ch_samplesheet
-    .branch {
-        with_index: { meta, sample_bam, sample_bam_index, snp_fastq, snp_bam, snp_bam_index -> sample_bam_index != null }
-        no_index:  { meta, sample_bam, sample_bam_index, snp_fastq, snp_bam, snp_bam_index -> sample_bam_index == null }
+    def (ch_bams_with_index, ch_bams_no_index) = ch_samplesheet.branch { meta, sample_bam, sample_bam_index, snp_fastq, snp_bam, snp_bam_index ->
+        with_index: sample_bam_index != null
+        no_index  : sample_bam_index == null
     }
 
-    def ch_bams_to_index = ch_bams_no_index
-        .map { meta, sample_bam, _sample_bam_index, _snp_fastq, _snp_bam, _snp_bam_index -> [meta, sample_bam] }
+    def (ch_snp_bams_with_index, ch_snp_bams_no_index) = ch_samplesheet.branch { meta, sample_bam, sample_bam_index, snp_fastq, snp_bam, snp_bam_index ->
+        with_index: snp_bam_index != null
+        no_index  : snp_bam && snp_bam_index == null
+    }
+
+    def ch_bams_to_index = ch_bams_no_index.map { meta, sample_bam, _sample_bam_index, _snp_fastq, _snp_bam, _snp_bam_index ->
+        [meta, sample_bam]
+    }
+
+    def ch_snp_bams_to_index = ch_snp_bams_no_index.map { meta, _sample_bam, _sample_bam_index, _snp_fastq, snp_bam, _snp_bam_index ->
+        [meta, snp_bam]
+    }
 
     SAMTOOLS_INDEX(ch_bams_to_index)
+    SAMTOOLS_INDEX_SNP(ch_snp_bams_to_index)
+
     ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions.first())
+    ch_versions = ch_versions.mix(SAMTOOLS_INDEX_SNP.out.versions.first())
 
     def ch_bams_no_index_fixed = ch_bams_no_index
-        .join(SAMTOOLS_INDEX.out.bai, by: 0)
-        .map { meta, sample_bam, _sample_bam_index, snp_fastq, snp_bam, snp_bam_index, sample_bam_index_new ->
-            [meta, sample_bam, sample_bam_index_new, snp_fastq, snp_bam, snp_bam_index]
+        .combine(SAMTOOLS_INDEX.out.bam, by: 0)
+        .combine(SAMTOOLS_INDEX.out.bai, by: 0)
+        .map { meta, old_vals, new_bam, new_bai ->
+            def (_old_bam, _old_bai, snp_fastq, snp_bam, snp_bam_index) = old_vals
+            [meta, new_bam, new_bai, snp_fastq, snp_bam, snp_bam_index]
         }
 
-    def ch_samplesheet_fixed = ch_bams_with_index.mix(ch_bams_no_index_fixed)
-
-    def (ch_snp_bams_with_index, ch_snp_bams_no_index) = ch_samplesheet_fixed
-    .branch {
-        with_index: { meta, sample_bam, sample_bam_index, snp_fastq, snp_bam, snp_bam_index -> snp_bam_index != null }
-        no_index : { meta, sample_bam, sample_bam_index, snp_fastq, snp_bam, snp_bam_index -> snp_bam && snp_bam_index == null }
-    }
-
-    def ch_snp_bams_to_index = ch_snp_bams_no_index
-    .map { meta, _sample_bam, _sample_bam_index, _snp_fastq, snp_bam, _snp_bam_index -> [meta, snp_bam] }
-
-    SAMTOOLS_INDEX_SNP_BAM(ch_snp_bams_to_index)
-    def ch_snp_bam_index_versions = SAMTOOLS_INDEX_SNP_BAM.out.versions.first()
-    def ch_snp_bam_index_bai = SAMTOOLS_INDEX_SNP_BAM.out.bai
-    ch_versions = ch_versions.mix(ch_snp_bam_index_versions)
-
     def ch_snp_bams_no_index_fixed = ch_snp_bams_no_index
-    .join(ch_snp_bam_index_bai, by: 0)
-    .map { meta, sample_bam, sample_bam_index, snp_fastq, snp_bam, _snp_bam_index, snp_bam_index_new ->
-        [meta, sample_bam, sample_bam_index, snp_fastq, snp_bam, snp_bam_index_new]
-    }
+        .combine(SAMTOOLS_INDEX_SNP.out.bam, by: 0)
+        .combine(SAMTOOLS_INDEX_SNP.out.bai, by: 0)
+        .map { meta, old_vals, new_snp_bam, new_snp_bam_index ->
+            def (sample_bam, sample_bam_index, snp_fastq, _old_snp_bam, _old_snp_bam_index) = old_vals
+            [meta, sample_bam, sample_bam_index, snp_fastq, new_snp_bam, new_snp_bam_index]
+        }
 
-    ch_samplesheet_fixed = ch_snp_bams_with_index.mix(ch_snp_bams_no_index_fixed)
+    def ch_samplesheet_fixed_1 = ch_bams_with_index.mix(ch_bams_no_index_fixed)
+    def ch_samplesheet_fixed_2 = ch_snp_bams_with_index.mix(ch_snp_bams_no_index_fixed)
+    def ch_samplesheet_fixed   = ch_samplesheet_fixed_1.mix(ch_samplesheet_fixed_2)
 
 
     //
@@ -107,11 +109,14 @@ workflow SAMPLETRACKING {
         }
         .set{ ch_inputs }
 
-    ch_inputs.to_align.multiMap{ meta, sample_bam, sample_bam_index, snp_fastq ->
-        fastq:  [meta, snp_fastq]
-        bam:    [meta, sample_bam, sample_bam_index]
-    }
-    .set{ ch_to_align }
+    ch_inputs.to_align
+        .distinct { meta -> meta.id }  // ← esto elimina duplicados por ID
+        .multiMap { meta, sample_bam, sample_bam_index, snp_fastq ->
+            fastq: [meta, snp_fastq]
+            bam:   [meta, sample_bam, sample_bam_index]
+        }
+        .set { ch_to_align }
+
 
     BWA_MEM(
         ch_to_align.fastq,
@@ -129,12 +134,15 @@ workflow SAMPLETRACKING {
         return [groupKey([id: meta.pool], meta.pool_count), sample_bam, sample_bam_index, snp_bam, snp_bam_index]
     }
     .groupTuple()
-    .merge(ch_haplotype_map.map{ _meta, haplotype_map -> haplotype_map})
-    .map{ meta, sample_bam, sample_bam_index, snp_bam, snp_bam_index, haplotype_map ->
-        return [meta, sample_bam.flatten(), sample_bam_index.flatten(), snp_bam.flatten(), snp_bam_index.flatten(), haplotype_map]
+    .merge(ch_haplotype_map.map{ _meta, haplotype_map -> haplotype_map })
+    .map { meta, sample_bam, sample_bam_index, snp_bam, snp_bam_index, haplotype_map ->
+        def sbam  = sample_bam.flatten().first()
+        def sbai  = sample_bam_index.flatten().first()
+        def snpb  = snp_bam.flatten().first()
+        def snpi  = snp_bam_index.flatten().first()
+        return [meta, [sbam], [sbai], [snpb], [snpi], haplotype_map]
     }
-    .dump(tag: "Samples to fingerprint", pretty: true)
-    .set{ch_to_fingerprint}
+    .set { ch_to_fingerprint }
 
     PICARD_CROSSCHECKFINGERPRINTS(
         ch_to_fingerprint,
@@ -234,7 +242,6 @@ workflow SAMPLETRACKING {
         .set { ch_sex_prediction_configs }
 
     ch_pool_multiqc_files = ch_pool_multiqc_files.mix(ch_sex_prediction_configs)
-
 
     //
     // Collate and save software versions
