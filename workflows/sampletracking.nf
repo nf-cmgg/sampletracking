@@ -15,7 +15,7 @@ include { paramsSummaryMultiqc          } from '../subworkflows/nf-core/utils_nf
 include { softwareVersionsToYAML        } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText        } from '../subworkflows/local/utils_nfcore_sampletracking_pipeline'
 include { SAMTOOLS_INDEX                } from '../modules/nf-core/samtools/index'
-include { SAMTOOLS_INDEX as SAMTOOLS_INDEX_SNP_BAM } from '../modules/nf-core/samtools/index'
+include { SAMTOOLS_INDEX_SNP            } from '../modules/nf-core/samtools_snp/index'
 
 
 /*
@@ -130,11 +130,14 @@ workflow SAMPLETRACKING {
         }
         .set{ ch_inputs }
 
-    ch_inputs.to_align.multiMap{ meta, sample_bam, sample_bam_index, snp_fastq ->
-        fastq:  [meta, snp_fastq]
-        bam:    [meta, sample_bam, sample_bam_index]
-    }
-    .set{ ch_to_align }
+    ch_inputs.to_align
+        .distinct { meta -> meta.id }  // ← esto elimina duplicados por ID
+        .multiMap { meta, sample_bam, sample_bam_index, snp_fastq ->
+            fastq: [meta, snp_fastq]
+            bam:   [meta, sample_bam, sample_bam_index]
+        }
+        .set { ch_to_align }
+
 
     BWA_MEM(
         ch_to_align.fastq,
@@ -152,12 +155,15 @@ workflow SAMPLETRACKING {
         return [groupKey([id: meta.pool], meta.pool_count), sample_bam, sample_bam_index, snp_bam, snp_bam_index]
     }
     .groupTuple()
-    .merge(ch_haplotype_map.map{ _meta, haplotype_map -> haplotype_map})
-    .map{ meta, sample_bam, sample_bam_index, snp_bam, snp_bam_index, haplotype_map ->
-        return [meta, sample_bam.flatten(), sample_bam_index.flatten(), snp_bam.flatten(), snp_bam_index.flatten(), haplotype_map]
+    .merge(ch_haplotype_map.map{ _meta, haplotype_map -> haplotype_map })
+    .map { meta, sample_bam, sample_bam_index, snp_bam, snp_bam_index, haplotype_map ->
+        def sbam  = sample_bam.flatten().first()
+        def sbai  = sample_bam_index.flatten().first()
+        def snpb  = snp_bam.flatten().first()
+        def snpi  = snp_bam_index.flatten().first()
+        return [meta, [sbam], [sbai], [snpb], [snpi], haplotype_map]
     }
-    .dump(tag: "Samples to fingerprint", pretty: true)
-    .set{ch_to_fingerprint}
+    .set { ch_to_fingerprint }
 
     PICARD_CROSSCHECKFINGERPRINTS(
         ch_to_fingerprint,
