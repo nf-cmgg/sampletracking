@@ -15,7 +15,7 @@ include { paramsSummaryMultiqc          } from '../subworkflows/nf-core/utils_nf
 include { softwareVersionsToYAML        } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText        } from '../subworkflows/local/utils_nfcore_sampletracking_pipeline'
 include { SAMTOOLS_INDEX                } from '../modules/nf-core/samtools/index'
-include { SAMTOOLS_INDEX_SNP            } from '../modules/nf-core/samtools_snp/index'
+include { SAMTOOLS_INDEX as SAMTOOLS_INDEX_SNP_BAM } from '../modules/nf-core/samtools/index'
 
 
 /*
