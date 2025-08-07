@@ -43,47 +43,70 @@ workflow SAMPLETRACKING {
     def ch_multiqc_files = Channel.empty()
     def ch_pool_multiqc_files = Channel.empty()
 
-    def (ch_bams_with_index, ch_bams_no_index) = ch_samplesheet
-    .branch {
-        with_index: { meta, sample_bam, sample_bam_index, snp_fastq, snp_bam, snp_bam_index -> sample_bam_index != null }
-        no_index:  { meta, sample_bam, sample_bam_index, snp_fastq, snp_bam, snp_bam_index -> sample_bam_index == null }
+    def (ch_sample_bam_with_index, ch_sample_bam_no_index) = ch_samplesheet.branch {
+        meta, sample_bam, sample_bam_index, snp_fastq, snp_bam, snp_bam_index ->
+            with_index: sample_bam_index != null
+            no_index : sample_bam_index == null
     }
 
-    def ch_bams_to_index = ch_bams_no_index
-        .map { meta, sample_bam, _sample_bam_index, _snp_fastq, _snp_bam, _snp_bam_index -> [meta, sample_bam] }
+    def (ch_snp_bam_with_index, ch_snp_bam_no_index) = ch_samplesheet.branch {
+        meta, sample_bam, sample_bam_index, snp_fastq, snp_bam, snp_bam_index ->
+            with_index: snp_bam_index != null
+            no_index : snp_bam_index == null
+    }
 
-    SAMTOOLS_INDEX(ch_bams_to_index)
-    ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions.first())
+    def ch_remaining_data = ch_samplesheet.map { meta, _sample_bam, _sample_bam_index, snp_fastq, _snp_bam, _snp_bam_index ->
+        [meta, snp_fastq]
+    }
 
-    def ch_bams_no_index_fixed = ch_bams_no_index
-        .join(SAMTOOLS_INDEX.out.bai, by: 0)
-        .map { meta, sample_bam, _sample_bam_index, snp_fastq, snp_bam, snp_bam_index, sample_bam_index_new ->
-            [meta, sample_bam, sample_bam_index_new, snp_fastq, snp_bam, snp_bam_index]
+    SAMTOOLS_INDEX(
+        ch_sample_bam_no_index.map { meta, sample_bam, _sample_bam_index, _snp_fastq, _snp_bam, _snp_bam_index ->
+            [meta, sample_bam]
+        }
+    )
+
+    def ch_sample_index_all = SAMTOOLS_INDEX.out.bai
+        .concat(SAMTOOLS_INDEX.out.csi)
+        .concat(SAMTOOLS_INDEX.out.crai)
+
+    def ch_sample_bam_fixed = ch_sample_bam_with_index.mix(
+        ch_sample_bam_no_index
+            .join(ch_sample_index_all, by: 0)
+            .map { meta, sample_bam, _sample_bam_index, snp_fastq, snp_bam, snp_bam_index, sample_bam_index_new ->
+                [meta, sample_bam, sample_bam_index_new, snp_fastq, snp_bam, snp_bam_index]
+            }
+    )
+
+    SAMTOOLS_INDEX_SNP_BAM(
+        ch_snp_bam_no_index.map { meta, _sample_bam, _sample_bam_index, _snp_fastq, snp_bam, _snp_bam_index ->
+            [meta, snp_bam]
+        }
+    )
+
+    def ch_snp_index_all = SAMTOOLS_INDEX_SNP_BAM.out.bai
+        .concat(SAMTOOLS_INDEX_SNP_BAM.out.csi)
+        .concat(SAMTOOLS_INDEX_SNP_BAM.out.crai)
+
+    def ch_snp_bam_fixed = ch_snp_bam_with_index.mix(
+        ch_snp_bam_no_index
+            .join(ch_snp_index_all, by: 0)
+            .map { meta, sample_bam, sample_bam_index, snp_fastq, snp_bam, _snp_bam_index, snp_bam_index_new ->
+                [meta, sample_bam, sample_bam_index, snp_fastq, snp_bam, snp_bam_index_new]
+            }
+    )
+
+    def ch_samplesheet_fixed = ch_remaining_data
+        .join(ch_sample_bam_fixed, by: 0)
+        .map { meta, snp_fastq, sample_bam, sample_bam_index, _snp_fastq2, snp_bam, snp_bam_index ->
+            [meta, snp_fastq, sample_bam, sample_bam_index, snp_bam, snp_bam_index]
+        }
+        .join(ch_snp_bam_fixed, by: 0)
+        .map { meta, snp_fastq, sample_bam, sample_bam_index, snp_bam, snp_bam_index, _meta2, _sample_bam2, _sample_bam_index2, _snp_fastq2, _snp_bam2, _snp_bam_index2 ->
+            [meta, sample_bam, sample_bam_index, snp_fastq, snp_bam, snp_bam_index]
         }
 
-    def ch_samplesheet_fixed = ch_bams_with_index.mix(ch_bams_no_index_fixed)
-
-    def (ch_snp_bams_with_index, ch_snp_bams_no_index) = ch_samplesheet_fixed
-    .branch {
-        with_index: { meta, sample_bam, sample_bam_index, snp_fastq, snp_bam, snp_bam_index -> snp_bam_index != null }
-        no_index : { meta, sample_bam, sample_bam_index, snp_fastq, snp_bam, snp_bam_index -> snp_bam && snp_bam_index == null }
-    }
-
-    def ch_snp_bams_to_index = ch_snp_bams_no_index
-    .map { meta, _sample_bam, _sample_bam_index, _snp_fastq, snp_bam, _snp_bam_index -> [meta, snp_bam] }
-
-    SAMTOOLS_INDEX_SNP_BAM(ch_snp_bams_to_index)
-    def ch_snp_bam_index_versions = SAMTOOLS_INDEX_SNP_BAM.out.versions.first()
-    def ch_snp_bam_index_bai = SAMTOOLS_INDEX_SNP_BAM.out.bai
-    ch_versions = ch_versions.mix(ch_snp_bam_index_versions)
-
-    def ch_snp_bams_no_index_fixed = ch_snp_bams_no_index
-    .join(ch_snp_bam_index_bai, by: 0)
-    .map { meta, sample_bam, sample_bam_index, snp_fastq, snp_bam, _snp_bam_index, snp_bam_index_new ->
-        [meta, sample_bam, sample_bam_index, snp_fastq, snp_bam, snp_bam_index_new]
-    }
-
-    ch_samplesheet_fixed = ch_snp_bams_with_index.mix(ch_snp_bams_no_index_fixed)
+    ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions.first())
+    ch_versions = ch_versions.mix(SAMTOOLS_INDEX_SNP_BAM.out.versions.first())
 
 
     //
@@ -143,7 +166,7 @@ workflow SAMPLETRACKING {
     ch_versions = ch_versions.mix(PICARD_CROSSCHECKFINGERPRINTS.out.versions)
     ch_crosscheck_metrics_out = PICARD_CROSSCHECKFINGERPRINTS.out.crosscheck_metrics
     ch_pool_multiqc_files = ch_pool_multiqc_files.mix(PICARD_CROSSCHECKFINGERPRINTS.out.crosscheck_metrics)
-
+/*
     //
     // Determine sample sex
     //
@@ -234,7 +257,8 @@ workflow SAMPLETRACKING {
         .set { ch_sex_prediction_configs }
 
     ch_pool_multiqc_files = ch_pool_multiqc_files.mix(ch_sex_prediction_configs)
-
+*/
+    def ch_sex_prediction_out = Channel.empty()
 
     //
     // Collate and save software versions
