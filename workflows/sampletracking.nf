@@ -46,18 +46,16 @@ workflow SAMPLETRACKING {
 
     def (ch_sample, ch_snp, ch_rest) = ch_samplesheet
         .multiMap {meta, sample_bam, sample_bam_index, snp_fastq, snp_bam, snp_bam_index ->
-            sample: [meta, (sample_bam instanceof List && sample_bam.isEmpty() ? null : sample_bam), (sample_bam_index ?: null)]
-            snp   : [meta, (snp_bam   instanceof List && snp_bam.isEmpty()   ? null : snp_bam),     (snp_bam_index   ?: null)]
-            rest  : [meta, (snp_fastq instanceof List && snp_fastq.isEmpty() ? null : snp_fastq)]
-        }
+            sample: [meta, sample_bam, sample_bam_index]
+            snp   : [meta, snp_bam, snp_bam_index]
+            rest  : [meta, snp_fastq]
+            }
 
     def (ch_sample_with_idx, ch_sample_no_idx) = ch_sample.branch {
         _meta, _sample_bam, sample_bam_index ->
-            with_index: sample_bam_index != null
-            no_index  : sample_bam_index == null
+            with_index: sample_bam_index
+            no_index  : !sample_bam_index
     }
-
-    ch_sample_no_idx = ch_sample_no_idx.filter { _meta, bam, _idx -> bam != null }
 
     SAMTOOLS_INDEX(
         ch_sample_no_idx.map { meta, sample_bam, _sample_bam_index -> [meta, sample_bam] }
@@ -76,11 +74,9 @@ workflow SAMPLETRACKING {
     def (ch_snp_with_idx, ch_snp_no_idx, ch_snp_none) = ch_snp.branch {
         _meta, snp_bam, snp_bam_index ->
             with_index: snp_bam_index != null && snp_bam != null
-            no_index  : snp_bam_index == null && snp_bam != null
             none      : snp_bam == null
+            no_index  : snp_bam_index == null && snp_bam != null
     }
-
-    ch_snp_no_idx    = ch_snp_no_idx.filter    { _meta, bam, _idx -> bam != null }
 
     SAMTOOLS_INDEX_SNP_BAM(
         ch_snp_no_idx.map { meta, snp_bam, _snp_bam_index -> [meta, snp_bam] }
@@ -95,7 +91,7 @@ workflow SAMPLETRACKING {
             .join(ch_snp_idx_all, by: 0)
             .map { meta, snp_bam, _old_index, new_index -> [meta, snp_bam, new_index] }
     ).mix(
-        ch_snp_none.map { meta, _bam, _idx -> [meta, null, null] }
+        ch_snp_none
     )
 
     def ch_samplesheet_fixed = ch_rest
@@ -130,9 +126,7 @@ workflow SAMPLETRACKING {
         }
         .set{ ch_inputs }
 
-    ch_inputs.to_align
-        .distinct { meta -> meta.id }  // ← esto elimina duplicados por ID
-        .multiMap { meta, sample_bam, sample_bam_index, snp_fastq ->
+    ch_inputs.to_align.multiMap { meta, sample_bam, sample_bam_index, snp_fastq ->
             fastq: [meta, snp_fastq]
             bam:   [meta, sample_bam, sample_bam_index]
         }
@@ -155,15 +149,13 @@ workflow SAMPLETRACKING {
         return [groupKey([id: meta.pool], meta.pool_count), sample_bam, sample_bam_index, snp_bam, snp_bam_index]
     }
     .groupTuple()
-    .merge(ch_haplotype_map.map{ _meta, haplotype_map -> haplotype_map })
-    .map { meta, sample_bam, sample_bam_index, snp_bam, snp_bam_index, haplotype_map ->
-        def sbam  = sample_bam.flatten().first()
-        def sbai  = sample_bam_index.flatten().first()
-        def snpb  = snp_bam.flatten().first()
-        def snpi  = snp_bam_index.flatten().first()
-        return [meta, [sbam], [sbai], [snpb], [snpi], haplotype_map]
+    .merge(ch_haplotype_map.map{ _meta, haplotype_map -> haplotype_map})
+    .map{ meta, sample_bam, sample_bam_index, snp_bam, snp_bam_index, haplotype_map ->
+        return [meta, sample_bam.flatten(), sample_bam_index.flatten(), snp_bam.flatten(), snp_bam_index.flatten(), haplotype_map]
     }
-    .set { ch_to_fingerprint }
+    .dump(tag: "Samples to fingerprint", pretty: true)
+    .set{ch_to_fingerprint}
+
 
     PICARD_CROSSCHECKFINGERPRINTS(
         ch_to_fingerprint,
@@ -172,6 +164,7 @@ workflow SAMPLETRACKING {
     ch_versions = ch_versions.mix(PICARD_CROSSCHECKFINGERPRINTS.out.versions)
     ch_crosscheck_metrics_out = PICARD_CROSSCHECKFINGERPRINTS.out.crosscheck_metrics
     ch_pool_multiqc_files = ch_pool_multiqc_files.mix(PICARD_CROSSCHECKFINGERPRINTS.out.crosscheck_metrics)
+
 
     //
     // Determine sample sex
@@ -263,7 +256,6 @@ workflow SAMPLETRACKING {
         .set { ch_sex_prediction_configs }
 
     ch_pool_multiqc_files = ch_pool_multiqc_files.mix(ch_sex_prediction_configs)
-
 
     //
     // Collate and save software versions
