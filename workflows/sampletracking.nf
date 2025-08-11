@@ -73,9 +73,9 @@ workflow SAMPLETRACKING {
 
     def (ch_snp_with_idx, ch_snp_no_idx, ch_snp_none) = ch_snp.branch {
         _meta, snp_bam, snp_bam_index ->
-            with_index: snp_bam_index != null && snp_bam != null
-            none      : snp_bam == null
-            no_index  : snp_bam_index == null && snp_bam != null
+            none      : !snp_bam
+            with_index: snp_bam_index
+            no_index  : !snp_bam_index
     }
 
     SAMTOOLS_INDEX_SNP_BAM(
