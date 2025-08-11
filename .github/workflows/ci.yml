@@ -31,7 +31,7 @@ jobs:
       matrix:
         NXF_VER:
           - "24.04.1"
-          - "latest-everything"
+          - "latest-stable"
         tags:
           - "workflows"
           - "pipeline"
