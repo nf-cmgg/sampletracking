@@ -33,9 +33,6 @@ workflow NFCMGG_SAMPLETRACKING {
     genome_fasta // channel: genome fasta file
     haplotype_map // channel: haplotype map file
     outdir       // channel: output directory
-    multiqc_config // channel: multiqc config file
-    multiqc_logo   // channel: multiqc logo file
-    multiqc_methods_description // channel: multiqc methods description file
 
     main:
 
@@ -47,10 +44,7 @@ workflow NFCMGG_SAMPLETRACKING {
         bwa_index,
         genome_fasta,
         haplotype_map,
-        outdir,
-        multiqc_config,
-        multiqc_logo,
-        multiqc_methods_description
+        outdir
     )
     emit:
     multiqc_report = SAMPLETRACKING.out.multiqc_report // channel: /path/to/multiqc_report.html
@@ -100,10 +94,7 @@ workflow {
             [[id:"haplotype_map"],
             file(params.haplotype_map, checkIfExists: true)
         ]),
-        params.outdir,
-        params.multiqc_config,
-        params.multiqc_logo,
-        params.multiqc_methods_description
+        params.outdir
     )
     //
     // SUBWORKFLOW: Run completion tasks

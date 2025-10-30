@@ -33,9 +33,6 @@ workflow SAMPLETRACKING {
     ch_haplotype_map            // channel: [meta, /path/to/haplotype_map]
 
     outdir                      // string:  path/to/outdir
-    multiqc_config              // string:  path/to/multiqc_config
-    multiqc_logo                // string:  path/to/multiqc_logo
-    multiqc_methods_description // string:  path/to/multiqc_methods_description
 
     main:
 
