@@ -13,15 +13,50 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { SAMPLETRACKING            } from './workflows/sampletracking'
-include { PIPELINE_INITIALISATION   } from './subworkflows/local/utils_nfcore_sampletracking_pipeline'
-include { PIPELINE_COMPLETION       } from './subworkflows/local/utils_nfcore_sampletracking_pipeline'
+include { SAMPLETRACKING  } from './workflows/sampletracking'
+include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_sampletracking_pipeline'
+include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_sampletracking_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     NAMED WORKFLOWS FOR PIPELINE
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
+//
+// WORKFLOW: Run main analysis pipeline depending on type of input
+//
+workflow NFCMGG_SAMPLETRACKING {
+
+    take:
+    samplesheet // channel: samplesheet read in from --input
+    bwa_index   // channel: bwa index file
+    genome_fasta // channel: genome fasta file
+    haplotype_map // channel: haplotype map file
+    outdir       // channel: output directory
+    multiqc_config // channel: multiqc config file
+    multiqc_logo   // channel: multiqc logo file
+    multiqc_methods_description // channel: multiqc methods description file
+
+    main:
+
+    //
+    // WORKFLOW: Run pipeline
+    //
+    SAMPLETRACKING (
+        samplesheet,
+        bwa_index,
+        genome_fasta,
+        haplotype_map,
+        outdir,
+        multiqc_config,
+        multiqc_logo,
+        multiqc_methods_description
+    )
+    emit:
+    multiqc_report = SAMPLETRACKING.out.multiqc_report // channel: /path/to/multiqc_report.html
+}
+/*
+
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -32,22 +67,25 @@ include { PIPELINE_COMPLETION       } from './subworkflows/local/utils_nfcore_sa
 workflow {
 
     main:
-
     //
     // SUBWORKFLOW: Run initialisation tasks
     //
     PIPELINE_INITIALISATION (
         params.version,
         params.validate_params,
+        params.monochrome_logs,
         args,
         params.outdir,
-        params.input
+        params.input,
+        params.help,
+        params.help_full,
+        params.show_hidden
     )
 
     //
     // WORKFLOW: Run main workflow
     //
-    SAMPLETRACKING (
+    NFCMGG_SAMPLETRACKING (
         PIPELINE_INITIALISATION.out.samplesheet,
         Channel.value([
             [id: "bwa"],
@@ -67,7 +105,6 @@ workflow {
         params.multiqc_logo,
         params.multiqc_methods_description
     )
-
     //
     // SUBWORKFLOW: Run completion tasks
     //
@@ -78,7 +115,7 @@ workflow {
         params.outdir,
         params.monochrome_logs,
         params.hook_url,
-        SAMPLETRACKING.out.multiqc_report
+        NFCMGG_SAMPLETRACKING.out.multiqc_report
     )
 }
 
