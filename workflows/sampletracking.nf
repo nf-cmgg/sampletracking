@@ -6,7 +6,7 @@
 
 include { BWA_MEM                       } from '../modules/nf-core/bwa/mem/main'
 include { PICARD_CROSSCHECKFINGERPRINTS } from '../modules/nf-core/picard/crosscheckfingerprints/main'
-include { NGSBITS_SAMPLEGENDER          } from '../modules/local/ngsbits/samplegender/main'
+include { NGSBITS_SAMPLEGENDER          } from '../modules/nf-core/ngsbits/samplegender/main'
 include { MULTIQC as MULTIQC_POOLS      } from '../modules/nf-core/multiqc/main'
 include { MULTIQC as MULTIQC_MAIN       } from '../modules/nf-core/multiqc/main'
 include { paramsSummaryMap              } from 'plugin/nf-schema'

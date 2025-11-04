@@ -4,16 +4,20 @@
             null,
             [
                 "pipeline_info",
-                "pipeline_info/nf_core_pipeline_software_mqc_versions.yml"
+                "pipeline_info/nf_core_pipeline_software_mqc_versions.yml",
+                "samtools",
+                "samtools/snp_sample1.bam.bai",
+                "samtools/snp_sample2.bam.bai"
             ],
             [
-                
+                "snp_sample1.bam.bai:md5,55041f2aa753e984c554127175d99f0f",
+                "snp_sample2.bam.bai:md5,32573303dff7fe41444819bada3ed130"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-10-30T13:39:17.110313"
+        "timestamp": "2025-11-04T12:50:13.317766"
     }
 }

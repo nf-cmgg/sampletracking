@@ -21,6 +21,12 @@
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/multiqc/multiqc.diff"
                     },
+                    "ngsbits/samplegender": {
+                        "branch": "master",
+                        "git_sha": "ae8668d026462283f3bdc70ad2d6c78f8919fe68",
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/ngsbits/samplegender/ngsbits-samplegender.diff"
+                    },
                     "picard/crosscheckfingerprints": {
                         "branch": "master",
                         "git_sha": "df124e87c74d8b40285199f8cc20151f5aa57255",

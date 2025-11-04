@@ -82,24 +82,19 @@ workflow PIPELINE_INITIALISATION {
     //
     // Create channel from input file provided through params.input
     //
+    def input_list = samplesheetToList(input, "assets/schema_input.json")
+    def pool_count = input_list
+        .inject([:], { counts, row ->
+            counts[row[0].pool] = (counts[row[0].pool] ?: 0) + 1
+            return counts
+        })
 
     Channel
-        .fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
+        .fromList(input_list)
         .map {
-            meta, fastq_1, fastq_2 ->
-                if (!fastq_2) {
-                    return [ meta.id, meta + [ single_end:true ], [ fastq_1 ] ]
-                } else {
-                    return [ meta.id, meta + [ single_end:false ], [ fastq_1, fastq_2 ] ]
-                }
-        }
-        .groupTuple()
-        .map { samplesheet ->
-            validateInputSamplesheet(samplesheet)
-        }
-        .map {
-            meta, fastqs ->
-                return [ meta, fastqs.flatten() ]
+            meta, sample_bam, sample_bam_index, snp_fastq_1, snp_fastq_2, snp_bam, snp_bam_index ->
+                def new_meta = meta + [single_end: false, pool_count: pool_count[meta.pool]]
+                return [ new_meta, sample_bam, sample_bam_index, [snp_fastq_1, snp_fastq_2].flatten(), snp_bam, snp_bam_index ]
         }
         .set { ch_samplesheet }
 
