@@ -81,16 +81,16 @@ workflow {
     //
     NFCMGG_SAMPLETRACKING (
         PIPELINE_INITIALISATION.out.samplesheet,
-        Channel.value([
+        channel.value([
             [id: "bwa"],
             file(params.bwa_index, checkIfExists: true)
         ]),
-        Channel.value(
+        channel.value(
             [[id:"genome_fasta"],
             file(params.fasta, checkIfExists: true),
             file(params.fai, checkIfExists: true),
         ]),
-        Channel.value(
+        channel.value(
             [[id:"haplotype_map"],
             file(params.haplotype_map, checkIfExists: true)
         ]),
