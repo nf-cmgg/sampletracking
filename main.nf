@@ -75,6 +75,15 @@ workflow {
         params.hook_url,
         SAMPLETRACKING.out.multiqc_report
     )
+
+    publish:
+    multiqc_report = SAMPLETRACKING.out.multiqc_report
+    multiqc_pools  = SAMPLETRACKING.out.multiqc_pools
+}
+
+output {
+    multiqc_report { path "multiqc/" }
+    multiqc_pools  { path "multiqc/" }
 }
 
 /*
