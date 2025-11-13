@@ -12,7 +12,7 @@ nextflow_workflow {
         options "-stub"
         setup {
             run("BWA_INDEX") {
-                script "../../modules/nf-core/bwa/index/main.nf"
+                script "../modules/nf-core/bwa/index/main.nf"
                 process {
                     """
                     input[0] = [
