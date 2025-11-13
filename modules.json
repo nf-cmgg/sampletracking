@@ -29,7 +29,7 @@
                     },
                     "picard/crosscheckfingerprints": {
                         "branch": "master",
-                        "git_sha": "df124e87c74d8b40285199f8cc20151f5aa57255",
+                        "git_sha": "4e8415483e3119fc3035ece12ec9236dac261357",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/picard/crosscheckfingerprints/picard-crosscheckfingerprints.diff"
                     },
