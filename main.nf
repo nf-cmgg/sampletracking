@@ -19,41 +19,6 @@ include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_samp
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    NAMED WORKFLOWS FOR PIPELINE
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-//
-// WORKFLOW: Run main analysis pipeline depending on type of input
-//
-workflow NFCMGG_SAMPLETRACKING {
-
-    take:
-    samplesheet // channel: samplesheet read in from --input
-    bwa_index   // channel: bwa index file
-    genome_fasta // channel: genome fasta file
-    haplotype_map // channel: haplotype map file
-    outdir       // channel: output directory
-
-    main:
-
-    //
-    // WORKFLOW: Run pipeline
-    //
-    SAMPLETRACKING (
-        samplesheet,
-        bwa_index,
-        genome_fasta,
-        haplotype_map,
-        outdir
-    )
-    emit:
-    multiqc_report = SAMPLETRACKING.out.multiqc_report // channel: /path/to/multiqc_report.html
-}
-/*
-
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN MAIN WORKFLOW
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
@@ -67,7 +32,6 @@ workflow {
     PIPELINE_INITIALISATION (
         params.version,
         params.validate_params,
-        params.monochrome_logs,
         args,
         params.outdir,
         params.input,
@@ -79,22 +43,25 @@ workflow {
     //
     // WORKFLOW: Run main workflow
     //
-    NFCMGG_SAMPLETRACKING (
+    SAMPLETRACKING (
         PIPELINE_INITIALISATION.out.samplesheet,
-        Channel.value([
+        channel.value([
             [id: "bwa"],
             file(params.bwa_index, checkIfExists: true)
         ]),
-        Channel.value(
+        channel.value(
             [[id:"genome_fasta"],
             file(params.fasta, checkIfExists: true),
             file(params.fai, checkIfExists: true),
         ]),
-        Channel.value(
+        channel.value(
             [[id:"haplotype_map"],
             file(params.haplotype_map, checkIfExists: true)
         ]),
-        params.outdir
+        params.outdir,
+        params.multiqc_config,
+        params.multiqc_logo,
+        params.multiqc_methods_description
     )
     //
     // SUBWORKFLOW: Run completion tasks
@@ -106,8 +73,17 @@ workflow {
         params.outdir,
         params.monochrome_logs,
         params.hook_url,
-        NFCMGG_SAMPLETRACKING.out.multiqc_report
+        SAMPLETRACKING.out.multiqc_report
     )
+
+    publish:
+    multiqc_report = SAMPLETRACKING.out.multiqc_report
+    multiqc_pools  = SAMPLETRACKING.out.multiqc_pools
+}
+
+output {
+    multiqc_report { path "multiqc/" }
+    multiqc_pools  { path "multiqc/" }
 }
 
 /*

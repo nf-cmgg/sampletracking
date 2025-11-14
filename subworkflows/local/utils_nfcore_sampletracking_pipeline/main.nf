@@ -29,7 +29,6 @@ workflow PIPELINE_INITIALISATION {
     take:
     version           // boolean: Display version and exit
     validate_params   // boolean: Boolean whether to validate parameters against the schema at runtime
-    monochrome_logs   // boolean: Do not use coloured log outputs
     nextflow_cli_args //   array: List of positional nextflow CLI args
     outdir            //  string: The output directory where the results will be saved
     input             //  string: Path to input samplesheet
@@ -39,7 +38,7 @@ workflow PIPELINE_INITIALISATION {
 
     main:
 
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
 
     //
     // Print version and exit if required and dump pipeline parameters to JSON file
@@ -89,7 +88,7 @@ workflow PIPELINE_INITIALISATION {
             return counts
         })
 
-    Channel
+    channel
         .fromList(input_list)
         .map {
             meta, sample_bam, sample_bam_index, snp_fastq_1, snp_fastq_2, snp_bam, snp_bam_index ->
