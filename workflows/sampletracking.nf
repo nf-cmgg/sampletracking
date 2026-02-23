@@ -38,8 +38,6 @@ workflow SAMPLETRACKING {
     multiqc_methods_description // string:  path/to/multiqc_methods_description
 
     main:
-
-    def ch_versions = channel.empty()
     def ch_multiqc_files = channel.empty()
     def ch_pool_multiqc_files = channel.empty()
 
@@ -101,10 +99,6 @@ workflow SAMPLETRACKING {
             [meta, sample_bam, sample_bam_index, snp_fastq, snp_bam, snp_bam_index]
         }
 
-    ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions.first())
-    ch_versions = ch_versions.mix(SAMTOOLS_INDEX_SNP_BAM.out.versions.first())
-
-
     //
     // Crosscheck fingerprints
     //
@@ -139,7 +133,6 @@ workflow SAMPLETRACKING {
         ch_fasta_fai.map{meta, fasta, _fai -> [meta, fasta]},
         true
     )
-    ch_versions = ch_versions.mix(BWA_MEM.out.versions)
 
     ch_to_align.bam
     .join(BWA_MEM.out.cram, failOnMismatch:true, failOnDuplicate:true)
@@ -161,7 +154,6 @@ workflow SAMPLETRACKING {
         ch_to_fingerprint,
         ch_fasta_fai
     )
-    ch_versions = ch_versions.mix(PICARD_CROSSCHECKFINGERPRINTS.out.versions)
     ch_crosscheck_metrics_out = PICARD_CROSSCHECKFINGERPRINTS.out.crosscheck_metrics
     ch_pool_multiqc_files = ch_pool_multiqc_files.mix(PICARD_CROSSCHECKFINGERPRINTS.out.crosscheck_metrics)
 
@@ -181,7 +173,6 @@ workflow SAMPLETRACKING {
         ch_fasta_fai.map { meta, fasta, _fai -> [meta, fasta]}.collect(),
         ch_fasta_fai.map { meta, _fasta, fai -> [meta, fai]}.collect(),
     )
-    ch_versions = ch_versions.mix(NGSBITS_SAMPLEGENDER.out.versions.first())
 
     ch_sex_prediction_out = NGSBITS_SAMPLEGENDER.out.xy_tsv
         .join(NGSBITS_SAMPLEGENDER.out.sry_tsv, failOnMismatch: true, failOnDuplicate: true)
@@ -260,9 +251,33 @@ workflow SAMPLETRACKING {
     //
     // Collate and save software versions
     //
-    softwareVersionsToYAML(ch_versions)
-        .collectFile(storeDir: "${outdir}/pipeline_info", name: 'nf_core_pipeline_software_mqc_versions.yml', sort: true, newLine: true)
-        .set { ch_collated_versions }
+
+    def topic_versions = channel.topic("versions")
+        .distinct()
+        .branch { entry ->
+            versions_file: entry instanceof Path
+            versions_tuple: true
+        }
+
+    def topic_versions_string = topic_versions.versions_tuple
+        .map { process, tool, version ->
+            [ process[process.lastIndexOf(':')+1..-1], "  ${tool}: ${version}" ]
+        }
+        .groupTuple(by:0)
+        .map { process, tool_versions ->
+            tool_versions.unique().sort()
+            "${process}:\n${tool_versions.join('\n')}"
+        }
+
+    softwareVersionsToYAML(topic_versions.versions_file)
+        .mix(topic_versions_string)
+        .collectFile(
+            storeDir: "${outdir}/pipeline_info",
+            name:  'structural_software_'  + 'mqc_'  + 'versions.yml',
+            sort: true,
+            newLine: true
+        ).set { ch_collated_versions }
+
 
     //
     // MODULE: MultiQC
@@ -318,7 +333,6 @@ workflow SAMPLETRACKING {
     multiqc_pools       = MULTIQC_POOLS.out.report  // channel: path(html)
     crosscheck_metrics  = ch_crosscheck_metrics_out // channel: [ val(meta), path(metrics) ]
     sex_prediction      = ch_sex_prediction_out     // channel: [ val(meta), path(tsv) ]
-    versions            = ch_versions               // channel: [ path(versions.yml) ]
 }
 
 /*
