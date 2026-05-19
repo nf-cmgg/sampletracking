@@ -32,10 +32,10 @@ workflow SAMPLETRACKING {
     ch_fasta_fai                // channel: [meta,/path/to/fasta, /path/to/fasta.fai]
     ch_haplotype_map            // channel: [meta, /path/to/haplotype_map]
 
-    outdir                      // string:  path/to/outdir
-    multiqc_config              // string:  path/to/multiqc_config
-    multiqc_logo                // string:  path/to/multiqc_logo
-    multiqc_methods_description // string:  path/to/multiqc_methods_description
+    outdir                      // path:  path/to/outdir
+    multiqc_config              // path:  path/to/multiqc_config
+    multiqc_logo                // path:  path/to/multiqc_logo
+    multiqc_methods_description // path:  path/to/multiqc_methods_description
 
     main:
     def ch_multiqc_files = channel.empty()
@@ -272,7 +272,7 @@ workflow SAMPLETRACKING {
     softwareVersionsToYAML(topic_versions.versions_file)
         .mix(topic_versions_string)
         .collectFile(
-            storeDir: "${outdir.toUriString()}/pipeline_info",
+            storeDir: outdir.resolve("pipeline_info").toUriString(),
             name:  'structural_software_'  + 'mqc_'  + 'versions.yml',
             sort: true,
             newLine: true
