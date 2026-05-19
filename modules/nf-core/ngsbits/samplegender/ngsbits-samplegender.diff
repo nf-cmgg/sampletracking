@@ -1,12 +1,17 @@
 Changes in component 'nf-core/ngsbits/samplegender'
+'modules/nf-core/ngsbits/samplegender/environment.yml' is unchanged
+'modules/nf-core/ngsbits/samplegender/meta.yml' is unchanged
 Changes in 'ngsbits/samplegender/main.nf':
 --- modules/nf-core/ngsbits/samplegender/main.nf
 +++ modules/nf-core/ngsbits/samplegender/main.nf
-@@ -11,10 +11,11 @@
+@@ -9,12 +9,12 @@
+ 
+     input:
      tuple val(meta), path(bam), path(bai)
-     tuple val(meta2), path(fasta)
-     tuple val(meta3), path(fai)
+-    tuple val(meta2), path(fasta)
+-    tuple val(meta3), path(fai)
 -    val method
++    tuple val(meta2), path(fasta), path(fai)
  
      output:
 -    tuple val(meta), path("*.tsv"), emit: tsv
@@ -16,7 +21,7 @@ Changes in 'ngsbits/samplegender/main.nf':
      tuple val("${task.process}"), val('ngsbits'), eval("SampleGender --version  2>&1 | sed 's/SampleGender //'"), topic: versions, emit: versions_ngsbits
  
      when:
-@@ -22,20 +23,38 @@
+@@ -22,20 +22,38 @@
  
      script:
      def args = task.ext.args ?: ''
@@ -60,8 +65,6 @@ Changes in 'ngsbits/samplegender/main.nf':
      """
  }
 
-'modules/nf-core/ngsbits/samplegender/environment.yml' is unchanged
-'modules/nf-core/ngsbits/samplegender/meta.yml' is unchanged
-'modules/nf-core/ngsbits/samplegender/tests/main.nf.test' is unchanged
 'modules/nf-core/ngsbits/samplegender/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/ngsbits/samplegender/tests/main.nf.test' is unchanged
 ************************************************************

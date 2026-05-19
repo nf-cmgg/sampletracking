@@ -1,4 +1,6 @@
 Changes in component 'nf-core/picard/crosscheckfingerprints'
+'modules/nf-core/picard/crosscheckfingerprints/environment.yml' is unchanged
+'modules/nf-core/picard/crosscheckfingerprints/meta.yml' is unchanged
 Changes in 'picard/crosscheckfingerprints/main.nf':
 --- modules/nf-core/picard/crosscheckfingerprints/main.nf
 +++ modules/nf-core/picard/crosscheckfingerprints/main.nf
@@ -12,9 +14,7 @@ Changes in 'picard/crosscheckfingerprints/main.nf':
      output:
      tuple val(meta), path("*.crosscheck_metrics.txt"), emit: crosscheck_metrics
 
-'modules/nf-core/picard/crosscheckfingerprints/environment.yml' is unchanged
-'modules/nf-core/picard/crosscheckfingerprints/meta.yml' is unchanged
-'modules/nf-core/picard/crosscheckfingerprints/tests/main.nf.test' is unchanged
 'modules/nf-core/picard/crosscheckfingerprints/tests/main.nf.test.snap' is unchanged
 'modules/nf-core/picard/crosscheckfingerprints/tests/nextflow.config' is unchanged
+'modules/nf-core/picard/crosscheckfingerprints/tests/main.nf.test' is unchanged
 ************************************************************

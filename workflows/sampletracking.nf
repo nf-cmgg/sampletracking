@@ -7,8 +7,7 @@
 include { BWA_MEM                       } from '../modules/nf-core/bwa/mem/main'
 include { PICARD_CROSSCHECKFINGERPRINTS } from '../modules/nf-core/picard/crosscheckfingerprints/main'
 include { NGSBITS_SAMPLEGENDER          } from '../modules/nf-core/ngsbits/samplegender/main'
-include { MULTIQC as MULTIQC_POOLS      } from '../modules/nf-core/multiqc/main'
-include { MULTIQC as MULTIQC_MAIN       } from '../modules/nf-core/multiqc/main'
+include { MULTIQC                       } from '../modules/nf-core/multiqc/main'
 include { paramsSummaryMap              } from 'plugin/nf-schema'
 include { samplesheetToList             } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc          } from '../subworkflows/nf-core/utils_nfcore_pipeline'
@@ -39,15 +38,13 @@ workflow SAMPLETRACKING {
 
     main:
     def ch_multiqc_files = channel.empty()
-    def ch_pool_multiqc_files = channel.empty()
 
-
-    def (ch_sample, ch_snp, ch_rest) = ch_samplesheet
+    def (ch_sample, ch_snp, ch_fastq) = ch_samplesheet
         .multiMap {meta, sample_bam, sample_bam_index, snp_fastq, snp_bam, snp_bam_index ->
             sample: [meta, sample_bam, sample_bam_index]
             snp   : [meta, snp_bam, snp_bam_index]
-            rest  : [meta, snp_fastq]
-            }
+            fastq : [meta, snp_fastq]
+        }
 
     def (ch_sample_with_idx, ch_sample_no_idx) = ch_sample.branch {
         _meta, _sample_bam, sample_bam_index ->
@@ -59,13 +56,9 @@ workflow SAMPLETRACKING {
         ch_sample_no_idx.map { meta, sample_bam, _sample_bam_index -> [meta, sample_bam] }
     )
 
-    def ch_sample_idx_all = SAMTOOLS_INDEX.out.bai
-        .mix(SAMTOOLS_INDEX.out.csi)
-        .mix(SAMTOOLS_INDEX.out.crai)
-
     def ch_sample_fixed = ch_sample_with_idx.mix(
         ch_sample_no_idx
-            .join(ch_sample_idx_all, by: 0)
+            .join(SAMTOOLS_INDEX.out.index, by: 0)
             .map { meta, sample_bam, _old_index, new_index -> [meta, sample_bam, new_index] }
     )
 
@@ -80,19 +73,15 @@ workflow SAMPLETRACKING {
         ch_snp_no_idx.map { meta, snp_bam, _snp_bam_index -> [meta, snp_bam] }
     )
 
-    def ch_snp_idx_all = SAMTOOLS_INDEX_SNP_BAM.out.bai
-        .mix(SAMTOOLS_INDEX_SNP_BAM.out.csi)
-        .mix(SAMTOOLS_INDEX_SNP_BAM.out.crai)
-
     def ch_snp_fixed = ch_snp_with_idx.mix(
         ch_snp_no_idx
-            .join(ch_snp_idx_all, by: 0)
+            .join(SAMTOOLS_INDEX_SNP_BAM.out.index, by: 0)
             .map { meta, snp_bam, _old_index, new_index -> [meta, snp_bam, new_index] }
     ).mix(
         ch_snp_none
     )
 
-    def ch_samplesheet_fixed = ch_rest
+    def ch_samplesheet_fixed = ch_fastq
         .join(ch_sample_fixed, by: 0)
         .join(ch_snp_fixed,    by: 0)
         .map { meta, snp_fastq, sample_bam, sample_bam_index, snp_bam, snp_bam_index ->
@@ -155,7 +144,7 @@ workflow SAMPLETRACKING {
         ch_fasta_fai
     )
     ch_crosscheck_metrics_out = PICARD_CROSSCHECKFINGERPRINTS.out.crosscheck_metrics
-    ch_pool_multiqc_files = ch_pool_multiqc_files.mix(PICARD_CROSSCHECKFINGERPRINTS.out.crosscheck_metrics)
+    ch_multiqc_files = ch_multiqc_files.mix(PICARD_CROSSCHECKFINGERPRINTS.out.crosscheck_metrics)
 
 
     //
@@ -170,8 +159,7 @@ workflow SAMPLETRACKING {
 
     NGSBITS_SAMPLEGENDER(
         ch_samplegender_input,
-        ch_fasta_fai.map { meta, fasta, _fai -> [meta, fasta]}.collect(),
-        ch_fasta_fai.map { meta, _fasta, fai -> [meta, fai]}.collect(),
+        ch_fasta_fai
     )
 
     ch_sex_prediction_out = NGSBITS_SAMPLEGENDER.out.xy_tsv
@@ -246,12 +234,11 @@ workflow SAMPLETRACKING {
         }
         .set { ch_sex_prediction_configs }
 
-    ch_pool_multiqc_files = ch_pool_multiqc_files.mix(ch_sex_prediction_configs)
+    ch_multiqc_files = ch_multiqc_files.mix(ch_sex_prediction_configs)
 
     //
     // Collate and save software versions
     //
-
     def topic_versions = channel.topic("versions")
         .distinct()
         .branch { entry ->
@@ -261,9 +248,9 @@ workflow SAMPLETRACKING {
 
     def topic_versions_string = topic_versions.versions_tuple
         .map { process, tool, version ->
-            [ process[process.lastIndexOf(':')+1..-1], "  ${tool}: ${version}" ]
+            [process[process.lastIndexOf(':') + 1..-1], "  ${tool}: ${version}"]
         }
-        .groupTuple(by:0)
+        .groupTuple(by: 0)
         .map { process, tool_versions ->
             tool_versions.unique().sort()
             "${process}:\n${tool_versions.join('\n')}"
@@ -272,65 +259,45 @@ workflow SAMPLETRACKING {
     softwareVersionsToYAML(topic_versions.versions_file)
         .mix(topic_versions_string)
         .collectFile(
-            storeDir: outdir.resolve("pipeline_info").toUriString(),
-            name:  'structural_software_'  + 'mqc_'  + 'versions.yml',
+            storeDir: "${outdir.toUriString()}/pipeline_info",
+            name: 'nf_cmgg_sampletracking_software_mqc_versions.yml',
             sort: true,
-            newLine: true
-        ).set { ch_collated_versions }
+            newLine: true,
+        )
+        .set { ch_collated_versions }
 
 
     //
     // MODULE: MultiQC
     //
-    ch_multiqc_config        = channel.fromPath(
-        "$projectDir/assets/multiqc_config.yml", checkIfExists: true)
-    ch_multiqc_custom_config = multiqc_config ?
-        channel.of(multiqc_config) :
-        channel.empty()
-    ch_multiqc_logo          = multiqc_logo ?
-        channel.of(multiqc_logo) :
-        channel.empty()
-
-    summary_params      = paramsSummaryMap(
-        workflow, parameters_schema: "nextflow_schema.json")
+    // summary files without meta, e.g. versions, params
+    summary_params = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
     ch_workflow_summary = channel.value(paramsSummaryMultiqc(summary_params))
-    ch_multiqc_files = ch_multiqc_files.mix(
-        ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-    ch_multiqc_custom_methods_description = multiqc_methods_description ?
-        multiqc_methods_description :
-        file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
-    ch_methods_description                = channel.value(
-        methodsDescriptionText(ch_multiqc_custom_methods_description))
+    ch_methods_description = channel.value(multiqc_methods_description ? methodsDescriptionText(multiqc_methods_description) : "")
 
-    ch_multiqc_files = ch_multiqc_files.mix(ch_collated_versions)
-    ch_multiqc_files = ch_multiqc_files.mix(
-        ch_methods_description.collectFile(
-            name: 'methods_description_mqc.yaml',
-            sort: true
-        )
-    )
+    ch_summary_files = channel.empty()
+        .mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
+        .mix(ch_collated_versions)
+        .mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml', sort: true))
+        .toList()
+        .map { files -> [files] }
+        .dump(tag: "Summary files for MultiQC", pretty: true)
+    ch_multiqc_input = ch_multiqc_files
+        .map { meta, files ->
+            def new_meta = meta.pool ? [id: meta.pool] : [id: 'multiqc']
+            return [new_meta, files]
+        }
+        .groupTuple(by: 0)
+        .combine(ch_summary_files)
+        .map { meta, multiqc_files, summary_files ->
+            return [meta, (multiqc_files + summary_files).flatten(), multiqc_config.flatten(), multiqc_logo, [], []]
+        }
+        .dump(tag: "MULTIQC files", pretty: true)
 
-    MULTIQC_POOLS (
-        ch_pool_multiqc_files.groupTuple(),
-        ch_multiqc_config.toList(),
-        ch_multiqc_custom_config.toList(),
-        ch_multiqc_logo.toList(),
-        [],
-        []
-    )
-
-    MULTIQC_MAIN (
-        ch_multiqc_files.collect().map { files -> [[id:'report'], files]},
-        ch_multiqc_config.toList(),
-        ch_multiqc_custom_config.toList(),
-        ch_multiqc_logo.toList(),
-        [],
-        []
-    )
+    MULTIQC (ch_multiqc_input)
 
     emit:
-    multiqc_report      = MULTIQC_MAIN.out.report   // channel: path(html)
-    multiqc_pools       = MULTIQC_POOLS.out.report  // channel: path(html)
+    multiqc_report      = MULTIQC.out.report        // channel: path(html)
     crosscheck_metrics  = ch_crosscheck_metrics_out // channel: [ val(meta), path(metrics) ]
     sex_prediction      = ch_sex_prediction_out     // channel: [ val(meta), path(tsv) ]
 }
