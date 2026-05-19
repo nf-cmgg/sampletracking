@@ -59,6 +59,16 @@ We thank the following people for their extensive assistance in the development 
 
 If you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).
 
+## Development environment
+
+A [pixi](https://pixi.prefix.dev/latest/) development environment is available for this pipeline. Run the following command to install the environment:
+
+```
+pixi install
+```
+
+Then run `pixi shell` to enter the environment and start developing.
+
 ## Citations
 
 An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.
