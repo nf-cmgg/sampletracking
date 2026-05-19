@@ -7,12 +7,18 @@ lint:
     - assets/nf-core-sampletracking_logo_light.png
     - docs/images/nf-core-sampletracking_logo_light.png
     - docs/images/nf-core-sampletracking_logo_dark.png
+    - .gitattributes
     - .gitignore
+  nextflow_config: false # TMP
+  schema_params: false # TMP
+  multiqc_config:
+    - report_comment
   merge_markers:
     - .pixi/envs
   files_exist:
     - CODE_OF_CONDUCT.md
     - assets/nf-core-sampletracking_logo_light.png
+    - docs/CONTRIBUTING.md
     - docs/images/nf-core-sampletracking_logo_light.png
     - docs/images/nf-core-sampletracking_logo_dark.png
     - .github/ISSUE_TEMPLATE/config.yml
