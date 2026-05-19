@@ -9,3 +9,6 @@ testing*
 null/
 .env
 .nf-test*
+# pixi environments
+.pixi/*
+!.pixi/config.toml

@@ -32,10 +32,10 @@ workflow SAMPLETRACKING {
     ch_fasta_fai                // channel: [meta,/path/to/fasta, /path/to/fasta.fai]
     ch_haplotype_map            // channel: [meta, /path/to/haplotype_map]
 
-    outdir                      // string:  path/to/outdir
-    multiqc_config              // string:  path/to/multiqc_config
-    multiqc_logo                // string:  path/to/multiqc_logo
-    multiqc_methods_description // string:  path/to/multiqc_methods_description
+    outdir                      // path:  path/to/outdir
+    multiqc_config              // path:  path/to/multiqc_config
+    multiqc_logo                // path:  path/to/multiqc_logo
+    multiqc_methods_description // path:  path/to/multiqc_methods_description
 
     main:
     def ch_multiqc_files = channel.empty()
@@ -272,7 +272,7 @@ workflow SAMPLETRACKING {
     softwareVersionsToYAML(topic_versions.versions_file)
         .mix(topic_versions_string)
         .collectFile(
-            storeDir: "${outdir}/pipeline_info",
+            storeDir: outdir.resolve("pipeline_info").toUriString(),
             name:  'structural_software_'  + 'mqc_'  + 'versions.yml',
             sort: true,
             newLine: true
@@ -285,10 +285,10 @@ workflow SAMPLETRACKING {
     ch_multiqc_config        = channel.fromPath(
         "$projectDir/assets/multiqc_config.yml", checkIfExists: true)
     ch_multiqc_custom_config = multiqc_config ?
-        channel.fromPath(multiqc_config, checkIfExists: true) :
+        channel.of(multiqc_config) :
         channel.empty()
     ch_multiqc_logo          = multiqc_logo ?
-        channel.fromPath(multiqc_logo, checkIfExists: true) :
+        channel.of(multiqc_logo) :
         channel.empty()
 
     summary_params      = paramsSummaryMap(
@@ -297,7 +297,7 @@ workflow SAMPLETRACKING {
     ch_multiqc_files = ch_multiqc_files.mix(
         ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
     ch_multiqc_custom_methods_description = multiqc_methods_description ?
-        file(multiqc_methods_description, checkIfExists: true) :
+        multiqc_methods_description :
         file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
     ch_methods_description                = channel.value(
         methodsDescriptionText(ch_multiqc_custom_methods_description))
