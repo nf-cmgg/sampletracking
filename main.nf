@@ -139,9 +139,11 @@ workflow {
         channel.value([ [id:"genome_fasta"], params.fasta, params.fai ]),
         channel.value([ [id:"haplotype_map"], params.haplotype_map ]),
         params.outdir,
-        params.multiqc_config,
-        params.multiqc_logo,
-        params.multiqc_methods_description
+        params.multiqc_config
+            ? [file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true), params.multiqc_config]
+            : [file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true)],
+        params.multiqc_logo ? params.multiqc_logo : [],
+        params.multiqc_methods_description ? params.multiqc_methods_description : file("${projectDir}/assets/methods_description_template.yml", checkIfExists: true),
     )
     //
     // SUBWORKFLOW: Run completion tasks
