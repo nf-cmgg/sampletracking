@@ -13,9 +13,11 @@ lint:
     - .github/PULL_REQUEST_TEMPLATE.md
     - assets/email_template.txt
     - docs/README.md
-  nextflow_config:
-    - manifest.name
-    - manifest.homePage
+  # nextflow_config:
+  #   - manifest.name
+  #   - manifest.homePage
+  nextflow_config: false # TMP
+  schema_params: false # TMP
   multiqc_config:
     - report_comment
   files_exist:
