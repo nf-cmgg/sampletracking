@@ -154,17 +154,31 @@ workflow {
         params.plaintext_email,
         params.outdir,
         params.monochrome_logs,
-        SAMPLETRACKING.out.multiqc_report
+        SAMPLETRACKING.out.multiqc_report.filter { meta, _file -> meta.id == "multiqc" }.first(),
     )
 
     publish:
     multiqc_report = SAMPLETRACKING.out.multiqc_report
-    multiqc_pools  = SAMPLETRACKING.out.multiqc_pools
+    crosscheck_metrics = SAMPLETRACKING.out.crosscheck_metrics
+    sex_prediction = SAMPLETRACKING.out.sex_prediction
 }
 
 output {
-    multiqc_report { path "multiqc/" }
-    multiqc_pools  { path "multiqc/" }
+    multiqc_report {
+        path { meta, _file ->
+            return ("${meta.id}/")
+        }
+    }
+    crosscheck_metrics {
+        path { meta, _file ->
+            return (meta.pool ? "${meta.pool}/" : "crosscheck_metrics/")
+        }
+    }
+    sex_prediction {
+        path { meta, _file ->
+            return (meta.pool ? "${meta.pool}/" : "sex_prediction/")
+        }
+    }
 }
 
 /*
