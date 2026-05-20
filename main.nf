@@ -139,9 +139,11 @@ workflow {
         channel.value([ [id:"genome_fasta"], params.fasta, params.fai ]),
         channel.value([ [id:"haplotype_map"], params.haplotype_map ]),
         params.outdir,
-        params.multiqc_config,
-        params.multiqc_logo,
-        params.multiqc_methods_description
+        params.multiqc_config
+            ? [file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true), params.multiqc_config]
+            : [file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true)],
+        params.multiqc_logo ? params.multiqc_logo : [],
+        params.multiqc_methods_description ? params.multiqc_methods_description : file("${projectDir}/assets/methods_description_template.yml", checkIfExists: true),
     )
     //
     // SUBWORKFLOW: Run completion tasks
@@ -152,18 +154,31 @@ workflow {
         params.plaintext_email,
         params.outdir,
         params.monochrome_logs,
-        params.hook_url,
-        SAMPLETRACKING.out.multiqc_report
+        SAMPLETRACKING.out.multiqc_report.filter { meta, _file -> meta.id == "multiqc" }.first(),
     )
 
     publish:
     multiqc_report = SAMPLETRACKING.out.multiqc_report
-    multiqc_pools  = SAMPLETRACKING.out.multiqc_pools
+    crosscheck_metrics = SAMPLETRACKING.out.crosscheck_metrics
+    sex_prediction = SAMPLETRACKING.out.sex_prediction
 }
 
 output {
-    multiqc_report { path "multiqc/" }
-    multiqc_pools  { path "multiqc/" }
+    multiqc_report {
+        path { meta, _file ->
+            return ("${meta.id}/")
+        }
+    }
+    crosscheck_metrics {
+        path { meta, _file ->
+            return (meta.pool ? "${meta.pool}/" : "crosscheck_metrics/")
+        }
+    }
+    sex_prediction {
+        path { meta, _xy, _sry, _hetx ->
+            return (meta.pool ? "${meta.pool}/" : "sex_prediction/")
+        }
+    }
 }
 
 /*

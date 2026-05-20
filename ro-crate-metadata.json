@@ -21,9 +21,9 @@
         {
             "@id": "./",
             "@type": "Dataset",
-            "creativeWorkStatus": "InProgress",
-            "datePublished": "2025-10-30T12:51:04+00:00",
-            "description": "# ![nf-cmgg/sampletracking](docs/images/nf-cmgg-sampletracking_logo_light.svg#gh-light-mode-only) ![nf-cmgg/sampletracking](docs/images/nf-cmgg-sampletracking_logo_dark.svg#gh-dark-mode-only)\n\n[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new/nf-cmgg/sampletracking)\n[![GitHub Actions CI Status](https://github.com/nf-cmgg/sampletracking/actions/workflows/nf-test.yml/badge.svg)](https://github.com/nf-cmgg/sampletracking/actions/workflows/nf-test.yml)\n[![GitHub Actions Linting Status](https://github.com/nf-cmgg/sampletracking/actions/workflows/linting.yml/badge.svg)](https://github.com/nf-cmgg/sampletracking/actions/workflows/linting.yml)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.XXXXXXX-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.XXXXXXX)\n[![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)\n\n[![Nextflow](https://img.shields.io/badge/version-%E2%89%A525.10.0-green?style=flat&logo=nextflow&logoColor=white&color=%230DC09D&link=https%3A%2F%2Fnextflow.io)](https://www.nextflow.io/)\n[![nf-core template version](https://img.shields.io/badge/nf--core_template-3.4.1-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/3.4.1)\n[![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)\n[![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)\n[![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)\n[![Launch on Seqera Platform](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Seqera%20Platform-%234256e7)](https://cloud.seqera.io/launch?pipeline=https://github.com/nf-cmgg/sampletracking)\n\n## Introduction\n\n**nf-cmgg/sampletracking** is a bioinformatics pipeline that performs sampletracking on sequencing samples. The pipeline does this by crosschecking SNP fingerprints and by checking if the expected sex matches the real sex of the sample.\n\n![metro_map](docs/images/metro_map.png)\n\n## Usage\n\n> [!NOTE]\n> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.\n\nFirst, prepare a samplesheet with your input data that looks as follows:\n\n`samplesheet.csv`:\n\n```csv\nsample,pool,sex,sample_bam,sample_bam_index,snp_bam,snp_bam_index\nSAMPLE1,POOL1,F,SAMPLE1.bam,SAMPLE1.bam.bai,SAMPLE1_snp.cram,SAMPLE2_snp.cram.crai\n```\n\nEach row represents a sample annotated with the pool it was sequenced in and the expected sex of this sample. It also needs a BAM/CRAM file with the sample data and (optionally) a FASTQ/BAM/CRAM file with SNP tracking data for the sample. Crosschecking fingerprints will be skipped when no SNP tracking data is provided.\n\nNow, you can run the pipeline using:\n\n```bash\nnextflow run nf-cmgg/sampletracking \\\n   -profile <docker/singularity/.../institute> \\\n   --input samplesheet.csv \\\n   --outdir <OUTDIR>\n```\n\n> [!WARNING]\n> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_;\n> see [docs](https://nf-co.re/usage/configuration#custom-configuration-files).\n\n## Credits\n\nnf-cmgg/sampletracking was originally written by [@matthdsm](https://github.com/matthdsm).\n\nWe thank the following people for their extensive assistance in the development of this pipeline:\n\n- [@nvnieuwk](https://github.com/nvnieuwk)\n\n## Contributions and Support\n\nIf you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).\n\n## Development environment\n\nA [pixi](https://pixi.prefix.dev/latest/) development environment is available for this pipeline. Run the following command to install the environment:\n\n```\npixi install\n```\n\nThen run `pixi shell` to enter the environment and start developing.\n\n## Citations\n\nAn extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.\n\nThis pipeline uses code and infrastructure developed and maintained by the [nf-core](https://nf-co.re) community, reused here under the [MIT license](https://github.com/nf-core/tools/blob/master/LICENSE).\n\n> **The nf-core framework for community-curated bioinformatics pipelines.**\n>\n> Philip Ewels, Alexander Peltzer, Sven Fillinger, Harshil Patel, Johannes Alneberg, Andreas Wilm, Maxime Ulysse Garcia, Paolo Di Tommaso & Sven Nahnsen.\n>\n> _Nat Biotechnol._ 2020 Feb 13. doi: [10.1038/s41587-020-0439-x](https://dx.doi.org/10.1038/s41587-020-0439-x).\n",
+            "creativeWorkStatus": "Stable",
+            "datePublished": "2026-05-19T19:54:47+00:00",
+            "description": "# ![nf-cmgg/sampletracking](docs/images/nf-cmgg-sampletracking_logo_light.svg#gh-light-mode-only) ![nf-cmgg/sampletracking](docs/images/nf-cmgg-sampletracking_logo_dark.svg#gh-dark-mode-only)\n\n[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new/nf-cmgg/sampletracking)\n[![GitHub Actions CI Status](https://github.com/nf-cmgg/sampletracking/actions/workflows/nf-test.yml/badge.svg)](https://github.com/nf-cmgg/sampletracking/actions/workflows/nf-test.yml)\n[![GitHub Actions Linting Status](https://github.com/nf-cmgg/sampletracking/actions/workflows/linting.yml/badge.svg)](https://github.com/nf-cmgg/sampletracking/actions/workflows/linting.yml)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.XXXXXXX-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.XXXXXXX)\n[![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)\n\n[![Nextflow](https://img.shields.io/badge/version-%E2%89%A526.04.0-green?style=flat&logo=nextflow&logoColor=white&color=%230DC09D&link=https%3A%2F%2Fnextflow.io)](https://www.nextflow.io/)\n[![nf-core template version](https://img.shields.io/badge/nf--core_template-3.4.1-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/3.4.1)\n[![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)\n[![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)\n[![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)\n[![Launch on Seqera Platform](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Seqera%20Platform-%234256e7)](https://cloud.seqera.io/launch?pipeline=https://github.com/nf-cmgg/sampletracking)\n\n## Introduction\n\n**nf-cmgg/sampletracking** is a bioinformatics pipeline that performs sampletracking on sequencing samples. The pipeline does this by crosschecking SNP fingerprints and by checking if the expected sex matches the real sex of the sample.\n\n![metro_map](docs/images/metro_map.png)\n\n## Usage\n\n> [!NOTE]\n> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.\n\nFirst, prepare a samplesheet with your input data that looks as follows:\n\n`samplesheet.csv`:\n\n```csv\nsample,pool,sex,sample_bam,sample_bam_index,snp_bam,snp_bam_index\nSAMPLE1,POOL1,F,SAMPLE1.bam,SAMPLE1.bam.bai,SAMPLE1_snp.cram,SAMPLE2_snp.cram.crai\n```\n\nEach row represents a sample annotated with the pool it was sequenced in and the expected sex of this sample. It also needs a BAM/CRAM file with the sample data and (optionally) a FASTQ/BAM/CRAM file with SNP tracking data for the sample. Crosschecking fingerprints will be skipped when no SNP tracking data is provided.\n\nNow, you can run the pipeline using:\n\n```bash\nnextflow run nf-cmgg/sampletracking \\\n   -profile <docker/singularity/.../institute> \\\n   --input samplesheet.csv \\\n   --outdir <OUTDIR>\n```\n\n> [!WARNING]\n> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_;\n> see [docs](https://nf-co.re/usage/configuration#custom-configuration-files).\n\n## Credits\n\nnf-cmgg/sampletracking was originally written by [@matthdsm](https://github.com/matthdsm).\n\nWe thank the following people for their extensive assistance in the development of this pipeline:\n\n- [@nvnieuwk](https://github.com/nvnieuwk)\n\n## Contributions and Support\n\nIf you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).\n\n## Development environment\n\nA [pixi](https://pixi.prefix.dev/latest/) development environment is available for this pipeline. Run the following command to install the environment:\n\n```\npixi install\n```\n\nThen run `pixi shell` to enter the environment and start developing.\n\n## Citations\n\nAn extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.\n\nThis pipeline uses code and infrastructure developed and maintained by the [nf-core](https://nf-co.re) community, reused here under the [MIT license](https://github.com/nf-core/tools/blob/master/LICENSE).\n\n> **The nf-core framework for community-curated bioinformatics pipelines.**\n>\n> Philip Ewels, Alexander Peltzer, Sven Fillinger, Harshil Patel, Johannes Alneberg, Andreas Wilm, Maxime Ulysse Garcia, Paolo Di Tommaso & Sven Nahnsen.\n>\n> _Nat Biotechnol._ 2020 Feb 13. doi: [10.1038/s41587-020-0439-x](https://dx.doi.org/10.1038/s41587-020-0439-x).\n",
             "hasPart": [
                 {
                     "@id": "main.nf"
@@ -45,9 +45,6 @@
                 },
                 {
                     "@id": "modules/"
-                },
-                {
-                    "@id": "modules/local/"
                 },
                 {
                     "@id": "modules/nf-core/"
@@ -102,7 +99,7 @@
             },
             "mentions": [
                 {
-                    "@id": "#be1fa202-2d41-46d9-9c66-d40def7fa808"
+                    "@id": "#6cbc1f44-cdaf-48aa-8cd6-be94a2a3ea97"
                 }
             ],
             "name": "nf-cmgg/sampletracking"
@@ -129,16 +126,13 @@
                 "SoftwareSourceCode",
                 "ComputationalWorkflow"
             ],
-            "creator": [
+            "author": [
                 {
                     "@id": "https://orcid.org/0000-0003-2555-3114"
-                },
-                {
-                    "@id": "https://orcid.org/0009-0003-5619-1555"
                 }
             ],
             "dateCreated": "",
-            "dateModified": "2025-10-30T13:51:04Z",
+            "dateModified": "2026-05-19T21:54:47Z",
             "dct:conformsTo": "https://bioschemas.org/profiles/ComputationalWorkflow/1.0-RELEASE/",
             "image": {
                 "@id": "docs/images/metro_map.png"
@@ -153,6 +147,9 @@
             "maintainer": [
                 {
                     "@id": "https://orcid.org/0000-0003-2555-3114"
+                },
+                {
+                    "@id": "https://orcid.org/0009-0003-5619-1555"
                 }
             ],
             "name": [
@@ -166,10 +163,10 @@
             },
             "url": [
                 "https://github.com/nf-cmgg/sampletracking",
-                "https://nf-co.re/nf-cmgg/sampletracking/dev/"
+                "https://nf-co.re/nf-cmgg/sampletracking/1.0.1/"
             ],
             "version": [
-                "1.0.1dev"
+                "1.0.1"
             ]
         },
         {
@@ -182,7 +179,7 @@
             "url": {
                 "@id": "https://www.nextflow.io/"
             },
-            "version": "!>=25.04.0"
+            "version": "!>=26.04.0"
         },
         {
             "@id": "docs/images/metro_map.png",
@@ -193,11 +190,11 @@
             "name": "Workflow diagram"
         },
         {
-            "@id": "#be1fa202-2d41-46d9-9c66-d40def7fa808",
+            "@id": "#6cbc1f44-cdaf-48aa-8cd6-be94a2a3ea97",
             "@type": "TestSuite",
             "instance": [
                 {
-                    "@id": "#3091679a-cb1d-4767-91c4-bb534b38b123"
+                    "@id": "#bc78421a-fd3c-4195-9d7f-0e87e7e997ed"
                 }
             ],
             "mainEntity": {
@@ -206,7 +203,7 @@
             "name": "Test suite for nf-cmgg/sampletracking"
         },
         {
-            "@id": "#3091679a-cb1d-4767-91c4-bb534b38b123",
+            "@id": "#bc78421a-fd3c-4195-9d7f-0e87e7e997ed",
             "@type": "TestInstance",
             "name": "GitHub Actions workflow for testing nf-cmgg/sampletracking",
             "resource": "repos/nf-cmgg/sampletracking/actions/workflows/nf-test.yml",
@@ -247,11 +244,6 @@
             "@id": "modules/",
             "@type": "Dataset",
             "description": "Modules used by the pipeline"
-        },
-        {
-            "@id": "modules/local/",
-            "@type": "Dataset",
-            "description": "Pipeline-specific modules"
         },
         {
             "@id": "modules/nf-core/",
@@ -337,14 +329,18 @@
         {
             "@id": "https://orcid.org/0000-0003-2555-3114",
             "@type": "Person",
-            "email": "11850640+matthdsm@users.noreply.github.com",
-            "name": "Matthias De Smet"
+            "affiliation": "Ghent University Hospital",
+            "email": "matthias.desmet@ugent.be",
+            "name": "Matthias De Smet",
+            "url": "https://github.com/matthdsm"
         },
         {
             "@id": "https://orcid.org/0009-0003-5619-1555",
             "@type": "Person",
-            "email": "101190534+nvnieuwk@users.noreply.github.com",
-            "name": "Nicolas Vannieuwkerke"
+            "affiliation": "Ghent University Hospital",
+            "email": "nicolas.vannieuwkerke@ugent.be",
+            "name": "Nicolas Nicolas Vannieuwkerke",
+            "url": "https://github.com/nvnieuwk"
         }
     ]
 }

@@ -63,9 +63,9 @@ nextflow_workflow {
                     ]
                 )
                 input[4] = file("${outputDir}")
-                input[5] = ""
-                input[6] = ""
-                input[7] = ""
+                input[5] = []
+                input[6] = []
+                input[7] = []
                 """
             }
         }
@@ -116,9 +116,9 @@ nextflow_workflow {
                     ]
                 )
                 input[4] = file("${outputDir}")
-                input[5] = ""
-                input[6] = ""
-                input[7] = ""
+                input[5] = []
+                input[6] = []
+                input[7] = []
                 """
             }
         }
