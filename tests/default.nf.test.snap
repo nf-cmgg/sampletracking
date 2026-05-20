@@ -3,24 +3,26 @@
         "content": [
             {
                 "0": [
-                    "multiqc_report.html:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    [
+                        {
+                            "id": "multiqc"
+                        },
+                        "multiqc_report.html:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "1": [
-                    "pool1_multiqc_report.html:md5,d41d8cd98f00b204e9800998ecf8427e"
-                ],
-                "2": [
                     
                 ],
-                "3": [
+                "2": [
                     [
                         {
                             "id": "sample1",
                             "pool": "pool1",
                             "pool_count": 2
                         },
-                        "sample1.xy_xy.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "sample1.xy_sry.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "sample1.xy_hetx.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "sample1_xy.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample1_sry.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample1_hetx.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ],
                     [
                         {
@@ -28,19 +30,21 @@
                             "pool": "pool1",
                             "pool_count": 2
                         },
-                        "sample2.xy_xy.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "sample2.xy_sry.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "sample2.xy_hetx.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "sample2_xy.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample2_sry.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample2_hetx.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "crosscheck_metrics": [
                     
                 ],
-                "multiqc_pools": [
-                    "pool1_multiqc_report.html:md5,d41d8cd98f00b204e9800998ecf8427e"
-                ],
                 "multiqc_report": [
-                    "multiqc_report.html:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    [
+                        {
+                            "id": "multiqc"
+                        },
+                        "multiqc_report.html:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "sex_prediction": [
                     [
@@ -49,9 +53,9 @@
                             "pool": "pool1",
                             "pool_count": 2
                         },
-                        "sample1.xy_xy.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "sample1.xy_sry.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "sample1.xy_hetx.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "sample1_xy.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample1_sry.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample1_hetx.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ],
                     [
                         {
@@ -59,29 +63,31 @@
                             "pool": "pool1",
                             "pool_count": 2
                         },
-                        "sample2.xy_xy.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "sample2.xy_sry.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "sample2.xy_hetx.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "sample2_xy.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample2_sry.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample2_hetx.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-02-23T15:14:58.180905986",
+        "timestamp": "2026-05-20T13:18:35.435836634",
         "meta": {
-            "nf-test": "0.9.4",
-            "nextflow": "25.10.4"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.1"
         }
     },
     "Should run without failures": {
         "content": [
             {
                 "0": [
-                    "multiqc_report.html:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    [
+                        {
+                            "id": "multiqc"
+                        },
+                        "multiqc_report.html:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "1": [
-                    "pool1_multiqc_report.html:md5,d41d8cd98f00b204e9800998ecf8427e"
-                ],
-                "2": [
                     [
                         {
                             "groupSize": 2,
@@ -92,16 +98,16 @@
                         "pool1.crosscheck_metrics.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
-                "3": [
+                "2": [
                     [
                         {
                             "id": "sample1",
                             "pool": "pool1",
                             "pool_count": 2
                         },
-                        "sample1.xy_xy.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "sample1.xy_sry.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "sample1.xy_hetx.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "sample1_xy.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample1_sry.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample1_hetx.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ],
                     [
                         {
@@ -109,9 +115,9 @@
                             "pool": "pool1",
                             "pool_count": 2
                         },
-                        "sample2.xy_xy.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "sample2.xy_sry.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "sample2.xy_hetx.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "sample2_xy.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample2_sry.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample2_hetx.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "crosscheck_metrics": [
@@ -125,11 +131,13 @@
                         "pool1.crosscheck_metrics.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
-                "multiqc_pools": [
-                    "pool1_multiqc_report.html:md5,d41d8cd98f00b204e9800998ecf8427e"
-                ],
                 "multiqc_report": [
-                    "multiqc_report.html:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    [
+                        {
+                            "id": "multiqc"
+                        },
+                        "multiqc_report.html:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "sex_prediction": [
                     [
@@ -138,9 +146,9 @@
                             "pool": "pool1",
                             "pool_count": 2
                         },
-                        "sample1.xy_xy.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "sample1.xy_sry.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "sample1.xy_hetx.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "sample1_xy.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample1_sry.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample1_hetx.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ],
                     [
                         {
@@ -148,17 +156,17 @@
                             "pool": "pool1",
                             "pool_count": 2
                         },
-                        "sample2.xy_xy.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "sample2.xy_sry.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "sample2.xy_hetx.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "sample2_xy.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample2_sry.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample2_hetx.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-02-23T15:14:39.356411664",
+        "timestamp": "2026-05-20T13:17:50.737740062",
         "meta": {
-            "nf-test": "0.9.4",
-            "nextflow": "25.10.4"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.1"
         }
     }
 }
