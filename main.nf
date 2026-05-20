@@ -175,7 +175,7 @@ output {
         }
     }
     sex_prediction {
-        path { meta, _file ->
+        path { meta, _xy, _sry, _hetx ->
             return (meta.pool ? "${meta.pool}/" : "sex_prediction/")
         }
     }
