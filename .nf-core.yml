@@ -24,6 +24,7 @@ lint:
     - .github/ISSUE_TEMPLATE/config.yml
     - .github/workflows/awstest.yml
     - .github/workflows/awsfulltest.yml
+    - .github/workflows/download_pipeline.yml
   nf_test_content: false
 
 template:
