@@ -3,15 +3,27 @@ Changes in 'multiqc/main.nf':
 --- modules/nf-core/multiqc/main.nf
 +++ modules/nf-core/multiqc/main.nf
 @@ -7,7 +7,7 @@
-         'biocontainers/multiqc:1.26--pyhdfd78af_0' }"
+         'community.wave.seqera.io/library/multiqc:1.33--ee7739d47738383b' }"
  
      input:
--    path  multiqc_files, stageAs: "?/*"
-+    tuple val(meta), path(multiqc_files)
+-    path multiqc_files, stageAs: "?/*"
++    tuple val(meta), path(multiqc_files, stageAs: "?/*")
      path(multiqc_config)
      path(extra_multiqc_config)
      path(multiqc_logo)
-@@ -50,10 +50,15 @@
+@@ -26,7 +26,10 @@
+ 
+     script:
+     def args = task.ext.args ?: ''
+-    def prefix = task.ext.prefix ? "--filename ${task.ext.prefix}.html" : ''
++    def prefix = ''
++    if(args.contains("--title")) {
++        prefix = args.split("--title ")[-1].split(" ")[0] + "_"
++    }
+     def config = multiqc_config ? "--config ${multiqc_config}" : ''
+     def extra_config = extra_multiqc_config ? "--config ${extra_multiqc_config}" : ''
+     def logo = multiqc_logo ? "--cl-config 'custom_logo: \"${multiqc_logo}\"'" : ''
+@@ -46,10 +49,15 @@
      """
  
      stub:
@@ -22,18 +34,19 @@ Changes in 'multiqc/main.nf':
 +    }
      """
 -    mkdir multiqc_data
+-    touch multiqc_data/.stub
 -    mkdir multiqc_plots
 -    touch multiqc_report.html
 +    mkdir ${prefix}multiqc_data
++    touch ${prefix}multiqc_data/.stub
 +    mkdir ${prefix}multiqc_plots
 +    touch ${prefix}multiqc_report.html
- 
-     cat <<-END_VERSIONS > versions.yml
-     "${task.process}":
+     """
+ }
 
 'modules/nf-core/multiqc/environment.yml' is unchanged
 'modules/nf-core/multiqc/meta.yml' is unchanged
-'modules/nf-core/multiqc/tests/tags.yml' is unchanged
+'modules/nf-core/multiqc/tests/custom_prefix.config' is unchanged
 'modules/nf-core/multiqc/tests/main.nf.test' is unchanged
 'modules/nf-core/multiqc/tests/main.nf.test.snap' is unchanged
 'modules/nf-core/multiqc/tests/nextflow.config' is unchanged

@@ -67,6 +67,13 @@
             }
         },
         "uniqueEntries": ["sample"],
-        "required": ["sample", "sample_bam"]
+        "anyOf": [
+            {
+                "required": ["sample", "pool", "sample_bam", "snp_bam"]
+            },
+            {
+                "required": ["sample", "pool", "sample_bam", "snp_fastq_1"]
+            }
+        ]
     }
 }

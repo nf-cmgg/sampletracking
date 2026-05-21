@@ -1,0 +1,70 @@
+Changes in component 'nf-core/ngsbits/samplegender'
+'modules/nf-core/ngsbits/samplegender/environment.yml' is unchanged
+'modules/nf-core/ngsbits/samplegender/meta.yml' is unchanged
+Changes in 'ngsbits/samplegender/main.nf':
+--- modules/nf-core/ngsbits/samplegender/main.nf
++++ modules/nf-core/ngsbits/samplegender/main.nf
+@@ -9,12 +9,12 @@
+ 
+     input:
+     tuple val(meta), path(bam), path(bai)
+-    tuple val(meta2), path(fasta)
+-    tuple val(meta3), path(fai)
+-    val method
++    tuple val(meta2), path(fasta), path(fai)
+ 
+     output:
+-    tuple val(meta), path("*.tsv"), emit: tsv
++    tuple val(meta), path("*_xy.tsv")   , emit: xy_tsv
++    tuple val(meta), path("*_hetx.tsv") , emit: hetx_tsv
++    tuple val(meta), path("*_sry.tsv")  , emit: sry_tsv
+     tuple val("${task.process}"), val('ngsbits'), eval("SampleGender --version  2>&1 | sed 's/SampleGender //'"), topic: versions, emit: versions_ngsbits
+ 
+     when:
+@@ -22,20 +22,38 @@
+ 
+     script:
+     def args = task.ext.args ?: ''
++    def args2 = task.ext.args2 ?: ''
++    def args3 = task.ext.args3 ?: ''
+     def prefix = task.ext.prefix ?: "${meta.id}"
+     def ref = fasta ? "-ref ${fasta}" : ""
+     """
+     SampleGender \\
+         -in ${bam} \\
+-        -method ${method} \\
+-        -out ${prefix}.tsv \\
++        -method xy \\
++        -out ${prefix}_xy.tsv \\
+         ${ref} \\
+-        ${args}
++        ${args} \\
++    && \\
++    SampleGender \\
++        -in ${bam} \\
++        -method hetx \\
++        -out ${prefix}_hetx.tsv \\
++        ${ref} \\
++        ${args2} \\
++    && \\
++    SampleGender \\
++        -in ${bam} \\
++        -method sry \\
++        -out ${prefix}_sry.tsv \\
++        ${ref} \\
++        ${args3}
+     """
+ 
+     stub:
+     def prefix = task.ext.prefix ?: "${meta.id}"
+     """
+-    touch ${prefix}.tsv
++    touch ${prefix}_xy.tsv
++    touch ${prefix}_hetx.tsv
++    touch ${prefix}_sry.tsv
+     """
+ }
+
+'modules/nf-core/ngsbits/samplegender/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/ngsbits/samplegender/tests/main.nf.test' is unchanged
+************************************************************

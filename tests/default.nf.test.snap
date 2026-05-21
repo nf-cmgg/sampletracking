@@ -1,0 +1,172 @@
+{
+    "Should run without failures - skip crosscheck fingerprints": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "multiqc"
+                        },
+                        "multiqc_report.html:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "sample1",
+                            "pool": "pool1",
+                            "pool_count": 2
+                        },
+                        "sample1_xy.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample1_sry.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample1_hetx.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        {
+                            "id": "sample2",
+                            "pool": "pool1",
+                            "pool_count": 2
+                        },
+                        "sample2_xy.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample2_sry.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample2_hetx.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "crosscheck_metrics": [
+                    
+                ],
+                "multiqc_report": [
+                    [
+                        {
+                            "id": "multiqc"
+                        },
+                        "multiqc_report.html:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "sex_prediction": [
+                    [
+                        {
+                            "id": "sample1",
+                            "pool": "pool1",
+                            "pool_count": 2
+                        },
+                        "sample1_xy.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample1_sry.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample1_hetx.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        {
+                            "id": "sample2",
+                            "pool": "pool1",
+                            "pool_count": 2
+                        },
+                        "sample2_xy.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample2_sry.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample2_hetx.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-05-20T13:18:35.435836634",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.1"
+        }
+    },
+    "Should run without failures": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "multiqc"
+                        },
+                        "multiqc_report.html:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "groupSize": 2,
+                            "groupTarget": {
+                                "id": "pool1"
+                            }
+                        },
+                        "pool1.crosscheck_metrics.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "sample1",
+                            "pool": "pool1",
+                            "pool_count": 2
+                        },
+                        "sample1_xy.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample1_sry.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample1_hetx.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        {
+                            "id": "sample2",
+                            "pool": "pool1",
+                            "pool_count": 2
+                        },
+                        "sample2_xy.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample2_sry.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample2_hetx.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "crosscheck_metrics": [
+                    [
+                        {
+                            "groupSize": 2,
+                            "groupTarget": {
+                                "id": "pool1"
+                            }
+                        },
+                        "pool1.crosscheck_metrics.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "multiqc_report": [
+                    [
+                        {
+                            "id": "multiqc"
+                        },
+                        "multiqc_report.html:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "sex_prediction": [
+                    [
+                        {
+                            "id": "sample1",
+                            "pool": "pool1",
+                            "pool_count": 2
+                        },
+                        "sample1_xy.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample1_sry.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample1_hetx.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        {
+                            "id": "sample2",
+                            "pool": "pool1",
+                            "pool_count": 2
+                        },
+                        "sample2_xy.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample2_sry.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "sample2_hetx.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-05-20T13:17:50.737740062",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.1"
+        }
+    }
+}
