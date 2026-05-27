@@ -282,11 +282,7 @@ workflow SAMPLETRACKING {
         .toList()
         .map { files -> [files] }
         .dump(tag: "Summary files for MultiQC", pretty: true)
-    ch_multiqc_input = ch_multiqc_files
-        .map { meta, files ->
-            def new_meta = meta.pool ? [id: meta.pool] : [id: 'multiqc']
-            return [new_meta, files]
-        }
+    ch_multiqc_input = ch_multiqc_files.view()
         .groupTuple(by: 0)
         .combine(ch_summary_files)
         .map { meta, multiqc_files, summary_files ->
