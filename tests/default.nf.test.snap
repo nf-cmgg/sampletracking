@@ -5,7 +5,7 @@
                 "0": [
                     [
                         {
-                            "id": "multiqc"
+                            "id": "pool1"
                         },
                         "multiqc_report.html:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
@@ -41,7 +41,7 @@
                 "multiqc_report": [
                     [
                         {
-                            "id": "multiqc"
+                            "id": "pool1"
                         },
                         "multiqc_report.html:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
@@ -70,7 +70,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-05-20T13:18:35.435836634",
+        "timestamp": "2026-05-27T12:57:52.633600497",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.1"
@@ -82,7 +82,7 @@
                 "0": [
                     [
                         {
-                            "id": "multiqc"
+                            "id": "pool1"
                         },
                         "multiqc_report.html:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
@@ -134,7 +134,7 @@
                 "multiqc_report": [
                     [
                         {
-                            "id": "multiqc"
+                            "id": "pool1"
                         },
                         "multiqc_report.html:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
@@ -163,7 +163,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-05-20T13:17:50.737740062",
+        "timestamp": "2026-05-27T12:57:38.476272794",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.1"
