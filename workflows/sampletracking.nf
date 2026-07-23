@@ -283,7 +283,7 @@ workflow SAMPLETRACKING {
         .map { files -> [files] }
         .dump(tag: "Summary files for MultiQC", pretty: true)
     ch_multiqc_input = ch_multiqc_files
-        .groupTuple(by: 0)
+        .groupTuple(size:2) // size 2 for sex check + crosscheck fingerprints
         .combine(ch_summary_files)
         .map { meta, multiqc_files, summary_files ->
             return [meta, (multiqc_files + summary_files).flatten(), multiqc_config.flatten(), multiqc_logo, [], []]
