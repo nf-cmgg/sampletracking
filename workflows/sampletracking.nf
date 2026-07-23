@@ -283,6 +283,10 @@ workflow SAMPLETRACKING {
         .map { files -> [files] }
         .dump(tag: "Summary files for MultiQC", pretty: true)
     ch_multiqc_input = ch_multiqc_files
+        .map { meta, files ->
+            // This is needed to prevent merge key mismatches on pipeline resume
+            tuple([id: meta.id], files)
+        }
         .groupTuple(size:2) // size 2 for sex check + crosscheck fingerprints
         .combine(ch_summary_files)
         .map { meta, multiqc_files, summary_files ->
