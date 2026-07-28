@@ -94,18 +94,14 @@ workflow SAMPLETRACKING {
 
     def ch_crosscheck_metrics_out = channel.empty()
     ch_samplesheet_fixed
-        .filter { meta, _sample_bam, _sample_bam_index, snp_fastq, snp_bam, _snp_bam_index ->
-            if(!snp_bam && !snp_fastq) {
-                log.warn("No SNP BAM/CRAM/FASTQ files were detected for '${meta.id}'. Skipping the crosscheck fingerprints step for this sample.")
-                return false
-            }
-            return true
-        }
         .branch { meta, sample_bam, sample_bam_index, snp_fastq, snp_bam, snp_bam_index ->
             aligned: snp_bam
                 return [meta, sample_bam, sample_bam_index, snp_bam, snp_bam_index]
             to_align : snp_fastq
                 return [meta, sample_bam, sample_bam_index, snp_fastq]
+            no_snp: true
+                log.warn("No SNP BAM/CRAM/FASTQ files were detected for '${meta.id}'. Skipping the crosscheck fingerprints step for this sample.")
+                return [[id:meta.pool], []]
         }
         .set{ ch_inputs }
 
@@ -144,7 +140,10 @@ workflow SAMPLETRACKING {
         ch_fasta_fai
     )
     ch_crosscheck_metrics_out = PICARD_CROSSCHECKFINGERPRINTS.out.crosscheck_metrics
-    ch_multiqc_files = ch_multiqc_files.mix(PICARD_CROSSCHECKFINGERPRINTS.out.crosscheck_metrics)
+    ch_multiqc_files = ch_multiqc_files.mix(
+        PICARD_CROSSCHECKFINGERPRINTS.out.crosscheck_metrics,
+        ch_inputs.no_snp.unique() // Add pools with no snp data for flow consistency
+    )
 
 
     //
