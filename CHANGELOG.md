@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## v1.0.3
 
 - Fixed an issue where pool grouping for multiqc wasn't properly performed on pipeline resume
+- Revert the default configs base to the nf-core configs in preparation of converting nf-cmgg/configs to a private repo
 
 ## v1.0.2
 

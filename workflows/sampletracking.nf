@@ -258,7 +258,7 @@ workflow SAMPLETRACKING {
     softwareVersionsToYAML(topic_versions.versions_file)
         .mix(topic_versions_string)
         .collectFile(
-            storeDir: "${outdir.toUriString()}/pipeline_info",
+            storeDir: "${outdir}/pipeline_info",
             name: 'nf_cmgg_sampletracking_software_mqc_versions.yml',
             sort: true,
             newLine: true,
