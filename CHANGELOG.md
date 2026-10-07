@@ -3,12 +3,9 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v1.0.4
-
-- Added the multiqc data to the output of the pipeline
-
 ## v1.0.3
 
+- Added the multiqc data to the output of the pipeline
 - Fixed an issue where pool grouping for multiqc wasn't properly performed on pipeline resume
 
 ## v1.0.2
