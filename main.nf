@@ -52,6 +52,9 @@ params {
     // The maximum heterozygous SNP fraction for a sample to be considered male
     max_hetx_male: Float = 0.05
 
+    // The minimum coverage required for a sample to be considered in the fingerprinting analysis
+    fingerprinting_min_coverage: Integer = 1
+
     // Path to FASTA genome file.
     fasta: Path
 
