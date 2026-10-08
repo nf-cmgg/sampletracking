@@ -13,7 +13,7 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { SAMPLETRACKING  } from './workflows/sampletracking'
+include { SAMPLETRACKING          } from './workflows/sampletracking'
 include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_sampletracking_pipeline'
 include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_sampletracking_pipeline'
 
@@ -119,7 +119,7 @@ workflow {
     //
     // SUBWORKFLOW: Run initialisation tasks
     //
-    PIPELINE_INITIALISATION (
+    PIPELINE_INITIALISATION(
         params.version,
         params.validate_params,
         args,
@@ -127,17 +127,17 @@ workflow {
         params.input,
         params.help,
         params.help_full,
-        params.show_hidden
+        params.show_hidden,
     )
 
     //
     // WORKFLOW: Run main workflow
     //
-    SAMPLETRACKING (
+    SAMPLETRACKING(
         PIPELINE_INITIALISATION.out.samplesheet,
-        channel.value([ [id: "bwa"], params.bwa_index ]),
-        channel.value([ [id:"genome_fasta"], params.fasta, params.fai ]),
-        channel.value([ [id:"haplotype_map"], params.haplotype_map ]),
+        channel.value([[id: "bwa"], params.bwa_index]),
+        channel.value([[id: "genome_fasta"], params.fasta, params.fai]),
+        channel.value([[id: "haplotype_map"], params.haplotype_map]),
         params.outdir,
         params.multiqc_config
             ? [file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true), params.multiqc_config]
@@ -148,7 +148,7 @@ workflow {
     //
     // SUBWORKFLOW: Run completion tasks
     //
-    PIPELINE_COMPLETION (
+    PIPELINE_COMPLETION(
         params.email,
         params.email_on_fail,
         params.plaintext_email,
@@ -186,9 +186,3 @@ output {
         }
     }
 }
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    THE END
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/

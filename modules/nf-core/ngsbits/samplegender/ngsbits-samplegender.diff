@@ -15,10 +15,10 @@ Changes in 'ngsbits/samplegender/main.nf':
  
      output:
 -    tuple val(meta), path("*.tsv"), emit: tsv
-+    tuple val(meta), path("*_xy.tsv")   , emit: xy_tsv
-+    tuple val(meta), path("*_hetx.tsv") , emit: hetx_tsv
-+    tuple val(meta), path("*_sry.tsv")  , emit: sry_tsv
-     tuple val("${task.process}"), val('ngsbits'), eval("SampleGender --version  2>&1 | sed 's/SampleGender //'"), topic: versions, emit: versions_ngsbits
++    tuple val(meta), path("*_xy.tsv"), emit: xy_tsv
++    tuple val(meta), path("*_hetx.tsv"), emit: hetx_tsv
++    tuple val(meta), path("*_sry.tsv"), emit: sry_tsv
+     tuple val("${task.process}"), val('ngsbits'), eval("SampleGender --version  2>&1 | sed -n 's/SampleGender //p'"), topic: versions, emit: versions_ngsbits
  
      when:
 @@ -22,20 +22,38 @@
@@ -67,4 +67,6 @@ Changes in 'ngsbits/samplegender/main.nf':
 
 'modules/nf-core/ngsbits/samplegender/tests/main.nf.test.snap' is unchanged
 'modules/nf-core/ngsbits/samplegender/tests/main.nf.test' is unchanged
+'modules/nf-core/ngsbits/samplegender/.conda-lock/linux_arm64-bd-ded3d87a5c0a98ee_1.txt' is unchanged
+'modules/nf-core/ngsbits/samplegender/.conda-lock/linux_amd64-bd-10de2f01af4c9c32_1.txt' is unchanged
 ************************************************************

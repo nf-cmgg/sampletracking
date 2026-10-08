@@ -2,95 +2,17 @@
     "Should run without failures - skip crosscheck fingerprints": {
         "content": [
             {
-                "0": [
-                    [
-                        {
-                            "id": "pool1"
-                        },
-                        [
-                            ".stub:md5,d41d8cd98f00b204e9800998ecf8427e"
-                        ]
-                    ]
-                ],
-                "1": [
-                    [
-                        {
-                            "id": "pool1"
-                        },
-                        "multiqc_report.html:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "2": [
-                    
-                ],
-                "3": [
-                    [
-                        {
-                            "id": "sample1",
-                            "pool": "pool1",
-                            "pool_count": 2
-                        },
-                        "sample1_xy.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "sample1_sry.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "sample1_hetx.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ],
-                    [
-                        {
-                            "id": "sample2",
-                            "pool": "pool1",
-                            "pool_count": 2
-                        },
-                        "sample2_xy.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "sample2_sry.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "sample2_hetx.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "crosscheck_metrics": [
-                    
-                ],
-                "multiqc_data": [
-                    [
-                        {
-                            "id": "pool1"
-                        },
-                        [
-                            ".stub:md5,d41d8cd98f00b204e9800998ecf8427e"
-                        ]
-                    ]
-                ],
-                "multiqc_report": [
-                    [
-                        {
-                            "id": "pool1"
-                        },
-                        "multiqc_report.html:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "sex_prediction": [
-                    [
-                        {
-                            "id": "sample1",
-                            "pool": "pool1",
-                            "pool_count": 2
-                        },
-                        "sample1_xy.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "sample1_sry.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "sample1_hetx.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ],
-                    [
-                        {
-                            "id": "sample2",
-                            "pool": "pool1",
-                            "pool_count": 2
-                        },
-                        "sample2_xy.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "sample2_sry.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "sample2_hetx.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ]
-            }
+                
+            },
+            [
+                "pipeline_info",
+                "pipeline_info/nf_cmgg_sampletracking_software_mqc_versions.yml"
+            ],
+            [
+                
+            ]
         ],
-        "timestamp": "2026-10-07T15:40:17.730642058",
+        "timestamp": "2026-10-08T13:49:07.228822",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
@@ -99,111 +21,17 @@
     "Should run without failures": {
         "content": [
             {
-                "0": [
-                    [
-                        {
-                            "id": "pool1"
-                        },
-                        [
-                            ".stub:md5,d41d8cd98f00b204e9800998ecf8427e"
-                        ]
-                    ]
-                ],
-                "1": [
-                    [
-                        {
-                            "id": "pool1"
-                        },
-                        "multiqc_report.html:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "2": [
-                    [
-                        {
-                            "groupSize": 2,
-                            "groupTarget": {
-                                "id": "pool1"
-                            }
-                        },
-                        "pool1.crosscheck_metrics.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "3": [
-                    [
-                        {
-                            "id": "sample1",
-                            "pool": "pool1",
-                            "pool_count": 2
-                        },
-                        "sample1_xy.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "sample1_sry.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "sample1_hetx.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ],
-                    [
-                        {
-                            "id": "sample2",
-                            "pool": "pool1",
-                            "pool_count": 2
-                        },
-                        "sample2_xy.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "sample2_sry.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "sample2_hetx.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "crosscheck_metrics": [
-                    [
-                        {
-                            "groupSize": 2,
-                            "groupTarget": {
-                                "id": "pool1"
-                            }
-                        },
-                        "pool1.crosscheck_metrics.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "multiqc_data": [
-                    [
-                        {
-                            "id": "pool1"
-                        },
-                        [
-                            ".stub:md5,d41d8cd98f00b204e9800998ecf8427e"
-                        ]
-                    ]
-                ],
-                "multiqc_report": [
-                    [
-                        {
-                            "id": "pool1"
-                        },
-                        "multiqc_report.html:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "sex_prediction": [
-                    [
-                        {
-                            "id": "sample1",
-                            "pool": "pool1",
-                            "pool_count": 2
-                        },
-                        "sample1_xy.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "sample1_sry.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "sample1_hetx.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ],
-                    [
-                        {
-                            "id": "sample2",
-                            "pool": "pool1",
-                            "pool_count": 2
-                        },
-                        "sample2_xy.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "sample2_sry.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                        "sample2_hetx.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ]
-            }
+                
+            },
+            [
+                "pipeline_info",
+                "pipeline_info/nf_cmgg_sampletracking_software_mqc_versions.yml"
+            ],
+            [
+                
+            ]
         ],
-        "timestamp": "2026-10-07T15:39:40.243245478",
+        "timestamp": "2026-10-08T13:48:50.393842",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
