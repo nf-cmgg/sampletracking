@@ -135,7 +135,6 @@ workflow {
     //
     SAMPLETRACKING(
         PIPELINE_INITIALISATION.out.samplesheet,
-        channel.value([[id: "bwa"], params.bwa_index]),
         channel.value([[id: "genome_fasta"], params.fasta, params.fai]),
         channel.value([[id: "haplotype_map"], params.haplotype_map]),
         params.outdir,
@@ -158,10 +157,10 @@ workflow {
     )
 
     publish:
-    multiqc_data        = SAMPLETRACKING.out.multiqc_data
-    multiqc_report      = SAMPLETRACKING.out.multiqc_report
-    crosscheck_metrics  = SAMPLETRACKING.out.crosscheck_metrics
-    sex_prediction      = SAMPLETRACKING.out.sex_prediction
+    multiqc_data       = SAMPLETRACKING.out.multiqc_data
+    multiqc_report     = SAMPLETRACKING.out.multiqc_report
+    crosscheck_metrics = SAMPLETRACKING.out.crosscheck_metrics
+    sex_prediction     = SAMPLETRACKING.out.sex_prediction
 }
 
 output {
