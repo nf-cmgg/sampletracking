@@ -1,8 +1,8 @@
 [workspace]
-authors = ["Nicolas Vannieuwkerke <nicolas.vannieuwkerke@ugent.be>"]
+authors = ["Nicolas Vannieuwkerke <nicolas.vannieuwkerke@ugent.be>", "Matthias De Smet <matthias.desmet@ugent.be>"]
 channels = ["conda-forge", "bioconda"]
 name = "sampletracking"
-platforms = ["linux-64", "osx-64", "osx-arm64"]
+platforms = ["linux-64", "osx-arm64"]
 version = "0.1.0"
 
 [tasks]
