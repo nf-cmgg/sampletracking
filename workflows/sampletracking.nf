@@ -4,7 +4,6 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { BWA_MEM                                  } from '../modules/nf-core/bwa/mem/main'
 include { PICARD_CROSSCHECKFINGERPRINTS            } from '../modules/nf-core/picard/crosscheckfingerprints/main'
 include { NGSBITS_SAMPLEGENDER                     } from '../modules/nf-core/ngsbits/samplegender/main'
 include { MULTIQC                                  } from '../modules/nf-core/multiqc/main'
@@ -26,7 +25,6 @@ include { SAMTOOLS_INDEX as SAMTOOLS_INDEX_SNP_BAM } from '../modules/nf-core/sa
 workflow SAMPLETRACKING {
     take:
     ch_samplesheet // channel: samplesheet read in from --input
-    ch_bwa_index // channel: [meta, /path/to/bwa_index]
     ch_fasta_fai // channel: [meta,/path/to/fasta, /path/to/fasta.fai]
     ch_haplotype_map // channel: [meta, /path/to/haplotype_map]
     outdir // path:  path/to/outdir
@@ -37,10 +35,9 @@ workflow SAMPLETRACKING {
     main:
     def ch_multiqc_files = channel.empty()
 
-    def (ch_sample, ch_snp, ch_fastq) = ch_samplesheet.multiMap { meta, sample_bam, sample_bam_index, snp_fastq, snp_bam, snp_bam_index ->
+    def (ch_sample, ch_snp) = ch_samplesheet.multiMap { meta, sample_bam, sample_bam_index, snp_bam, snp_bam_index ->
         sample: [meta, sample_bam, sample_bam_index]
         snp: [meta, snp_bam, snp_bam_index]
-        fastq: [meta, snp_fastq]
     }
 
     def (ch_sample_with_idx, ch_sample_no_idx) = ch_sample.branch { _meta, _sample_bam, sample_bam_index ->
@@ -74,11 +71,10 @@ workflow SAMPLETRACKING {
             ch_snp_none
         )
 
-    def ch_samplesheet_fixed = ch_fastq
-        .join(ch_sample_fixed, by: 0)
+    def ch_samplesheet_fixed = ch_sample_fixed
         .join(ch_snp_fixed, by: 0)
-        .map { meta, snp_fastq, sample_bam, sample_bam_index, snp_bam, snp_bam_index ->
-            [meta, sample_bam, sample_bam_index, snp_fastq, snp_bam, snp_bam_index]
+        .map { meta, sample_bam, sample_bam_index, snp_bam, snp_bam_index ->
+            [meta, sample_bam, sample_bam_index, snp_bam, snp_bam_index]
         }
 
     //
@@ -87,36 +83,17 @@ workflow SAMPLETRACKING {
 
     def ch_crosscheck_metrics_out = channel.empty()
     ch_samplesheet_fixed
-        .branch { meta, sample_bam, sample_bam_index, snp_fastq, snp_bam, snp_bam_index ->
+        .branch { meta, sample_bam, sample_bam_index, snp_bam, snp_bam_index ->
             aligned: snp_bam
             return [meta, sample_bam, sample_bam_index, snp_bam, snp_bam_index]
-            to_align: snp_fastq
-            return [meta, sample_bam, sample_bam_index, snp_fastq]
             no_snp: true
-            log.warn("No SNP BAM/CRAM/FASTQ files were detected for '${meta.id}'. Skipping the crosscheck fingerprints step for this sample.")
+            log.warn("No SNP BAM/CRAM files were detected for '${meta.id}'. Skipping the crosscheck fingerprints step for this sample.")
             return [[id: meta.pool], []]
         }
         .set { ch_inputs }
 
-    ch_inputs.to_align
-        .multiMap { meta, sample_bam, sample_bam_index, snp_fastq ->
-            fastq: [meta, snp_fastq]
-            bam: [meta, sample_bam, sample_bam_index]
-        }
-        .set { ch_to_align }
 
-
-    BWA_MEM(
-        ch_to_align.fastq,
-        ch_bwa_index,
-        ch_fasta_fai.map { meta, fasta, _fai -> [meta, fasta] },
-        true,
-    )
-
-    ch_to_align.bam
-        .join(BWA_MEM.out.cram, failOnMismatch: true, failOnDuplicate: true)
-        .join(BWA_MEM.out.crai, failOnMismatch: true, failOnDuplicate: true)
-        .mix(ch_inputs.aligned)
+        ch_inputs.aligned
         .map { meta, sample_bam, sample_bam_index, snp_bam, snp_bam_index ->
             return [groupKey([id: meta.pool], meta.pool_count), sample_bam, sample_bam_index, snp_bam, snp_bam_index]
         }
@@ -145,7 +122,7 @@ workflow SAMPLETRACKING {
     //
     def ch_sex_prediction_out = channel.empty()
     ch_samplesheet_fixed
-        .map { meta, sample_bam, sample_bam_index, _snp_fastq, _snp_bam, _snp_bam_index ->
+        .map { meta, sample_bam, sample_bam_index, _snp_bam, _snp_bam_index ->
             [meta, sample_bam, sample_bam_index]
         }
         .set { ch_samplegender_input }

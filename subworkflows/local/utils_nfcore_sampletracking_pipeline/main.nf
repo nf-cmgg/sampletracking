@@ -86,9 +86,9 @@ workflow PIPELINE_INITIALISATION {
     }
 
     channel.fromList(input_list)
-        .map { meta, sample_bam, sample_bam_index, snp_fastq_1, snp_fastq_2, snp_bam, snp_bam_index ->
-            def new_meta = meta + [single_end: false, pool_count: pool_count[meta.pool]]
-            return [new_meta, sample_bam, sample_bam_index, [snp_fastq_1, snp_fastq_2].flatten(), snp_bam, snp_bam_index]
+        .map { meta, sample_bam, sample_bam_index, snp_bam, snp_bam_index ->
+            def new_meta = meta + [pool_count: pool_count[meta.pool]]
+            return [new_meta, sample_bam, sample_bam_index, snp_bam, snp_bam_index]
         }
         .set { ch_samplesheet }
 
