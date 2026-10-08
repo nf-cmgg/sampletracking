@@ -158,15 +158,21 @@ workflow {
     )
 
     publish:
-    multiqc_report = SAMPLETRACKING.out.multiqc_report
-    crosscheck_metrics = SAMPLETRACKING.out.crosscheck_metrics
-    sex_prediction = SAMPLETRACKING.out.sex_prediction
+    multiqc_data        = SAMPLETRACKING.out.multiqc_data
+    multiqc_report      = SAMPLETRACKING.out.multiqc_report
+    crosscheck_metrics  = SAMPLETRACKING.out.crosscheck_metrics
+    sex_prediction      = SAMPLETRACKING.out.sex_prediction
 }
 
 output {
+    multiqc_data {
+        path { meta, _file ->
+            return ("${meta.id}/multiqc/")
+        }
+    }
     multiqc_report {
         path { meta, _file ->
-            return ("${meta.id}/")
+            return ("${meta.id}/multiqc/")
         }
     }
     crosscheck_metrics {

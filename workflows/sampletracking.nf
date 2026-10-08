@@ -296,6 +296,7 @@ workflow SAMPLETRACKING {
     MULTIQC (ch_multiqc_input)
 
     emit:
+    multiqc_data        = MULTIQC.out.data          // channel: data
     multiqc_report      = MULTIQC.out.report        // channel: path(html)
     crosscheck_metrics  = ch_crosscheck_metrics_out // channel: [ val(meta), path(metrics) ]
     sex_prediction      = ch_sex_prediction_out     // channel: [ val(meta), path(tsv) ]
