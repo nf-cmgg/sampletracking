@@ -98,7 +98,7 @@ workflow SAMPLETRACKING {
         .set { ch_inputs }
 
 
-        ch_inputs.aligned
+    ch_inputs.aligned
         .map { meta, sample_bam, sample_bam_index, snp_bam, snp_bam_index ->
             return [groupKey([id: meta.pool], meta.pool_count), sample_bam, sample_bam_index, snp_bam, snp_bam_index]
         }
@@ -259,10 +259,10 @@ workflow SAMPLETRACKING {
     MULTIQC(ch_multiqc_input)
 
     emit:
-    multiqc_data        = MULTIQC.out.data          // channel: data
-    multiqc_report      = MULTIQC.out.report        // channel: path(html)
-    crosscheck_metrics  = ch_crosscheck_metrics_out // channel: [ val(meta), path(metrics) ]
-    sex_prediction      = ch_sex_prediction_out     // channel: [ val(meta), path(tsv) ]
+    multiqc_data       = MULTIQC.out.data // channel: data
+    multiqc_report     = MULTIQC.out.report // channel: path(html)
+    crosscheck_metrics = ch_crosscheck_metrics_out // channel: [ val(meta), path(metrics) ]
+    sex_prediction     = ch_sex_prediction_out // channel: [ val(meta), path(tsv) ]
 }
 
 /*
