@@ -6,14 +6,13 @@
             },
             [
                 "pipeline_info",
-                "pipeline_info/nf_cmgg_sampletracking_software_mqc_versions.yml",
-                "pipeline_info/pipeline_dag_2026-10-08_12-59-34.mmd"
+                "pipeline_info/nf_cmgg_sampletracking_software_mqc_versions.yml"
             ],
             [
-                "pipeline_dag_2026-10-08_12-59-34.mmd:md5,d494d25aa7f1bb6271b4ac08a114291c"
+                
             ]
         ],
-        "timestamp": "2026-10-08T12:59:49.730594",
+        "timestamp": "2026-10-08T13:49:07.228822",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
@@ -26,14 +25,13 @@
             },
             [
                 "pipeline_info",
-                "pipeline_info/nf_cmgg_sampletracking_software_mqc_versions.yml",
-                "pipeline_info/pipeline_dag_2026-10-08_12-58-28.mmd"
+                "pipeline_info/nf_cmgg_sampletracking_software_mqc_versions.yml"
             ],
             [
-                "pipeline_dag_2026-10-08_12-58-28.mmd:md5,d17bbdeae217c6d554ca70a1dc32c495"
+                
             ]
         ],
-        "timestamp": "2026-10-08T12:59:32.344049",
+        "timestamp": "2026-10-08T13:48:50.393842",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
