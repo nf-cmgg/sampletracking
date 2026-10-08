@@ -7,13 +7,23 @@
                         {
                             "id": "pool1"
                         },
-                        "multiqc_report.html:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        [
+                            ".stub:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
                     ]
                 ],
                 "1": [
-                    
+                    [
+                        {
+                            "id": "pool1"
+                        },
+                        "multiqc_report.html:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "2": [
+                    
+                ],
+                "3": [
                     [
                         {
                             "id": "sample1",
@@ -37,6 +47,16 @@
                 ],
                 "crosscheck_metrics": [
                     
+                ],
+                "multiqc_data": [
+                    [
+                        {
+                            "id": "pool1"
+                        },
+                        [
+                            ".stub:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
                 ],
                 "multiqc_report": [
                     [
@@ -70,10 +90,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-05-27T12:57:52.633600497",
+        "timestamp": "2026-10-07T15:40:17.730642058",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.1"
+            "nextflow": "26.04.6"
         }
     },
     "Should run without failures": {
@@ -84,10 +104,20 @@
                         {
                             "id": "pool1"
                         },
-                        "multiqc_report.html:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        [
+                            ".stub:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
                     ]
                 ],
                 "1": [
+                    [
+                        {
+                            "id": "pool1"
+                        },
+                        "multiqc_report.html:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
                     [
                         {
                             "groupSize": 2,
@@ -98,7 +128,7 @@
                         "pool1.crosscheck_metrics.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
-                "2": [
+                "3": [
                     [
                         {
                             "id": "sample1",
@@ -129,6 +159,16 @@
                             }
                         },
                         "pool1.crosscheck_metrics.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "multiqc_data": [
+                    [
+                        {
+                            "id": "pool1"
+                        },
+                        [
+                            ".stub:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
                     ]
                 ],
                 "multiqc_report": [
@@ -163,10 +203,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-05-27T12:57:38.476272794",
+        "timestamp": "2026-10-07T15:39:40.243245478",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.1"
+            "nextflow": "26.04.6"
         }
     }
 }

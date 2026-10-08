@@ -239,7 +239,7 @@ workflow SAMPLETRACKING {
     softwareVersionsToYAML(topic_versions.versions_file)
         .mix(topic_versions_string)
         .collectFile(
-            storeDir: "${outdir.toUriString()}/pipeline_info",
+            storeDir: "${outdir}/pipeline_info",
             name: 'nf_cmgg_sampletracking_software_mqc_versions.yml',
             sort: true,
             newLine: true,
@@ -277,9 +277,10 @@ workflow SAMPLETRACKING {
     MULTIQC(ch_multiqc_input)
 
     emit:
-    multiqc_report     = MULTIQC.out.report // channel: path(html)
-    crosscheck_metrics = ch_crosscheck_metrics_out // channel: [ val(meta), path(metrics) ]
-    sex_prediction     = ch_sex_prediction_out // channel: [ val(meta), path(tsv) ]
+    multiqc_data        = MULTIQC.out.data          // channel: data
+    multiqc_report      = MULTIQC.out.report        // channel: path(html)
+    crosscheck_metrics  = ch_crosscheck_metrics_out // channel: [ val(meta), path(metrics) ]
+    sex_prediction      = ch_sex_prediction_out     // channel: [ val(meta), path(tsv) ]
 }
 
 /*
