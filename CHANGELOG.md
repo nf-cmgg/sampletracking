@@ -3,9 +3,11 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v1.0.3
+## v1.1.0dev
 
 - Fixed an issue where pool grouping for multiqc wasn't properly performed on pipeline resume
+- Update modules
+- Update to nf-core template 4.1.0
 
 ## v1.0.2
 

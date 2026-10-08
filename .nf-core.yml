@@ -1,38 +1,52 @@
 repository_type: pipeline
 
-nf_core_version: 4.0.2
+nf_core_version: 4.1.0
 
 lint:
   files_unchanged:
+    - docs/CONTRIBUTING.md
+    - CODE_OF_CONDUCT.md
     - assets/nf-core-sampletracking_logo_light.png
     - docs/images/nf-core-sampletracking_logo_light.png
     - docs/images/nf-core-sampletracking_logo_dark.png
+    - .github/ISSUE_TEMPLATE/bug_report.yml
+    - .github/PULL_REQUEST_TEMPLATE.md
+    - assets/email_template.txt
+    - docs/README.md
     - .gitattributes
     - .gitignore
-  nextflow_config: false # TMP
+  nextflow_config: false
   schema_params: false # TMP
   multiqc_config:
     - report_comment
   merge_markers:
     - .pixi/envs
   files_exist:
+    - CITATIONS.md
+    - conf/igenomes.config
+    - conf/igenomes_ignored.config
     - CODE_OF_CONDUCT.md
     - assets/nf-core-sampletracking_logo_light.png
-    - docs/CONTRIBUTING.md
     - docs/images/nf-core-sampletracking_logo_light.png
     - docs/images/nf-core-sampletracking_logo_dark.png
+    - docs/CONTRIBUTING.md
     - .github/ISSUE_TEMPLATE/config.yml
     - .github/workflows/awstest.yml
     - .github/workflows/awsfulltest.yml
-    - .github/workflows/download_pipeline.yml
-  nf_test_content: false
 
 template:
   org: nf-cmgg
   name: sampletracking
   description: CMGG Sampletracking workflow
-  author: Matthias De Smet
-  version: 1.0.3
+  author: Matthias De Smet, Nicolas Vannieuwkerke
+  version: 1.1.0dev
   force: true
   outdir: .
+  skip_features:
+    - igenomes
+    - fastqc
+    - seqera_platform
+    - gpu
+    - codespaces
+    - citations
   is_nfcore: false
