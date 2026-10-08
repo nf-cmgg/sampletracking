@@ -76,6 +76,8 @@ workflow SAMPLETRACKING {
     def ch_samplesheet_fixed = ch_sample_fixed.join(ch_snp_fixed, by: 0).dump(tag: "Fixed samplesheet entry", pretty: true)
 
 
+
+
     //
     // Crosscheck fingerprints
     //
