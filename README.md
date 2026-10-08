@@ -31,7 +31,7 @@ sample,pool,sex,sample_bam,sample_bam_index,snp_bam,snp_bam_index
 SAMPLE1,POOL1,F,SAMPLE1.bam,SAMPLE1.bam.bai,SAMPLE1_snp.cram,SAMPLE2_snp.cram.crai
 ```
 
-Each row represents a sample annotated with the pool it was sequenced in and the expected sex of this sample. It also needs a BAM/CRAM file with the sample data and (optionally) a FASTQ/BAM/CRAM file with SNP tracking data for the sample. Crosschecking fingerprints will be skipped when no SNP tracking data is provided.
+Each row represents a sample annotated with the pool it was sequenced in and the expected sex of this sample. It also needs a BAM/CRAM file with the sample data and (optionally) a BAM/CRAM file with SNP tracking data for the sample. Crosschecking fingerprints will be skipped when no SNP tracking data is provided.
 
 Now, you can run the pipeline using:
 

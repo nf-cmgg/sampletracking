@@ -17,10 +17,9 @@ The samplesheet can have as many columns as you desire, however, there is a stri
 A final samplesheet file may look something like the one below.
 
 ```csv title="samplesheet.csv"
-sample,pool,sex,sample_bam,sample_bam_index,snp_bam,snp_bam_index,snp_fastq_1,snp_fastq_2
-SAMPLE1,POOL1,F,SAMPLE1.bam,SAMPLE1.bam.bai,SAMPLE1_snp.cram,SAMPLE1_snp.cram.crai,,
-SAMPLE2,POOL1,M,SAMPLE2.cram,SAMPLE2.cram.crai,,,SAMPLE2_snp_R1.fastq.gz,SAMPLE2_snp_R2.fastq.gz
-SAMPLE3,,U,SAMPLE3.bam,SAMPLE3.bam.bai,,,
+sample,pool,sex,sample_bam,sample_bam_index,snp_bam,snp_bam_index
+SAMPLE1,POOL1,F,SAMPLE1.bam,SAMPLE1.bam.bai,SAMPLE1_snp.cram,SAMPLE1_snp.cram.crai
+SAMPLE3,,U,SAMPLE3.bam,SAMPLE3.bam.bai,,
 ```
 
 | Column             | Description                                                                                                                                                                                    |
@@ -32,8 +31,6 @@ SAMPLE3,,U,SAMPLE3.bam,SAMPLE3.bam.bai,,,
 | `sample_bam_index` | Full path to the index of the BAM/CRAM file with the sample data. This file needs to exist and have the `.bai` or `.crai` extension.                                                           |
 | `snp_bam`          | Full path to the BAM/CRAM file with the SNP data. This file needs to exist and have the `.bam` or `.cram` extension.                                                                           |
 | `snp_bam_index`    | Full path to the index of the BAM/CRAM file with the SNP data. This file needs to exist and have the `.bai` or `.crai` extension.                                                              |
-| `snp_fastq_1`      | Full path to the FASTQ file with forward reads containing the SNP data. This file needs to exist and have the `.fastq.gz` or `.fq.gz` extension.                                               |
-| `snp_fastq_2`      | Full path to the FASTQ file with reverse reads containing the SNP data. This file needs to exist and have the `.fastq.gz` or `.fq.gz` extension.                                               |
 
 An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
 

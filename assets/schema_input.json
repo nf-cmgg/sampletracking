@@ -32,20 +32,6 @@
                 "exists": true,
                 "errorMessage": "Sample BAM/CRAM index file must be provided, cannot contain spaces and must have extension '.bai' or '.csi'"
             },
-            "snp_fastq_1": {
-                "type": "string",
-                "format": "file-path",
-                "exists": true,
-                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-                "errorMessage": "FastQ file for reads 1 must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
-            },
-            "snp_fastq_2": {
-                "type": "string",
-                "format": "file-path",
-                "exists": true,
-                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-                "errorMessage": "FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
-            },
             "snp_bam": {
                 "type": "string",
                 "format": "file-path",
@@ -70,9 +56,6 @@
         "anyOf": [
             {
                 "required": ["sample", "pool", "sample_bam", "snp_bam"]
-            },
-            {
-                "required": ["sample", "pool", "sample_bam", "snp_fastq_1"]
             }
         ]
     }
