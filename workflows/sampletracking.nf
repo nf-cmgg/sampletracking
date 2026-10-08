@@ -12,6 +12,7 @@ include { samplesheetToList                        } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc                     } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML                   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText                   } from '../subworkflows/local/utils_nfcore_sampletracking_pipeline'
+include { haplotypeMapToBed                        } from '../subworkflows/local/utils_nfcmgg_sampletracking_pipeline'
 include { SAMTOOLS_INDEX                           } from '../modules/nf-core/samtools/index'
 include { SAMTOOLS_INDEX as SAMTOOLS_INDEX_SNP_BAM } from '../modules/nf-core/samtools/index'
 
@@ -77,9 +78,13 @@ workflow SAMPLETRACKING {
             [meta, sample_bam, sample_bam_index, snp_bam, snp_bam_index]
         }
 
+
+
     //
     // Crosscheck fingerprints
     //
+
+    haplotypeMapToBed(ch_haplotype_map, "output.bed")
 
     def ch_crosscheck_metrics_out = channel.empty()
     ch_samplesheet_fixed
