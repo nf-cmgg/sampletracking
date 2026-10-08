@@ -23,7 +23,7 @@
                     },
                     "ngsbits/samplegender": {
                         "branch": "master",
-                        "git_sha": "c55ea22c5db28775feb8e7583995d8f05949efd8",
+                        "git_sha": "3388c6ac0f4bff2d5f21b7e3e9c545df07396125",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/ngsbits/samplegender/ngsbits-samplegender.diff"
                     },
