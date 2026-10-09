@@ -10,10 +10,6 @@
 
 ## Pipeline tools
 
-- [BWA-MEM](https://arxiv.org/abs/1303.3997v2)
-
-  > Li H: Aligning sequence reads, clone sequences and assembly contigs with BWA-MEM. arXiv 2013. doi: 10.48550/arXiv.1303.3997
-
 - [Picard](https://broadinstitute.github.io/picard/)
 
 - [MultiQC](https://pubmed.ncbi.nlm.nih.gov/27312411/)

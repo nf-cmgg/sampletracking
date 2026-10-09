@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update to nf-core template 4.1.0
 - Bump nf-schema to 3.0.0
 - Revert the default configs base to the nf-core configs in preparation of converting nf-cmgg/configs to a private repo
+- Add coverage based filter for crosscheck fingerprints
 - Drop support for snp fastq inputs
 
 ## v1.0.2

@@ -42,6 +42,20 @@
                 }
             }
         },
+        "fingerprinting_options": {
+            "title": "Fingerprinting options",
+            "type": "object",
+            "fa_icon": "fas fa-terminal",
+            "description": "Options to customize the fingerprinting",
+            "properties": {
+                "fingerprinting_min_sites": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "description": "The minimum number of covered sites required for a sample to be considered in the fingerprinting analysis",
+                    "default": 5
+                }
+            }
+        },
         "sex_prediction_options": {
             "title": "Sex prediction options",
             "type": "object",
@@ -87,7 +101,7 @@
             "type": "object",
             "fa_icon": "fas fa-dna",
             "description": "Reference genome related files and options required for the workflow.",
-            "required": ["fasta", "bwa_index", "haplotype_map"],
+            "required": ["fasta", "haplotype_map"],
             "properties": {
                 "fasta": {
                     "type": "string",
@@ -106,14 +120,6 @@
                     "mimetype": "text/plain",
                     "pattern": "^\\S+\\.fai$",
                     "description": "Path to FASTA index file.",
-                    "help_text": "This parameter is *mandatory*.",
-                    "fa_icon": "far fa-file-code"
-                },
-                "bwa_index": {
-                    "type": "string",
-                    "format": "directory-path",
-                    "exists": true,
-                    "description": "Path to bwa index directory.",
                     "help_text": "This parameter is *mandatory*.",
                     "fa_icon": "far fa-file-code"
                 },
@@ -225,13 +231,6 @@
                     "fa_icon": "fas fa-palette",
                     "hidden": true
                 },
-                "hook_url": {
-                    "type": "string",
-                    "description": "Incoming hook URL for messaging service",
-                    "fa_icon": "fas fa-people-group",
-                    "help_text": "Incoming hook URL for messaging service. Currently, MS Teams and Slack are supported.",
-                    "hidden": true
-                },
                 "multiqc_config": {
                     "type": "string",
                     "format": "file-path",
@@ -288,6 +287,9 @@
     "allOf": [
         {
             "$ref": "#/$defs/input_output_options"
+        },
+        {
+            "$ref": "#/$defs/fingerprinting_options"
         },
         {
             "$ref": "#/$defs/sex_prediction_options"

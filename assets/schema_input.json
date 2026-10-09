@@ -30,7 +30,7 @@
                 "type": "string",
                 "format": "file-path",
                 "exists": true,
-                "errorMessage": "Sample BAM/CRAM index file must be provided, cannot contain spaces and must have extension '.bai' or '.csi'"
+                "errorMessage": "Sample BAM/CRAM index file must be provided, cannot contain spaces and must have extension '.bai', 'crai' or '.csi'"
             },
             "snp_bam": {
                 "type": "string",
@@ -42,7 +42,7 @@
                 "type": "string",
                 "format": "file-path",
                 "exists": true,
-                "errorMessage": "snp BAM/CRAM index file must be provided, cannot contain spaces and must have extension '.bai' or '.csi'"
+                "errorMessage": "snp BAM/CRAM index file must be provided, cannot contain spaces and must have extension '.bai', 'crai' or '.csi'"
             },
             "sex": {
                 "type": "string",

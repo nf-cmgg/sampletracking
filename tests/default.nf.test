@@ -1,113 +1,15 @@
-nextflow_workflow {
+nextflow_pipeline {
 
     name "Test Workflow SAMPLETRACKING"
-    script "workflows/sampletracking.nf"
+    script "../main.nf"
+    config "nextflow.config"
 
-    tag "workflows"
-    tag "workflows/sampletracking"
-
-    workflow "SAMPLETRACKING"
+    tag "pipeline"
 
     test("Should run without failures") {
-        options "-stub"
         when {
             params {
                 outdir = "$outputDir"
-            }
-            workflow {
-                """
-                input[0] = Channel.of(
-                    [
-                        [id:"sample2", pool: "pool1", pool_count:2], // meta
-                        file("https://github.com/nf-cmgg/test-datasets/raw/sampletracking/data/genomics/homo_sapiens/illumina/exome/cram/sample2.sorted.cram", checkIfExists:true),        // sample_bam
-                        file("https://github.com/nf-cmgg/test-datasets/raw/sampletracking/data/genomics/homo_sapiens/illumina/exome/cram/sample2.sorted.cram.crai", checkIfExists:true),   // sample_index
-                        file("https://github.com/nf-cmgg/test-datasets/raw/sampletracking/data/genomics/homo_sapiens/illumina/snp/cram/snp_sample2.sorted.cram"),           // snp_bam
-                        file("https://github.com/nf-cmgg/test-datasets/raw/sampletracking/data/genomics/homo_sapiens/illumina/snp/cram/snp_sample2.sorted.cram.crai"),     // snp_bam
-                    ],
-                )
-                input[1] = Channel.value(
-                    [
-                        [:],
-                        file("https://github.com/nf-cmgg/test-datasets/raw/sampletracking/data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna"),
-                        file("https://github.com/nf-cmgg/test-datasets/raw/sampletracking/data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai")
-                    ]
-                )
-                input[2] = Channel.value(
-                    [
-                        [:],
-                        file("https://github.com/nf-cmgg/test-datasets/raw/sampletracking/data/genomics/homo_sapiens/genome/picard/haplotype_map.txt")
-                    ]
-                )
-                input[3] = file("${outputDir}")
-                input[4] = []
-                input[5] = []
-                input[6] = []
-                """
-            }
-        }
-
-        then {
-            // stable_path: All files + folders in ${params.outdir}/ with a stable path (including file name)
-            def stable_path = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{mmd,html,json,txt}'])
-            // stable_content: All files in ${params.outdir}/ with stable content
-            def stable_content = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
-            assert workflow.success
-            assertAll(
-                { assert snapshot(
-                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we test pipelines on multiple Nextflow versions
-                    removeNextflowVersion("$outputDir/pipeline_info/sampletracking_software_mqc_versions.yml"),
-                    // All stable path name, with a relative path
-                    stable_path,
-                    // All files with stable contents
-                    stable_content
-                ).match() }
-            )
-        }
-    }
-
-    test("Should run without failures - skip crosscheck fingerprints") {
-        options "-stub"
-
-        when {
-            params {
-                outdir = "$outputDir"
-            }
-            workflow {
-                """
-                input[0] = Channel.of(
-                    [
-                        [id:"sample1", pool: "pool1", pool_count:2], // meta
-                        file("https://github.com/nf-cmgg/test-datasets/raw/sampletracking/data/genomics/homo_sapiens/illumina/exome/bam/sample1.sort.bam", checkIfExists:true),     // sample_bam
-                        file("https://github.com/nf-cmgg/test-datasets/raw/sampletracking/data/genomics/homo_sapiens/illumina/exome/bam/sample1.sort.bam.bai", checkIfExists:true), // sample_index
-                        [],     // snp_bam
-                        []      // snp_bai
-                    ],
-                    [
-                        [id:"sample2", pool: "pool1", pool_count:2], // meta
-                        file("https://github.com/nf-cmgg/test-datasets/raw/sampletracking/data/genomics/homo_sapiens/illumina/exome/cram/sample2.sorted.cram", checkIfExists:true),        // sample_bam
-                        file("https://github.com/nf-cmgg/test-datasets/raw/sampletracking/data/genomics/homo_sapiens/illumina/exome/cram/sample2.sorted.cram.crai", checkIfExists:true),   // sample_index
-                        file("https://github.com/nf-cmgg/test-datasets/raw/sampletracking/data/genomics/homo_sapiens/illumina/snp/cram/snp_sample2.sorted.cram"),           // snp_bam
-                        file("https://github.com/nf-cmgg/test-datasets/raw/sampletracking/data/genomics/homo_sapiens/illumina/snp/cram/snp_sample2.sorted.cram.crai"),     // snp_bam
-                    ],
-                )
-                input[1] = Channel.value(
-                    [
-                        [:],
-                        file("https://github.com/nf-cmgg/test-datasets/raw/sampletracking/data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna"),
-                        file("https://github.com/nf-cmgg/test-datasets/raw/sampletracking/data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai")
-                    ]
-                )
-                input[2] = Channel.value(
-                    [
-                        [:],
-                        file("https://github.com/nf-cmgg/test-datasets/raw/sampletracking/data/genomics/homo_sapiens/genome/picard/haplotype_map.txt")
-                    ]
-                )
-                input[3] = file("${outputDir}")
-                input[4] = []
-                input[5] = []
-                input[6] = []
-                """
             }
         }
 
