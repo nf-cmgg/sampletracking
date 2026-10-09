@@ -75,9 +75,6 @@ workflow SAMPLETRACKING {
 
     def ch_samplesheet_fixed = ch_sample_fixed.join(ch_snp_fixed, by: 0).dump(tag: "Fixed samplesheet entry", pretty: true)
 
-
-
-
     //
     // Crosscheck fingerprints
     //
@@ -101,16 +98,14 @@ workflow SAMPLETRACKING {
         ch_fasta_fai_gzi,
     )
     ch_multiqc_files = ch_multiqc_files.mix(
-        SAMTOOLS_DEPTH_SAMPLE.out.tsv.map { meta, tsv ->
             return [meta + [id: meta.pool], tsv]
         },
         SAMTOOLS_DEPTH_SNP.out.tsv.map { meta, tsv ->
             return [meta + [id: meta.pool], tsv]
         },
+        ch_fasta_fai_gzi
     )
-
-    // Check if any samples fall below the expected coverage and filter
-    def ch_to_fingerprint = ch_samplesheet_fixed
+    ch_multiqc_files = ch_multiqc_files.mix(
         .join(SAMTOOLS_DEPTH_SAMPLE.out.tsv, by: 0)
         .join(SAMTOOLS_DEPTH_SNP.out.tsv, by: 0)
         .filter { meta, _sample_bam, _sample_bam_index, _snp_bam, _snp_bam_index, sample_depth_tsv, snp_depth_tsv ->

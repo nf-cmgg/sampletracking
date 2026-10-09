@@ -31,6 +31,7 @@ process SAMTOOLS_DEPTH {
         --threads ${task.cpus - 1} \\
         ${args} \\
         ${positions} \\
+        ${reference} \\
         -o ${prefix}.tsv \\
         ${reference} \\
         ${bam}
