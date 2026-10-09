@@ -17,31 +17,31 @@ nextflow_workflow {
                 """
                 input[0] = Channel.of(
                     [
-                        [id:"sample1", pool: "pool1", pool_count:2], // meta
-                        file("${pipelines_testdata_base_path}/sample1.cram", checkIfExists:true),
-                        file("${pipelines_testdata_base_path}/sample1.cram.crai", checkIfExists:true),
-                        file("${pipelines_testdata_base_path}/snp_sample1.cram"),
-                        file("${pipelines_testdata_base_path}/snp_sample1.cram.crai"),
+                        [id:"sample1", pool: "pool1", pool_count:2],
+                        file("${params.pipelines_testdata_base_path}/sample1.cram"),
+                        file("${params.pipelines_testdata_base_path}/sample1.cram.crai"),
+                        file("${params.pipelines_testdata_base_path}/snp_sample1.cram"),
+                        file("${params.pipelines_testdata_base_path}/snp_sample1.cram.crai"),
                     ],
                     [
-                        [id:"sample2", pool: "pool1", pool_count:2], // meta
-                        file("${pipelines_testdata_base_path}/sample2.cram", checkIfExists:true),
-                        file("${pipelines_testdata_base_path}/sample2.cram.crai", checkIfExists:true),
-                        file("${pipelines_testdata_base_path}/snp_sample2.cram"),
-                        file("${pipelines_testdata_base_path}/snp_sample2.cram.crai"),
+                        [id:"sample2", pool: "pool1", pool_count:2],
+                        file("${params.pipelines_testdata_base_path}/sample2.cram"),
+                        file("${params.pipelines_testdata_base_path}/sample2.cram.crai"),
+                        file("${params.pipelines_testdata_base_path}/snp_sample2.cram"),
+                        file("${params.pipelines_testdata_base_path}/snp_sample2.cram.crai"),
                     ],
                 )
                 input[1] = Channel.value(
                     [
                         [:],
-                        file("${pipelines_testdata_base_path}/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna"),
-                        file("${pipelines_testdata_base_path}/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai")
+                        file("${params.pipelines_testdata_base_path}/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna"),
+                        file("${params.pipelines_testdata_base_path}/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai")
                     ]
                 )
                 input[2] = Channel.value(
                     [
                         [:],
-                        file("${pipelines_testdata_base_path}/haplotype_map.txt")
+                        file("${params.pipelines_testdata_base_path}/haplotype_map.txt")
                     ]
                 )
                 input[3] = file("${outputDir}")
@@ -80,31 +80,31 @@ nextflow_workflow {
                 """
                 input[0] = Channel.of(
                     [
-                        [id:"sample1", pool: "pool1", pool_count:2], // meta
-                        file("${pipelines_testdata_base_path}/sample1.cram", checkIfExists:true),
-                        file("${pipelines_testdata_base_path}/sample1.cram.crai", checkIfExists:true),
+                        [id:"sample1", pool: "pool1", pool_count:2],
+                        file("${params.pipelines_testdata_base_path}/sample1.cram"),
+                        file("${params.pipelines_testdata_base_path}/sample1.cram.crai"),
                         [],
                         []
                     ],
                     [
-                        [id:"sample2", pool: "pool1", pool_count:2], // meta
-                        file("${pipelines_testdata_base_path}/sample2.cram", checkIfExists:true),
-                        file("${pipelines_testdata_base_path}/sample2.cram.crai", checkIfExists:true),
-                        file("${pipelines_testdata_base_path}/snp_sample2.cram"),
-                        file("${pipelines_testdata_base_path}/snp_sample2.cram.crai"),
+                        [id:"sample2", pool: "pool1", pool_count:2],
+                        file("${params.pipelines_testdata_base_path}/sample2.cram"),
+                        file("${params.pipelines_testdata_base_path}/sample2.cram.crai"),
+                        file("${params.pipelines_testdata_base_path}/snp_sample2.cram"),
+                        file("${params.pipelines_testdata_base_path}/snp_sample2.cram.crai"),
                     ],
                 )
                 input[1] = Channel.value(
                     [
                         [:],
-                        file("${pipelines_testdata_base_path}/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set.fna"),
-                        file("${pipelines_testdata_base_path}/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set.fna.fai")
+                        file("${params.pipelines_testdata_base_path}/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set.fna"),
+                        file("${params.pipelines_testdata_base_path}/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set.fna.fai")
                     ]
                 )
                 input[2] = Channel.value(
                     [
                         [id: "haplotype_map"],
-                        file("${pipelines_testdata_base_path}/haplotype_map.txt")
+                        file("${params.pipelines_testdata_base_path}/haplotype_map.txt")
                     ]
                 )
                 input[3] = file("${outputDir}")
