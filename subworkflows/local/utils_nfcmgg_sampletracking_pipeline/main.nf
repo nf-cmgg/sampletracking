@@ -1,7 +1,5 @@
-def haplotypeMapToBed(inputFilePath: Path, outputFilePath: String) {
-    def outputFile = new File(outputFilePath)
-
-    outputFile.withWriter('utf-8') { writer ->
+def haplotypeMapToBed(inputFilePath: Path, outputFilePath: Path) {
+    outputFilePath.withWriter('utf-8') { writer ->
         inputFilePath.eachLine { line ->
             // Skip metadata headers (@) and column definition lines (#)
             if (line.startsWith('@') || line.startsWith('#')) {

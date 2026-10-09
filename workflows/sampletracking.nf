@@ -85,7 +85,7 @@ workflow SAMPLETRACKING {
 
     // convert haplotype map to BED format
     ch_haplotype_bed = ch_haplotype_map.map { meta, haplotype_map ->
-        def bed_file = haplotype_map.name.replaceAll(/\.txt$/, ".bed")
+        def bed_file = file(workDir + "/" + haplotype_map.name.replaceAll(/\.txt$/, ".bed"))
         haplotypeMapToBed(haplotype_map, bed_file)
         return [meta, bed_file]
     }
