@@ -1,3 +1,6 @@
+workflow UTILS_NFCMGG_SAMPLETRACKING_PIPELINE { }
+
+
 def haplotypeMapToBed(inputFilePath: Path, outputFilePath: Path) {
     outputFilePath.text = ""
     inputFilePath.eachLine { line ->
