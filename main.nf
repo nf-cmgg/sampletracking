@@ -175,7 +175,7 @@ output {
         }
     }
     depth_metrics {
-        path { meta, _file ->
+        path { meta, _sample, _snp ->
             return (meta.pool ? "${meta.pool}/" : "depth_metrics/")
         }
     }

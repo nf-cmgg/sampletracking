@@ -94,39 +94,44 @@ workflow SAMPLETRACKING {
     SAMTOOLS_DEPTH_SAMPLE(
         ch_samplesheet_fixed.map { meta, sample_bam, sample_bam_index, _snp_bam, _snp_bam_index -> [meta, sample_bam, sample_bam_index] },
         ch_haplotype_bed,
-        ch_fasta_fai
+        ch_fasta_fai,
     )
 
     SAMTOOLS_DEPTH_SNP(
         ch_samplesheet_fixed.map { meta, _sample_bam, _sample_bam_index, snp_bam, snp_bam_index -> [meta, snp_bam, snp_bam_index] },
         ch_haplotype_bed,
-        ch_fasta_fai
+        ch_fasta_fai,
     )
     ch_multiqc_files = ch_multiqc_files.mix(
-        SAMTOOLS_DEPTH_SAMPLE.out.tsv.map{meta, tsv -> return [meta + [id: meta.pool], tsv] },
-        SAMTOOLS_DEPTH_SNP.out.tsv.map{meta, tsv -> return [meta + [id: meta.pool], tsv] }
+        SAMTOOLS_DEPTH_SAMPLE.out.tsv.map { meta, tsv ->
+            return [meta + [id: meta.pool], tsv]
+        },
+        SAMTOOLS_DEPTH_SNP.out.tsv.map { meta, tsv ->
+            return [meta + [id: meta.pool], tsv]
+        },
     )
 
     // Check if any samples fall below the expected coverage and filter
     def ch_to_fingerprint = ch_samplesheet_fixed
-        .branch { meta, sample_bam, sample_bam_index, snp_bam, snp_bam_index ->
-            aligned: snp_bam
-            return [meta, sample_bam, sample_bam_index, snp_bam, snp_bam_index]
-            no_snp: true
-            log.warn("No SNP BAM/CRAM files were detected for '${meta.id}'. Skipping the crosscheck fingerprints step for this sample.")
-            return [[id: meta.pool], []]
+        .filter { meta, _sample_bam, _sample_bam_index, snp_bam, _snp_bam_index ->
+            if (!snp_bam) {
+                log.warn("No SNP BAM/CRAM files were detected for '${meta.id}'. Skipping the crosscheck fingerprints step for this sample.")
+                return false
+            }
+            return true
         }
-        .aligned
         .join(SAMTOOLS_DEPTH_SAMPLE.out.tsv, by: 0)
         .join(SAMTOOLS_DEPTH_SNP.out.tsv, by: 0)
-        // exclude samples based on depth criteria
-        .branch { meta, sample_bam, sample_bam_index, snp_bam, snp_bam_index, sample_depth_tsv, snp_depth_tsv ->
-            pass: depthFilter(sample_depth_tsv, snp_depth_tsv, params.fingerprinting_min_sites)
-                return [groupKey([id: meta.pool, pool: meta.pool], meta.pool_count), sample_bam, sample_bam_index, snp_bam, snp_bam_index ]
-            fail: !depthFilter(sample_depth_tsv, snp_depth_tsv, params.fingerprinting_min_sites)
+        .filter { meta, _sample_bam, _sample_bam_index, _snp_bam, _snp_bam_index, sample_depth_tsv, snp_depth_tsv ->
+            def pass = depthFilter(sample_depth_tsv, snp_depth_tsv, params.fingerprinting_min_sites)
+            if (!pass) {
                 log.warn("'${meta.id}' was excluded due to insufficient coverage. Skipping the crosscheck fingerprints step for this sample.")
+            }
+            return pass
         }
-        .pass
+        .map { meta, sample_bam, sample_bam_index, snp_bam, snp_bam_index, _sample_depth_tsv, _snp_depth_tsv ->
+            return [groupKey([id: meta.pool, pool: meta.pool], meta.pool_count), sample_bam, sample_bam_index, snp_bam, snp_bam_index]
+        }
         .groupTuple()
         .merge(ch_haplotype_map.map { _meta, haplotype_map -> haplotype_map })
         .map { meta, sample_bam, sample_bam_index, snp_bam, snp_bam_index, haplotype_map ->
@@ -148,10 +153,9 @@ workflow SAMPLETRACKING {
     // Determine sample sex
     //
     NGSBITS_SAMPLEGENDER(
-        ch_samplesheet_fixed
-            .map { meta, sample_bam, sample_bam_index, _snp_bam, _snp_bam_index ->
-                [meta, sample_bam, sample_bam_index]
-            },
+        ch_samplesheet_fixed.map { meta, sample_bam, sample_bam_index, _snp_bam, _snp_bam_index ->
+            [meta, sample_bam, sample_bam_index]
+        },
         ch_fasta_fai,
     )
 

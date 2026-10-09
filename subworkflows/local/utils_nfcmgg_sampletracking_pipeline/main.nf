@@ -1,4 +1,5 @@
-workflow UTILS_NFCMGG_SAMPLETRACKING_PIPELINE { }
+workflow UTILS_NFCMGG_SAMPLETRACKING_PIPELINE {
+}
 
 
 def haplotypeMapToBed(inputFilePath: Path, outputFilePath: Path) {
@@ -33,7 +34,6 @@ def depthFilter(sample_depth_tsv: Path, snp_depth_tsv: Path, min_covered_sites: 
         [(parts[0]+":"+parts[1]): parts[2].toInteger()]
     }
     def coveredSites = sampleDepthMap.keySet().intersect(snpDepthMap.keySet())
-    println("Covered sites: ${coveredSites}")
     // count the number of sites covered in both files in the same positions
     if (coveredSites.size() >= min_covered_sites) {
         return true
