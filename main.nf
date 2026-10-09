@@ -142,7 +142,7 @@ workflow {
             ? [file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true), params.multiqc_config]
             : [file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true)],
         params.multiqc_logo ? params.multiqc_logo : [],
-        params.multiqc_methods_description ? params.multiqc_methods_description : file("${projectDir}/assets/methods_description_template.yml", checkIfExists: true),
+        params.multiqc_methods_description,
     )
     //
     // SUBWORKFLOW: Run completion tasks
@@ -160,7 +160,9 @@ workflow {
     multiqc_data       = SAMPLETRACKING.out.multiqc_data
     multiqc_report     = SAMPLETRACKING.out.multiqc_report
     crosscheck_metrics = SAMPLETRACKING.out.crosscheck_metrics
-    sex_prediction     = SAMPLETRACKING.out.sex_prediction
+    sex_prediction_xy   = SAMPLETRACKING.out.sex_prediction_xy
+    sex_prediction_sry  = SAMPLETRACKING.out.sex_prediction_sry
+    sex_prediction_hetx = SAMPLETRACKING.out.sex_prediction_hetx
 }
 
 output {
@@ -179,8 +181,18 @@ output {
             return (meta.pool ? "${meta.pool}/" : "crosscheck_metrics/")
         }
     }
-    sex_prediction {
-        path { meta, _xy, _sry, _hetx ->
+    sex_prediction_xy {
+        path { meta, _file ->
+            return (meta.pool ? "${meta.pool}/" : "sex_prediction/")
+        }
+    }
+    sex_prediction_sry {
+        path { meta, _file ->
+            return (meta.pool ? "${meta.pool}/" : "sex_prediction/")
+        }
+    }
+    sex_prediction_hetx {
+        path { meta, _file ->
             return (meta.pool ? "${meta.pool}/" : "sex_prediction/")
         }
     }

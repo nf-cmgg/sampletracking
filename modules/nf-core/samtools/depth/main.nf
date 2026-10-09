@@ -8,7 +8,8 @@ process SAMTOOLS_DEPTH {
         : 'community.wave.seqera.io/library/htslib_samtools:1.24--d697cfb9dce007cd'}"
 
     input:
-    tuple val(meta), path(bam), path(index), path(intervals)
+    tuple val(meta), path(bam), path(index)
+    tuple val(meta2), path(intervals)
 
     output:
     tuple val(meta), path("*.tsv"), emit: tsv
