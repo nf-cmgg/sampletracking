@@ -10,6 +10,7 @@ process SAMTOOLS_DEPTH {
     input:
     tuple val(meta), path(bam), path(index)
     tuple val(meta2), path(intervals)
+    tuple val(meta3), path(fasta), path(fai)
 
     output:
     tuple val(meta), path("*.tsv"), emit: tsv
@@ -22,6 +23,7 @@ process SAMTOOLS_DEPTH {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     def positions = intervals ? "-b ${intervals}" : ""
+    def reference = fasta ? "--reference ${fasta}" : ""
     """
     # Note: --threads value represents *additional* CPUs to allocate (total CPUs = 1 + --threads).
     samtools \\
@@ -29,6 +31,7 @@ process SAMTOOLS_DEPTH {
         --threads ${task.cpus - 1} \\
         ${args} \\
         ${positions} \\
+        ${reference} \\
         -o ${prefix}.tsv \\
         ${bam}
     """

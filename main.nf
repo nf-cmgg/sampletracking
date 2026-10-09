@@ -157,9 +157,10 @@ workflow {
     )
 
     publish:
-    multiqc_data       = SAMPLETRACKING.out.multiqc_data
-    multiqc_report     = SAMPLETRACKING.out.multiqc_report
-    crosscheck_metrics = SAMPLETRACKING.out.crosscheck_metrics
+    multiqc_data        = SAMPLETRACKING.out.multiqc_data
+    multiqc_report      = SAMPLETRACKING.out.multiqc_report
+    depth_metrics       = SAMPLETRACKING.out.depth_metrics
+    crosscheck_metrics  = SAMPLETRACKING.out.crosscheck_metrics
     sex_prediction_xy   = SAMPLETRACKING.out.sex_prediction_xy
     sex_prediction_sry  = SAMPLETRACKING.out.sex_prediction_sry
     sex_prediction_hetx = SAMPLETRACKING.out.sex_prediction_hetx
@@ -174,6 +175,11 @@ output {
     multiqc_report {
         path { meta, _file ->
             return ("${meta.id}/multiqc/")
+        }
+    }
+    depth_metrics {
+        path { meta, _file ->
+            return (meta.pool ? "${meta.pool}/" : "depth_metrics/")
         }
     }
     crosscheck_metrics {

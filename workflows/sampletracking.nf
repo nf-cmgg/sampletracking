@@ -12,6 +12,7 @@ include { SAMTOOLS_DEPTH as SAMTOOLS_DEPTH_SNP     } from '../modules/nf-core/sa
 include { SAMTOOLS_INDEX as SAMTOOLS_INDEX_SAMPLE  } from '../modules/nf-core/samtools/index'
 include { SAMTOOLS_INDEX as SAMTOOLS_INDEX_SNP_BAM } from '../modules/nf-core/samtools/index'
 include { haplotypeMapToBed                        } from '../subworkflows/local/utils_nfcmgg_sampletracking_pipeline'
+include { depthFilter                              } from '../subworkflows/local/utils_nfcmgg_sampletracking_pipeline'
 include { methodsDescriptionText                   } from '../subworkflows/local/utils_nfcore_sampletracking_pipeline'
 include { paramsSummaryMap                         } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc                     } from '../subworkflows/nf-core/utils_nfcore_pipeline'
@@ -76,7 +77,7 @@ workflow SAMPLETRACKING {
             ch_snp_none
         )
 
-    def ch_samplesheet_fixed = ch_sample_fixed.join(ch_snp_fixed, by: 0).dump(tag: "Fixed samplesheet", pretty: true)
+    def ch_samplesheet_fixed = ch_sample_fixed.join(ch_snp_fixed, by: 0).dump(tag: "Fixed samplesheet entry", pretty: true)
 
 
     //
@@ -85,7 +86,7 @@ workflow SAMPLETRACKING {
 
     // convert haplotype map to BED format
     ch_haplotype_bed = ch_haplotype_map.map { meta, haplotype_map ->
-        def bed_file = file(workDir + "/" + haplotype_map.name.replaceAll(/\.txt$/, ".bed"))
+        def bed_file = file("${workflow.workDir.toUriString()}/" + haplotype_map.name.replaceAll(/\.txt$/, ".bed"))
         haplotypeMapToBed(haplotype_map, bed_file)
         return [meta, bed_file]
     }
@@ -93,18 +94,21 @@ workflow SAMPLETRACKING {
     SAMTOOLS_DEPTH_SAMPLE(
         ch_samplesheet_fixed.map { meta, sample_bam, sample_bam_index, _snp_bam, _snp_bam_index -> [meta, sample_bam, sample_bam_index] },
         ch_haplotype_bed,
+        ch_fasta_fai
     )
 
     SAMTOOLS_DEPTH_SNP(
         ch_samplesheet_fixed.map { meta, _sample_bam, _sample_bam_index, snp_bam, snp_bam_index -> [meta, snp_bam, snp_bam_index] },
         ch_haplotype_bed,
+        ch_fasta_fai
+    )
+    ch_multiqc_files = ch_multiqc_files.mix(
+        SAMTOOLS_DEPTH_SAMPLE.out.tsv,
+        SAMTOOLS_DEPTH_SNP.out.tsv
     )
 
     // Check if any samples fall below the expected coverage and filter
-    def _ch_samples_filtered = channel.empty()
-
-    def ch_crosscheck_metrics_out = channel.empty()
-    ch_samplesheet_fixed
+    def ch_to_fingerprint = ch_samplesheet_fixed
         .branch { meta, sample_bam, sample_bam_index, snp_bam, snp_bam_index ->
             aligned: snp_bam
             return [meta, sample_bam, sample_bam_index, snp_bam, snp_bam_index]
@@ -112,11 +116,14 @@ workflow SAMPLETRACKING {
             log.warn("No SNP BAM/CRAM files were detected for '${meta.id}'. Skipping the crosscheck fingerprints step for this sample.")
             return [[id: meta.pool], []]
         }
-        .set { ch_crosscheck_metrics_in }
-
-
-    ch_crosscheck_metrics_in.aligned
-        .map { meta, sample_bam, sample_bam_index, snp_bam, snp_bam_index ->
+        .aligned
+        .join(SAMTOOLS_DEPTH_SAMPLE.out.tsv, by: 0)
+        .join(SAMTOOLS_DEPTH_SNP.out.tsv, by: 0)
+        // filter samples based on depth criteria
+        .filter { _meta, _sample_bam, _sample_bam_index, _snp_bam, _snp_bam_index, sample_depth_tsv, snp_depth_tsv ->
+            depthFilter(sample_depth_tsv, snp_depth_tsv)
+        }
+        .map { meta, sample_bam, sample_bam_index, snp_bam, snp_bam_index, _sample_depth_tsv, _snp_depth_tsv ->
             return [groupKey([id: meta.pool], meta.pool_count), sample_bam, sample_bam_index, snp_bam, snp_bam_index]
         }
         .groupTuple()
@@ -125,17 +132,14 @@ workflow SAMPLETRACKING {
             return [meta, sample_bam.flatten(), sample_bam_index.flatten(), snp_bam.flatten(), snp_bam_index.flatten(), haplotype_map]
         }
         .dump(tag: "Samples to fingerprint", pretty: true)
-        .set { ch_to_fingerprint }
-
 
     PICARD_CROSSCHECKFINGERPRINTS(
         ch_to_fingerprint,
         ch_fasta_fai,
     )
-    ch_crosscheck_metrics_out = PICARD_CROSSCHECKFINGERPRINTS.out.crosscheck_metrics
+
     ch_multiqc_files = ch_multiqc_files.mix(
-        PICARD_CROSSCHECKFINGERPRINTS.out.crosscheck_metrics,
-        ch_crosscheck_metrics_in.no_snp.unique(),
+        PICARD_CROSSCHECKFINGERPRINTS.out.crosscheck_metrics
     )
 
 
@@ -271,7 +275,8 @@ workflow SAMPLETRACKING {
     emit:
     multiqc_data        = MULTIQC.out.data // channel: data
     multiqc_report      = MULTIQC.out.report // channel: path(html)
-    crosscheck_metrics  = ch_crosscheck_metrics_out // channel: [ val(meta), path(metrics) ]
+    depth_metrics       = SAMTOOLS_DEPTH_SAMPLE.out.tsv.join(SAMTOOLS_DEPTH_SNP.out.tsv, by: 0) // channel: [ val(meta), path(tsv), path(tsv) ]
+    crosscheck_metrics  = PICARD_CROSSCHECKFINGERPRINTS.out.crosscheck_metrics // channel: [ val(meta), path(metrics) ]
     sex_prediction_xy   = NGSBITS_SAMPLEGENDER.out.xy_tsv // channel: [ val(meta), path(tsv) ]
     sex_prediction_sry  = NGSBITS_SAMPLEGENDER.out.sry_tsv // channel: [ val(meta), path(tsv) ]
     sex_prediction_hetx = NGSBITS_SAMPLEGENDER.out.hetx_tsv // channel: [ val(meta), path(tsv) ]
