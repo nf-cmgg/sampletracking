@@ -61,9 +61,6 @@ params {
     // Path to FASTA index file.
     fai: Path
 
-    // Path to bwa index directory.
-    bwa_index: Path
-
     // Path to haplotype map file.
     haplotype_map: Path
 
