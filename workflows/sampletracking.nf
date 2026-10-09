@@ -114,7 +114,6 @@ workflow SAMPLETRACKING {
         .map { meta, sample_bam, sample_bam_index, snp_bam, snp_bam_index, _sample_depth_tsv, _snp_depth_tsv ->
             return [[id: meta.pool, pool: meta.pool], sample_bam, sample_bam_index, snp_bam, snp_bam_index]
         }
-        .pass
         .groupTuple()
         .merge(ch_haplotype_map.map { _meta, haplotype_map -> haplotype_map })
         .map { meta, sample_bam, sample_bam_index, snp_bam, snp_bam_index, haplotype_map ->
