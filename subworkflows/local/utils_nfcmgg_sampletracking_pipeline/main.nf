@@ -1,4 +1,5 @@
 def haplotypeMapToBed(inputFilePath: Path, outputFilePath: Path) {
+    outputFilePath.text = ""
     inputFilePath.eachLine { line ->
         // Skip metadata headers (@) and column definition lines (#)
         if (line.startsWith('@') || line.startsWith('#')) {
@@ -18,6 +19,6 @@ def haplotypeMapToBed(inputFilePath: Path, outputFilePath: Path) {
     }
 }
 
-def depthFilter(_sample_depth_tsv: Path, _snp_depth_tsv: Path) {
+def depthFilter(_sample_depth_tsv: Path, _snp_depth_tsv: Path, _min_covered_sites: int) {
     return true
 }

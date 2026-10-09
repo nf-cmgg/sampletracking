@@ -1,14 +1,14 @@
 ---
 - sample: sample1
   pool: pool1
-  sex: U
+  sex: M
   sample_bam: s3://test-data/sampletracking/sample1.cram
   sample_bam_index: s3://test-data/sampletracking/sample1.cram.crai
   snp_bam: s3://test-data/sampletracking/snp_sample1.cram
   snp_bam_index: s3://test-data/sampletracking/snp_sample1.cram.crai
 - sample: sample2
   pool: pool1
-  sex: U
+  sex: M
   sample_bam: s3://test-data/sampletracking/sample2.cram
   sample_bam_index: s3://test-data/sampletracking/sample2.cram.crai
   snp_bam: s3://test-data/sampletracking/snp_sample2.cram
