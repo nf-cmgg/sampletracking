@@ -9,7 +9,6 @@ nextflow_workflow {
     workflow "SAMPLETRACKING"
 
     test("Should run without failures") {
-        options "-stub"
         when {
             params {
                 outdir = "$outputDir"
@@ -18,24 +17,31 @@ nextflow_workflow {
                 """
                 input[0] = Channel.of(
                     [
+                        [id:"sample1", pool: "pool1", pool_count:2], // meta
+                        file("${pipelines_testdata_base_path}/sample1.cram", checkIfExists:true),
+                        file("${pipelines_testdata_base_path}/sample1.cram.crai", checkIfExists:true),
+                        file("${pipelines_testdata_base_path}/snp_sample1.cram"),
+                        file("${pipelines_testdata_base_path}/snp_sample1.cram.crai"),
+                    ],
+                    [
                         [id:"sample2", pool: "pool1", pool_count:2], // meta
-                        file("https://github.com/nf-cmgg/test-datasets/raw/sampletracking/data/genomics/homo_sapiens/illumina/exome/cram/sample2.sorted.cram", checkIfExists:true),        // sample_bam
-                        file("https://github.com/nf-cmgg/test-datasets/raw/sampletracking/data/genomics/homo_sapiens/illumina/exome/cram/sample2.sorted.cram.crai", checkIfExists:true),   // sample_index
-                        file("https://github.com/nf-cmgg/test-datasets/raw/sampletracking/data/genomics/homo_sapiens/illumina/snp/cram/snp_sample2.sorted.cram"),           // snp_bam
-                        file("https://github.com/nf-cmgg/test-datasets/raw/sampletracking/data/genomics/homo_sapiens/illumina/snp/cram/snp_sample2.sorted.cram.crai"),     // snp_bam
+                        file("${pipelines_testdata_base_path}/sample2.cram", checkIfExists:true),
+                        file("${pipelines_testdata_base_path}/sample2.cram.crai", checkIfExists:true),
+                        file("${pipelines_testdata_base_path}/snp_sample2.cram"),
+                        file("${pipelines_testdata_base_path}/snp_sample2.cram.crai"),
                     ],
                 )
                 input[1] = Channel.value(
                     [
                         [:],
-                        file("https://github.com/nf-cmgg/test-datasets/raw/sampletracking/data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna"),
-                        file("https://github.com/nf-cmgg/test-datasets/raw/sampletracking/data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai")
+                        file("${pipelines_testdata_base_path}/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna"),
+                        file("${pipelines_testdata_base_path}/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai")
                     ]
                 )
                 input[2] = Channel.value(
                     [
                         [:],
-                        file("https://github.com/nf-cmgg/test-datasets/raw/sampletracking/data/genomics/homo_sapiens/genome/picard/haplotype_map.txt")
+                        file("${pipelines_testdata_base_path}/haplotype_map.txt")
                     ]
                 )
                 input[3] = file("${outputDir}")
@@ -66,8 +72,6 @@ nextflow_workflow {
     }
 
     test("Should run without failures - skip crosscheck fingerprints") {
-        options "-stub"
-
         when {
             params {
                 outdir = "$outputDir"
@@ -77,30 +81,30 @@ nextflow_workflow {
                 input[0] = Channel.of(
                     [
                         [id:"sample1", pool: "pool1", pool_count:2], // meta
-                        file("https://github.com/nf-cmgg/test-datasets/raw/sampletracking/data/genomics/homo_sapiens/illumina/exome/bam/sample1.sort.bam", checkIfExists:true),     // sample_bam
-                        file("https://github.com/nf-cmgg/test-datasets/raw/sampletracking/data/genomics/homo_sapiens/illumina/exome/bam/sample1.sort.bam.bai", checkIfExists:true), // sample_index
-                        [],     // snp_bam
-                        []      // snp_bai
+                        file("${pipelines_testdata_base_path}/sample1.cram", checkIfExists:true),
+                        file("${pipelines_testdata_base_path}/sample1.cram.crai", checkIfExists:true),
+                        [],
+                        []
                     ],
                     [
                         [id:"sample2", pool: "pool1", pool_count:2], // meta
-                        file("https://github.com/nf-cmgg/test-datasets/raw/sampletracking/data/genomics/homo_sapiens/illumina/exome/cram/sample2.sorted.cram", checkIfExists:true),        // sample_bam
-                        file("https://github.com/nf-cmgg/test-datasets/raw/sampletracking/data/genomics/homo_sapiens/illumina/exome/cram/sample2.sorted.cram.crai", checkIfExists:true),   // sample_index
-                        file("https://github.com/nf-cmgg/test-datasets/raw/sampletracking/data/genomics/homo_sapiens/illumina/snp/cram/snp_sample2.sorted.cram"),           // snp_bam
-                        file("https://github.com/nf-cmgg/test-datasets/raw/sampletracking/data/genomics/homo_sapiens/illumina/snp/cram/snp_sample2.sorted.cram.crai"),     // snp_bam
+                        file("${pipelines_testdata_base_path}/sample2.cram", checkIfExists:true),
+                        file("${pipelines_testdata_base_path}/sample2.cram.crai", checkIfExists:true),
+                        file("${pipelines_testdata_base_path}/snp_sample2.cram"),
+                        file("${pipelines_testdata_base_path}/snp_sample2.cram.crai"),
                     ],
                 )
                 input[1] = Channel.value(
                     [
                         [:],
-                        file("https://github.com/nf-cmgg/test-datasets/raw/sampletracking/data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna"),
-                        file("https://github.com/nf-cmgg/test-datasets/raw/sampletracking/data/genomics/homo_sapiens/genome/seq/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set_chr21.fna.fai")
+                        file("${pipelines_testdata_base_path}/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set.fna"),
+                        file("${pipelines_testdata_base_path}/GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set.fna.fai")
                     ]
                 )
                 input[2] = Channel.value(
                     [
-                        [:],
-                        file("https://github.com/nf-cmgg/test-datasets/raw/sampletracking/data/genomics/homo_sapiens/genome/picard/haplotype_map.txt")
+                        [id: "haplotype_map"],
+                        file("${pipelines_testdata_base_path}/haplotype_map.txt")
                     ]
                 )
                 input[3] = file("${outputDir}")
