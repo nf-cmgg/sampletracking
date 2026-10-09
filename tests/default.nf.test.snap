@@ -1,23 +1,4 @@
 {
-    "Should run without failures - skip crosscheck fingerprints": {
-        "content": [
-            {
-                
-            },
-            [
-                "pipeline_info",
-                "pipeline_info/nf_cmgg_sampletracking_software_mqc_versions.yml"
-            ],
-            [
-                
-            ]
-        ],
-        "timestamp": "2026-10-08T13:49:07.228822",
-        "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
-        }
-    },
     "Should run without failures": {
         "content": [
             {
@@ -25,16 +6,70 @@
             },
             [
                 "pipeline_info",
-                "pipeline_info/nf_cmgg_sampletracking_software_mqc_versions.yml"
+                "pipeline_info/nf_cmgg_sampletracking_software_mqc_versions.yml",
+                "pool1",
+                "pool1/multiqc",
+                "pool1/multiqc/pool1.html",
+                "pool1/multiqc/pool1_data",
+                "pool1/multiqc/pool1_data/llms-full.txt",
+                "pool1/multiqc/pool1_data/multiqc.log",
+                "pool1/multiqc/pool1_data/multiqc.parquet",
+                "pool1/multiqc/pool1_data/multiqc_citations.txt",
+                "pool1/multiqc/pool1_data/multiqc_data.json",
+                "pool1/multiqc/pool1_data/multiqc_general_stats.txt",
+                "pool1/multiqc/pool1_data/multiqc_picard-crosscheckfingerprints-table_table.txt",
+                "pool1/multiqc/pool1_data/multiqc_sex_prediction.txt",
+                "pool1/multiqc/pool1_data/multiqc_software_versions.txt",
+                "pool1/multiqc/pool1_data/multiqc_sources.txt",
+                "pool1/multiqc/pool1_data/picard-crosscheckfingerprints-heatmap.txt",
+                "pool1/multiqc/pool1_data/picard-crosscheckfingerprints-sample-table.txt",
+                "pool1/multiqc/pool1_data/picard-crosscheckfingerprints-table.txt",
+                "pool1/multiqc/pool1_data/picard_MarkIlluminaAdapters_histogram.txt",
+                "pool1/multiqc/pool1_data/picard_MeanQualityByCycle_histogram.txt",
+                "pool1/multiqc/pool1_data/picard_MeanQualityByCycle_histogram_1.txt",
+                "pool1/multiqc/pool1_data/picard_QualityScoreDistribution_histogram.txt",
+                "pool1/multiqc/pool1_data/picard_crosscheckfingerprints.txt",
+                "pool1/pool1.crosscheck_metrics.txt",
+                "pool1/sample1_hetx.tsv",
+                "pool1/sample1_sry.tsv",
+                "pool1/sample1_xy.tsv",
+                "pool1/sample2_hetx.tsv",
+                "pool1/sample2_sry.tsv",
+                "pool1/sample2_xy.tsv"
             ],
             [
-                
+                "pool1.html:md5,6e3090c4698c8c790db2af5538033072",
+                "llms-full.txt:md5,22a896c715a9e64ac9e0a79679f55576",
+                "multiqc.log:md5,4b0538d58fea58a498e487ef3325fea9",
+                "multiqc.parquet:md5,461a08f47fb32e32c201d68aa0acf95b",
+                "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
+                "multiqc_data.json:md5,5f52673e043a796aeec0ab05dbf1be35",
+                "multiqc_general_stats.txt:md5,94fa28042d67dbf437f0c94d301f37f5",
+                "multiqc_picard-crosscheckfingerprints-table_table.txt:md5,8d38e0dcca23057a5c64858e1de39e9e",
+                "multiqc_sex_prediction.txt:md5,bb3aeec4f7b6f4f19bf85bbab103a302",
+                "multiqc_software_versions.txt:md5,ef9ff12b72efc988d9a28763a0eefc19",
+                "multiqc_sources.txt:md5,aada5791ba29adea7a9de6ff2d998746",
+                "picard-crosscheckfingerprints-heatmap.txt:md5,e4119b4ba35fe3965ae27ea7e3aa0866",
+                "picard-crosscheckfingerprints-sample-table.txt:md5,1b53cbe2f7e83199bc465ffd818fe74f",
+                "picard-crosscheckfingerprints-table.txt:md5,58d699065847c1b7ef1cce0689125ab9",
+                "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "picard_crosscheckfingerprints.txt:md5,b92de2c4397e7ce8ca55f28d27be7c8b",
+                "pool1.crosscheck_metrics.txt:md5,f4978137504956e6f7206cb3833240be",
+                "sample1_hetx.tsv:md5,a586e8f2c7b69c6303fc6fe2e7bf7f07",
+                "sample1_sry.tsv:md5,475546ddb2ce007ddb0464ef5514febc",
+                "sample1_xy.tsv:md5,6b22921b3b6ddd2173d5ec163a3826f0",
+                "sample2_hetx.tsv:md5,e12d2205182b5d380a0316cd64f5a86d",
+                "sample2_sry.tsv:md5,eeb128b80f7af61e0cdcff896c0ef905",
+                "sample2_xy.tsv:md5,d3be474f1fd9617bbe831b3d4764812b"
             ]
         ],
-        "timestamp": "2026-10-08T13:48:50.393842",
+        "timestamp": "2026-10-09T14:23:57.403195",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "26.04.7"
         }
     }
 }
