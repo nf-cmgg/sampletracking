@@ -119,13 +119,14 @@ workflow SAMPLETRACKING {
         .aligned
         .join(SAMTOOLS_DEPTH_SAMPLE.out.tsv, by: 0)
         .join(SAMTOOLS_DEPTH_SNP.out.tsv, by: 0)
-        // filter samples based on depth criteria
-        .filter { _meta, _sample_bam, _sample_bam_index, _snp_bam, _snp_bam_index, sample_depth_tsv, snp_depth_tsv ->
-            depthFilter(sample_depth_tsv, snp_depth_tsv, params.fingerprinting_min_sites)
+        // exclude samples based on depth criteria
+        .branch { meta, sample_bam, sample_bam_index, snp_bam, snp_bam_index, sample_depth_tsv, snp_depth_tsv ->
+            pass: depthFilter(sample_depth_tsv, snp_depth_tsv, params.fingerprinting_min_sites)
+                return [groupKey([id: meta.pool, pool: meta.pool], meta.pool_count), sample_bam, sample_bam_index, snp_bam, snp_bam_index ]
+            fail: !depthFilter(sample_depth_tsv, snp_depth_tsv, params.fingerprinting_min_sites)
+                log.warn("'${meta.id}' was excluded due to insufficient coverage. Skipping the crosscheck fingerprints step for this sample.")
         }
-        .map { meta, sample_bam, sample_bam_index, snp_bam, snp_bam_index, _sample_depth_tsv, _snp_depth_tsv ->
-            return [groupKey([id: meta.pool, pool: meta.pool], meta.pool_count), sample_bam, sample_bam_index, snp_bam, snp_bam_index]
-        }
+        .pass
         .groupTuple()
         .merge(ch_haplotype_map.map { _meta, haplotype_map -> haplotype_map })
         .map { meta, sample_bam, sample_bam_index, snp_bam, snp_bam_index, haplotype_map ->
