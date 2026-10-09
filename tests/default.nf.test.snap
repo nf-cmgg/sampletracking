@@ -67,7 +67,11 @@
                 "sample3_xy.tsv:md5,3d7b5950615846e1b3759f394172037b"
             ]
         ],
+<<<<<<< HEAD
         "timestamp": "2026-10-11T12:51:32.064233",
+=======
+        "timestamp": "2026-10-09T21:46:00.869908",
+>>>>>>> c2063ba (update snaps)
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.7"
