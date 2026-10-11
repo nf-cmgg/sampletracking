@@ -44,9 +44,9 @@ workflow SAMPLETRACKING {
         snp: [meta, snp_bam, snp_bam_index]
     }
 
-    def (ch_sample_with_idx, ch_sample_no_idx) = ch_sample.branch { _meta, _sample_bam, sample_bam_index ->
-        with_index: sample_bam_index
+    def (ch_sample_no_idx, ch_sample_with_idx) = ch_sample.branch { _meta, _sample_bam, sample_bam_index ->
         no_index: !sample_bam_index
+        with_index: sample_bam_index
     }
 
     // Index sample BAM files that do not have an index
@@ -59,10 +59,9 @@ workflow SAMPLETRACKING {
     )
 
     // Index SNP BAM files that do not have an index
-    def (ch_snp_with_idx, ch_snp_no_idx, ch_snp_none) = ch_snp.branch { _meta, snp_bam, snp_bam_index ->
-        none: !snp_bam
-        with_index: snp_bam_index
+    def (ch_snp_no_idx, ch_snp_with_idx) = ch_snp.branch { _meta, _snp_bam, snp_bam_index ->
         no_index: !snp_bam_index
+        with_index: snp_bam_index
     }
 
     SAMTOOLS_INDEX_SNP_BAM(
@@ -72,9 +71,6 @@ workflow SAMPLETRACKING {
     def ch_snp_fixed = ch_snp_with_idx
         .mix(
             ch_snp_no_idx.join(SAMTOOLS_INDEX_SNP_BAM.out.index, by: 0).map { meta, snp_bam, _old_index, new_index -> [meta, snp_bam, new_index] }
-        )
-        .mix(
-            ch_snp_none
         )
 
     def ch_samplesheet_fixed = ch_sample_fixed.join(ch_snp_fixed, by: 0).dump(tag: "Fixed samplesheet entry", pretty: true)
