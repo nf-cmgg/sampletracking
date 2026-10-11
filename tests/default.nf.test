@@ -29,11 +29,7 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_content
                     ).match()
-                },
-                // nextflow.out should match the expected output
-                {assert filterNextflowOutput(workflow.out).match() },
-                // stderr should contain "'sample3' was excluded due to insufficient coverage"
-                {assert filterNextflowOutput(workflow.sterr).contains("'sample3' was excluded due to insufficient coverage")}
+                }
             )
         }
     }

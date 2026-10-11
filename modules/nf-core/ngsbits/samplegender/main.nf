@@ -9,7 +9,7 @@ process NGSBITS_SAMPLEGENDER {
 
     input:
     tuple val(meta), path(bam), path(bai)
-    tuple val(meta2), path(fasta), path(fai)
+    tuple val(meta2), path(fasta), path(fai), path(gzi)
 
     output:
     tuple val(meta), path("*_xy.tsv"), emit: xy_tsv

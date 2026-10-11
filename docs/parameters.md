@@ -29,11 +29,12 @@ Options to customize the sex prediction
 
 Reference genome related files and options required for the workflow.
 
-| Parameter       | Description                                                                                                         | Type     | Default | Required | Hidden |
-| --------------- | ------------------------------------------------------------------------------------------------------------------- | -------- | ------- | -------- | ------ |
-| `fasta`         | Path to FASTA genome file. <details><summary>Help</summary><small>This parameter is _mandatory_.</small></details>  | `string` |         | True     |        |
-| `fai`           | Path to FASTA index file. <details><summary>Help</summary><small>This parameter is _mandatory_.</small></details>   | `string` |         |          |        |
-| `haplotype_map` | Path to haplotype map file. <details><summary>Help</summary><small>This parameter is _mandatory_.</small></details> | `string` |         | True     |        |
+| Parameter       | Description                                                                                                                | Type     | Default | Required | Hidden |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------- | -------- | ------- | -------- | ------ |
+| `fasta`         | Path to FASTA genome file. <details><summary>Help</summary><small>This parameter is _mandatory_.</small></details>         | `string` |         | True     |        |
+| `fai`           | Path to FASTA index file. <details><summary>Help</summary><small>This parameter is _mandatory_.</small></details>          | `string` |         |          |        |
+| `gzi`           | Path to FASTA gzi index file. <details><summary>Help</summary><small>Mandatory when fasta is compressed.</small></details> | `string` |         |          |        |
+| `haplotype_map` | Path to haplotype map file. <details><summary>Help</summary><small>This parameter is _mandatory_.</small></details>        | `string` |         | True     |        |
 
 ## Institutional config options
 

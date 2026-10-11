@@ -29,7 +29,7 @@ include { softwareVersionsToYAML                   } from '../subworkflows/nf-co
 workflow SAMPLETRACKING {
     take:
     ch_samplesheet // channel: samplesheet read in from --input
-    ch_fasta_fai // channel: [meta,/path/to/fasta, /path/to/fasta.fai]
+    ch_fasta_fai_gzi // channel: [meta,/path/to/fasta, /path/to/fasta.fai, /path/to/fasta.gzi]
     ch_haplotype_map // channel: [meta, /path/to/haplotype_map]
     outdir // path:  path/to/outdir
     multiqc_config // path:  path/to/multiqc_config
@@ -90,13 +90,13 @@ workflow SAMPLETRACKING {
     SAMTOOLS_DEPTH_SAMPLE(
         ch_samplesheet_fixed.map { meta, sample_bam, sample_bam_index, _snp_bam, _snp_bam_index -> [meta, sample_bam, sample_bam_index] },
         ch_haplotype_bed,
-        ch_fasta_fai,
+        ch_fasta_fai_gzi,
     )
 
     SAMTOOLS_DEPTH_SNP(
         ch_samplesheet_fixed.map { meta, _sample_bam, _sample_bam_index, snp_bam, snp_bam_index -> [meta, snp_bam, snp_bam_index] },
         ch_haplotype_bed,
-        ch_fasta_fai,
+        ch_fasta_fai_gzi,
     )
     ch_multiqc_files = ch_multiqc_files.mix(
         SAMTOOLS_DEPTH_SAMPLE.out.tsv.map { meta, tsv ->
@@ -126,7 +126,7 @@ workflow SAMPLETRACKING {
 
     PICARD_CROSSCHECKFINGERPRINTS(
         ch_to_fingerprint,
-        ch_fasta_fai,
+        ch_fasta_fai_gzi,
     )
 
     ch_multiqc_files = ch_multiqc_files.mix(
@@ -141,7 +141,7 @@ workflow SAMPLETRACKING {
         ch_samplesheet_fixed.map { meta, sample_bam, sample_bam_index, _snp_bam, _snp_bam_index ->
             [meta, sample_bam, sample_bam_index]
         },
-        ch_fasta_fai,
+        ch_fasta_fai_gzi,
     )
 
     def ch_sex_prediction_configs = NGSBITS_SAMPLEGENDER.out.xy_tsv

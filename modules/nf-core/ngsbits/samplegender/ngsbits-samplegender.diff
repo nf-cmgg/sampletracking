@@ -11,7 +11,7 @@ Changes in 'ngsbits/samplegender/main.nf':
 -    tuple val(meta2), path(fasta)
 -    tuple val(meta3), path(fai)
 -    val method
-+    tuple val(meta2), path(fasta), path(fai)
++    tuple val(meta2), path(fasta), path(fai), path(gzi)
  
      output:
 -    tuple val(meta), path("*.tsv"), emit: tsv

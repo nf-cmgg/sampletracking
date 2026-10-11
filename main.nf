@@ -61,6 +61,9 @@ params {
     // Path to FASTA index file.
     fai: Path
 
+    // Path to FASTA GZI index file when the FASTA file is compressed with bgzip.
+    gzi: Path?
+
     // Path to haplotype map file.
     haplotype_map: Path
 
@@ -132,7 +135,7 @@ workflow {
     //
     SAMPLETRACKING(
         PIPELINE_INITIALISATION.out.samplesheet,
-        channel.value([[id: "genome_fasta"], params.fasta, params.fai]),
+        channel.value([[id: "genome_fasta"], params.fasta, params.fai, params.gzi ? params.gzi : []]),
         channel.value([[id: "haplotype_map"], params.haplotype_map]),
         params.outdir,
         params.multiqc_config

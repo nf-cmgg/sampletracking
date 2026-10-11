@@ -123,6 +123,16 @@
                     "help_text": "This parameter is *mandatory*.",
                     "fa_icon": "far fa-file-code"
                 },
+                "gzi": {
+                    "type": "string",
+                    "format": "file-path",
+                    "exists": true,
+                    "mimetype": "text/plain",
+                    "pattern": "^\\S+\\.gzi$",
+                    "description": "Path to FASTA GZI index file.",
+                    "help_text": "Path to FASTA GZI index file when the FASTA file is compressed with bgzip.",
+                    "fa_icon": "far fa-file-code"
+                },
                 "haplotype_map": {
                     "type": "string",
                     "format": "file-path",
