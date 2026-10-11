@@ -23,7 +23,7 @@ def haplotypeMapToBed(inputFilePath: Path, outputFilePath: Path) {
     }
 }
 
-def depthFilter(sample_depth_tsv: Path, snp_depth_tsv: Path, min_covered_sites: int) {
+def depthFilter(sample_name: String, sample_depth_tsv: Path, snp_depth_tsv: Path, min_covered_sites: int) {
     // read both files, split by tabs
     def sampleDepthMap = sample_depth_tsv.readLines().collectEntries { line ->
         def parts = line.split('\t')
@@ -38,5 +38,6 @@ def depthFilter(sample_depth_tsv: Path, snp_depth_tsv: Path, min_covered_sites: 
     if (coveredSites.size() >= min_covered_sites) {
         return true
     }
+    log.warn("'${sample_name}' was excluded due to insufficient coverage. Skipping the crosscheck fingerprints step for this sample.")
     return false
 }
