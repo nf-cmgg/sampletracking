@@ -10,4 +10,4 @@
 **/multiqc/*_plots/{svg,pdf,png}/*.{svg,pdf,png}
 **/multiqc/*.html
 pipeline_info/*.{mmd,html,json,txt,yml}
-**/crosscheck_metrics.txt
+**/*crosscheck_metrics.txt
