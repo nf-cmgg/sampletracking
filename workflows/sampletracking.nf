@@ -182,7 +182,7 @@ workflow SAMPLETRACKING {
                 coverage_sry: tsv_list.coverage_sry,
                 het_fraction: tsv_list.het_fraction,
             ]
-            return [groupKey([id: meta.pool], meta.pool_count), data]
+            return [[id: meta.pool], data]
         }
         .groupTuple()
         .map { meta, data ->
