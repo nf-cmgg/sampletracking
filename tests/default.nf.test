@@ -20,14 +20,20 @@ nextflow_pipeline {
             def stable_content = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
             assert workflow.success
             assertAll(
-                { assert snapshot(
+                {
+                    assert snapshot(
                     // pipeline versions.yml file for multiqc from which Nextflow version is removed because we test pipelines on multiple Nextflow versions
                     removeNextflowVersion("$outputDir/pipeline_info/sampletracking_software_mqc_versions.yml"),
                     // All stable path name, with a relative path
                     stable_path,
                     // All files with stable contents
                     stable_content
-                ).match() }
+                    ).match()
+                },
+                // nextflow.out should match the expected output
+                {assert filterNextflowOutput(workflow.out).match() },
+                // stderr should contain "'sample3' was excluded due to insufficient coverage"
+                {assert filterNextflowOutput(workflow.sterr).contains("'sample3' was excluded due to insufficient coverage")}
             )
         }
     }
