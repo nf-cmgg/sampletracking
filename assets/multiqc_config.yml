@@ -22,7 +22,7 @@ table_cond_formatting_rules:
       - lt: 50
 
 table_columns_name:
-  sex_prediction:
+  ngsbits-sex-prediction-table:
     match_certainty: "Certainty of sex match"
     expected_sex: "Expected Sex"
     calculated_sex: "Calculated Sex"
@@ -32,10 +32,14 @@ table_columns_name:
     ratio_yx: "# reads in chrY / # reads in chrX (XY)"
     het_fraction: "Fraction of heterozygous SNPs in chrX (HETX)"
     coverage_sry: "Coverage of SRY in chrY (SRY)"
-    xy_ratio: "X/Y ratio"
+  picard-crosscheckfingerprints-excluded-table:
+    sample: "Sample"
+    sites_sample: "# covered sites in sample BAM"
+    sites_snp: "# covered sites in SNP BAM"
+    sites_overlap: "# overlapping sites"
 
 custom_plot_config:
-  sex_prediction:
+  ngsbits-sex-prediction-table:
     defaultsort:
       - column: "Certainty of sex match"
         direction: asc
