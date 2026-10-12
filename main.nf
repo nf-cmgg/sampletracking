@@ -29,7 +29,7 @@ params {
     input: Path
 
     // The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure.
-    outdir: String = "results"
+    outdir: String
 
     // Email address for completion summary.
     email: String?
