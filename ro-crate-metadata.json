@@ -29,7 +29,7 @@
                     "@id": "main.nf"
                 },
                 {
-                    "@id": "docs/images/metro_map.png"
+                    "@id": "docs/images/metro_map.svg"
                 },
                 {
                     "@id": "assets/"
@@ -135,7 +135,7 @@
             "dateModified": "2026-10-07T15:46:43Z",
             "dct:conformsTo": "https://bioschemas.org/profiles/ComputationalWorkflow/1.0-RELEASE/",
             "image": {
-                "@id": "docs/images/metro_map.png"
+                "@id": "docs/images/metro_map.svg"
             },
             "keywords": [
                 "nf-core",
@@ -182,7 +182,7 @@
             "version": "!>=26.04.0"
         },
         {
-            "@id": "docs/images/metro_map.png",
+            "@id": "docs/images/metro_map.svg",
             "@type": [
                 "File",
                 "ImageObject"
