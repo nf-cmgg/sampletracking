@@ -23,7 +23,7 @@ def haplotypeMapToBed(inputFilePath: Path, outputFilePath: Path) {
     }
 }
 
-def depthFilter(sample_name: String, sample_depth_tsv: Path, snp_depth_tsv: Path, min_covered_sites: int) {
+def depthStats(sample_depth_tsv: Path, snp_depth_tsv: Path, min_covered_sites: int) {
     // read both files, split by tabs
     def sampleDepthMap = sample_depth_tsv.splitCsv(sep:'\t', strip:true).collectEntries { parts ->
         [(parts[0]+":"+parts[1]): parts[2].toInteger()]
@@ -32,10 +32,12 @@ def depthFilter(sample_name: String, sample_depth_tsv: Path, snp_depth_tsv: Path
         [(parts[0]+":"+parts[1]): parts[2].toInteger()]
     }
     def coveredSites = sampleDepthMap.keySet().intersect(snpDepthMap.keySet())
-    // count the number of sites covered in both files in the same positions
-    if (coveredSites.size() >= min_covered_sites) {
-        return true
-    }
-    log.warn("'${sample_name}' was excluded due to insufficient coverage. Skipping the crosscheck fingerprints step for this sample.")
-    return false
+    def state = coveredSites.size() >= min_covered_sites
+    def counts = [
+        sites_sample: sampleDepthMap.keySet().size(),
+        sites_snp: snpDepthMap.keySet().size(),
+        sites_overlap: coveredSites.size()
+    ]
+
+    return [state, counts]
 }

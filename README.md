@@ -15,7 +15,7 @@
 
 **nf-cmgg/sampletracking** is a bioinformatics pipeline that performs sampletracking on sequencing samples. The pipeline does this by crosschecking SNP fingerprints and by checking if the expected sex matches the real sex of the sample.
 
-![metro_map](docs/images/metro_map.png)
+![metro_map](docs/images/metro_map.svg)
 
 ## Usage
 

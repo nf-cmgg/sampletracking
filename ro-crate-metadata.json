@@ -23,6 +23,9 @@
                     "@id": "main.nf"
                 },
                 {
+                    "@id": "docs/images/metro_map.svg"
+                },
+                {
                     "@id": "assets/"
                 },
                 {
@@ -120,6 +123,9 @@
             "dateCreated": "",
             "dateModified": "2026-10-12T12:25:50Z",
             "dct:conformsTo": "https://bioschemas.org/profiles/ComputationalWorkflow/1.0-RELEASE/",
+            "image": {
+                "@id": "docs/images/metro_map.svg"
+            },
             "keywords": [
                 "nf-core",
                 "nextflow"
@@ -165,7 +171,7 @@
             "version": "!>=26.04.0"
         },
         {
-            "@id": "https://w3id.org/workflowhub/workflow-ro-crate/1.1",
+            "@id": "docs/images/metro_map.svg",
             "@type": [
                 "CreativeWork",
                 "Profile"

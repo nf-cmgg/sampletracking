@@ -12,7 +12,7 @@ include { SAMTOOLS_DEPTH as SAMTOOLS_DEPTH_SNP     } from '../modules/nf-core/sa
 include { SAMTOOLS_INDEX as SAMTOOLS_INDEX_SAMPLE  } from '../modules/nf-core/samtools/index'
 include { SAMTOOLS_INDEX as SAMTOOLS_INDEX_SNP_BAM } from '../modules/nf-core/samtools/index'
 include { haplotypeMapToBed                        } from '../subworkflows/local/utils_nfcmgg_sampletracking_pipeline'
-include { depthFilter                              } from '../subworkflows/local/utils_nfcmgg_sampletracking_pipeline'
+include { depthStats                              } from '../subworkflows/local/utils_nfcmgg_sampletracking_pipeline'
 include { methodsDescriptionText                   } from '../subworkflows/local/utils_nfcore_sampletracking_pipeline'
 include { paramsSummaryMap                         } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc                     } from '../subworkflows/nf-core/utils_nfcore_pipeline'
@@ -75,7 +75,6 @@ workflow SAMPLETRACKING {
 
     def ch_samplesheet_fixed = ch_sample_fixed.join(ch_snp_fixed, by: 0).dump(tag: "Fixed samplesheet entry", pretty: true)
 
-
     //
     // Crosscheck fingerprints
     //
@@ -104,16 +103,21 @@ workflow SAMPLETRACKING {
         },
         SAMTOOLS_DEPTH_SNP.out.tsv.map { meta, tsv ->
             return [meta + [id: meta.pool], tsv]
-        },
+        }
     )
 
-    // Check if any samples fall below the expected coverage and filter
-    def ch_to_fingerprint = ch_samplesheet_fixed
+    ch_depth_check = ch_samplesheet_fixed
         .join(SAMTOOLS_DEPTH_SAMPLE.out.tsv, by: 0)
         .join(SAMTOOLS_DEPTH_SNP.out.tsv, by: 0)
-        .filter { meta, _sample_bam, _sample_bam_index, _snp_bam, _snp_bam_index, sample_depth_tsv, snp_depth_tsv ->
-            depthFilter(meta.id, sample_depth_tsv, snp_depth_tsv, params.fingerprinting_min_sites)
+        .branch { meta, _sample_bam, _sample_bam_index, _snp_bam, _snp_bam_index, sample_depth_tsv, snp_depth_tsv ->
+            def stats = depthStats(sample_depth_tsv, snp_depth_tsv, params.fingerprinting_min_sites)
+            passed: stats[0]
+            failed: !stats[0]
+                log.warn("'${meta.id}' was excluded due to insufficient coverage. Skipping the crosscheck fingerprints step for this sample.")
+                return [meta.pool,[sample: meta.id] + stats[1]]
         }
+
+    ch_to_fingerprint = ch_depth_check.passed
         .map { meta, sample_bam, sample_bam_index, snp_bam, snp_bam_index, _sample_depth_tsv, _snp_depth_tsv ->
             return [[id: meta.pool, pool: meta.pool], sample_bam, sample_bam_index, snp_bam, snp_bam_index]
         }
@@ -130,7 +134,28 @@ workflow SAMPLETRACKING {
     )
 
     ch_multiqc_files = ch_multiqc_files.mix(
-        PICARD_CROSSCHECKFINGERPRINTS.out.crosscheck_metrics
+        PICARD_CROSSCHECKFINGERPRINTS.out.crosscheck_metrics,
+        ch_depth_check.failed.groupTuple()
+        .map { pool, data ->
+            def config = [
+                id: "picard-crosscheckfingerprints-excluded-table",
+                section_name: "Samples excluded from fingerprinting",
+                description: "This table shows the samples excluded from fingerprinting due to insufficient coverage",
+                plot_type: "table",
+                headers: [
+                    sample: [:],
+                    sites_sample: [:],
+                    sites_snp: [:],
+                    sites_overlap: [:],
+                ],
+                data: data.collectEntries { obj -> [obj.sample, obj - obj.subMap("sample")] }
+            ]
+            return [pool, new org.yaml.snakeyaml.Yaml().dump(config)]
+        }
+        .collectFile(newLine: true) { pool, content -> ["${pool}.fingerprint_excluded_mqc.yml", content] }
+        .map { file ->
+            [[id: file.name.replace(".fingerprint_excluded_mqc.yml", "")], file]
+        }
     )
 
 
@@ -182,17 +207,24 @@ workflow SAMPLETRACKING {
         }
         .groupTuple()
         .map { meta, data ->
-            def config = [id: "sex_prediction", section_name: "Sex prediction", description: "This table show the results of the sex prediction with the expected sex and some metrics", plot_type: "table", headers: [
-                match_certainty: [max: 100, min: 0, suffix: "%"],
-                expected_sex: [:],
-                calculated_sex: [:],
-                calculated_sex_yx: [:],
-                calculated_sex_sry: [:],
-                calculated_sex_hetx: [:],
-                ratio_yx: [format: "{:,.4f}"],
-                coverage_sry: [:],
-                het_fraction: [:],
-            ], data: data.collectEntries { obj -> [obj.sample, obj - obj.subMap("sample")] }]
+            def config = [
+                id: "ngsbits-sex-prediction-table",
+                section_name: "Sex prediction",
+                description: "This table show the results of the sex prediction with the expected sex and some metrics",
+                plot_type: "table",
+                headers: [
+                    match_certainty: [max: 100, min: 0, suffix: "%"],
+                    expected_sex: [:],
+                    calculated_sex: [:],
+                    calculated_sex_yx: [:],
+                    calculated_sex_sry: [:],
+                    calculated_sex_hetx: [:],
+                    ratio_yx: [format: "{:,.4f}"],
+                    coverage_sry: [:],
+                    het_fraction: [:],
+                ],
+                data: data.collectEntries { obj -> [obj.sample, obj - obj.subMap("sample")] }
+            ]
             return [meta, new org.yaml.snakeyaml.Yaml().dump(config)]
         }
         .collectFile(newLine: true) { meta, content -> ["${meta.id}.sex_prediction_mqc.yml", content] }
