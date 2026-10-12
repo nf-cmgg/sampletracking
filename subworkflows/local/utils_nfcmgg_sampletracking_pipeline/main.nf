@@ -28,8 +28,7 @@ def depthFilter(sample_name: String, sample_depth_tsv: Path, snp_depth_tsv: Path
     def sampleDepthMap = sample_depth_tsv.splitCsv(sep:'\t', strip:true).collectEntries { parts ->
         [(parts[0]+":"+parts[1]): parts[2].toInteger()]
     }
-    def snpDepthMap = snp_depth_tsv.readLines().collectEntries { line ->
-        def parts = line.split('\t')
+    def snpDepthMap = snp_depth_tsv.splitCsv(sep:'\t', strip:true).collectEntries { parts ->
         [(parts[0]+":"+parts[1]): parts[2].toInteger()]
     }
     def coveredSites = sampleDepthMap.keySet().intersect(snpDepthMap.keySet())
