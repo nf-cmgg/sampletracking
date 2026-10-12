@@ -78,22 +78,8 @@ workflow PIPELINE_INITIALISATION {
     // Create channel from input file provided through params.input
     //
     def input_list = samplesheetToList(input, "assets/schema_input.json")
-    def pool_count = input_list.inject(
-        [:]
-    ) { counts, row ->
-        counts[row[0].pool] = (counts[row[0].pool] ?: 0) + 1
-        return counts
-    }
-
-    channel.fromList(input_list)
-        .map { meta, sample_bam, sample_bam_index, snp_bam, snp_bam_index ->
-            def new_meta = meta + [pool_count: pool_count[meta.pool]]
-            return [new_meta, sample_bam, sample_bam_index, snp_bam, snp_bam_index]
-        }
-        .set { ch_samplesheet }
-
     emit:
-    samplesheet = ch_samplesheet
+    samplesheet = channel.fromList(input_list)
 }
 
 /*

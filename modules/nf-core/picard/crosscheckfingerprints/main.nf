@@ -9,7 +9,7 @@ process PICARD_CROSSCHECKFINGERPRINTS {
 
     input:
     tuple val(meta), path(input1), path(input1_index), path(input2), path(input2_index), path(haplotype_map)
-    tuple val(meta2), path(fasta), path(fasta_index)
+    tuple val(meta2), path(fasta), path(fasta_index), path(fasta_gzi)
 
     output:
     tuple val(meta), path("*.crosscheck_metrics.txt"), emit: crosscheck_metrics

@@ -10,6 +10,7 @@ null/
 .lineage/
 .nf-test
 .nf-test.log
+*.bed
 # pixi environments
 .pixi/*
 !.pixi/config.toml
