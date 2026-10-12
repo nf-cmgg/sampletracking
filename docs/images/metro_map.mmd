@@ -1,0 +1,21 @@
+%%metro title: nf-cmgg/sampletracking
+%%metro diamond_style: symmetric
+%%metro file: SNP | BAM/CRAM | SNP
+%%metro file: SAMPLE | BAM/CRAM | SAMPLE
+%%metro file: MULTIQC | HTML | MultiQC
+
+graph LR
+    SNP[snp]
+    SAMPLE[sample]
+    SAMTOOLS_DEPTH[samtools depth]
+    NBSBIT_SAMPLEGENDER[ngs-bits samplegender]
+    PICARD_CROSSCHECKFINGERPRINTS[picard crosscheckFingerprints]
+    MULTIQC[multiqc]
+
+    SAMPLE --> NBSBIT_SAMPLEGENDER
+    NBSBIT_SAMPLEGENDER --> MULTIQC
+
+    SAMPLE --> SAMTOOLS_DEPTH
+    SNP --> SAMTOOLS_DEPTH
+    SAMTOOLS_DEPTH --> PICARD_CROSSCHECKFINGERPRINTS
+    PICARD_CROSSCHECKFINGERPRINTS --> MULTIQC

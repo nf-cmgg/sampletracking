@@ -12,24 +12,9 @@ The directories listed below will be created in the results directory after the 
 
 The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
 
-- [BWA MEM](#bwa-mem) - Align SNP fastqs using BWA MEM
 - [Picard Crosscheckfingerprints](#picard-crosscheckfingerprints) - Check SNP fingerprints using Picard Crosscheckfingerprints
 - [MultiQC](#multiqc) - Aggregate report describing results and QC from the whole pipeline
 - [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
-
-### BWA MEM
-
-<details markdown="1">
-<summary>Output files</summary>
-
-- `bwa/`
-  - `*.cram`: SNP CRAM file aligned from the SNP fastq file
-  - `*.crai`: Crai index of the SNP CRAM file
-  - `*.csi`: Csi index of the SNP CRAM file
-
-</details>
-
-[BWA](https://github.com/lh3/bwa) is a software package for mapping DNA sequences against a large reference genome, such as the human genome. It consists of three algorithms: BWA-backtrack, BWA-SW and BWA-MEM. The first algorithm is designed for Illumina sequence reads up to 100bp, while the rest two for longer sequences ranged from 70bp to a few megabases. BWA-MEM and BWA-SW share similar features such as the support of long reads and chimeric alignment, but BWA-MEM, which is the latest, is generally recommended as it is faster and more accurate. BWA-MEM also has better performance than BWA-backtrack for 70-100bp Illumina reads.
 
 ### Picard Crosscheckfingerprints
 
