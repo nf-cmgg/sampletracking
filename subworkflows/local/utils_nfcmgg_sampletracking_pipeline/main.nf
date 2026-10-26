@@ -3,7 +3,6 @@ workflow UTILS_NFCMGG_SAMPLETRACKING_PIPELINE {
 
 
 def haplotypeMapToBed(inputFilePath: Path, outputFilePath: Path) {
-    outputFilePath.text = ""
     def outputFileTxt = []
     inputFilePath.eachLine { line ->
         // Skip metadata headers (@) and column definition lines (#)
