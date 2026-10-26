@@ -3,7 +3,7 @@ workflow UTILS_NFCMGG_SAMPLETRACKING_PIPELINE {
 
 
 def haplotypeMapToBed(inputFilePath: Path, outputFilePath: Path) {
-    outputFilePath.text = ""
+    def outputFileTxt = []
     inputFilePath.eachLine { line ->
         // Skip metadata headers (@) and column definition lines (#)
         if (line.startsWith('@') || line.startsWith('#')) {
@@ -18,9 +18,10 @@ def haplotypeMapToBed(inputFilePath: Path, outputFilePath: Path) {
             def chromStart: long = position - 1
             def chromEnd: long = position
             // Write standard 4-column BED (chrom, start, end, name)
-            outputFilePath.append("${chrom}\t${chromStart}\t${chromEnd}\t${name}\n")
+            outputFileTxt << "${chrom}\t${chromStart}\t${chromEnd}\t${name}\n"
         }
     }
+    outputFilePath.text = outputFileTxt.join("\n")
 }
 
 def depthFilter(sample_name: String, sample_depth_tsv: Path, snp_depth_tsv: Path, min_covered_sites: int) {
