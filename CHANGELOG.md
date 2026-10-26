@@ -3,7 +3,11 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v1.1.0dev
+## v1.1.1
+
+- Changed `.append()` to `.setText()` in `haplotypeMapToBed` for cloud compatibility
+
+## v1.1.0
 
 - Added the multiqc data to the output of the pipeline
 - Fixed an issue where pool grouping for multiqc wasn't properly performed on pipeline resume
