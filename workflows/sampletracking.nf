@@ -72,7 +72,6 @@ workflow SAMPLETRACKING {
         .mix(
             ch_snp_no_idx.join(SAMTOOLS_INDEX_SNP_BAM.out.index, by: 0).map { meta, snp_bam, _old_index, new_index -> [meta, snp_bam, new_index] }
         )
-
     def ch_samplesheet_fixed = ch_sample_fixed.join(ch_snp_fixed, by: 0).dump(tag: "Fixed samplesheet entry", pretty: true)
 
     //
